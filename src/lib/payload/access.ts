@@ -11,6 +11,9 @@ export const isAdminFieldLevel: FieldAccess = ({ req }) =>
 export const isAdminOrContentManager: Access = ({ req }) =>
   Boolean(req.user && ['admin', 'content-manager'].includes(req.user.role))
 
+export const isAdminOrContentManagerFieldLevel: FieldAccess = ({ req }) =>
+  Boolean(req.user && ['admin', 'content-manager'].includes(req.user.role))
+
 export const isAdminOrSalesManager: Access = ({ req }) =>
   Boolean(req.user && ['admin', 'sales-manager'].includes(req.user.role))
 

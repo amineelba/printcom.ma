@@ -146,10 +146,11 @@ export const slugField = (source = 'title'): Field[] => [
 ]
 
 /** Locks a field so only admins can edit it (e.g. internal commercial data). */
-export const adminOnlyField = (field: Field): Field => ({
-  ...field,
-  access: {
-    read: () => true,
-    update: isAdminFieldLevel,
-  },
-})
+export const adminOnlyField = (field: Field): Field =>
+  ({
+    ...field,
+    access: {
+      read: () => true,
+      update: isAdminFieldLevel,
+    },
+  }) as Field

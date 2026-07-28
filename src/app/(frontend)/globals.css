@@ -232,6 +232,11 @@ select {
   color: var(--pc-color-text-secondary);
 }
 
+.pc-text-body-small {
+  font-size: var(--pc-type-body-small-size);
+  line-height: var(--pc-type-body-small-line-height);
+}
+
 .pc-text-footnote {
   font-size: var(--pc-type-footnote-size);
   line-height: var(--pc-type-footnote-line-height);

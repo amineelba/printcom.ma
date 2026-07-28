@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { isAdmin, isAdminOrContentManager } from '@/lib/payload/access'
+import { isAdmin, isAdminOrContentManagerFieldLevel } from '@/lib/payload/access'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -30,7 +30,7 @@ export const SiteSettings: GlobalConfig = {
       name: 'featureFlags',
       type: 'group',
       label: 'Visibilité de pages conditionnelles',
-      access: { update: isAdminOrContentManager },
+      access: { update: isAdminOrContentManagerFieldLevel },
       fields: [
         {
           name: 'showParcMachines',
