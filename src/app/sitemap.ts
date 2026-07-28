@@ -1,6 +1,10 @@
 import type { MetadataRoute } from 'next'
 import { getPayload } from '@/lib/payload/client'
 
+// See src/app/(frontend)/layout.tsx — this reads Payload, so it must not
+// be evaluated at build time (no DB access guaranteed then).
+export const dynamic = 'force-dynamic'
+
 const STATIC_ROUTES = [
   '',
   '/produits',

@@ -8,15 +8,22 @@ import { StructuredData } from '@/components/seo/StructuredData'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonLd'
 
 /**
- * Default ISR window for statically-shaped pages under this layout (about,
- * services archive, legal pages, etc.). Routes that read searchParams or
- * call cookies()/headers() (e.g. /produits, /recherche) are automatically
- * rendered per-request by Next regardless of this value, so CMS edits to
- * filtered/interactive routes are always immediate; this setting only
- * controls how quickly edits to otherwise-static editorial pages surface
- * without a full redeploy.
+ * Force every page under this layout to render per-request rather than
+ * being statically generated at build time. This layout (and therefore
+ * every frontend page, since Server Component data fetches are not
+ * cached across requests without an explicit fetch-cache/unstable_cache
+ * wrapper) reads Payload globals, which means "static generation" here
+ * would mean "query Postgres during `next build`" — fragile in CI/CD
+ * environments where the database may not be reachable or credentials
+ * not yet provisioned at build time (this is what broke the first Vercel
+ * deploy: build-time `next build` failed with "missing secret key"
+ * because PAYLOAD_SECRET/DATABASE_URL weren't set as build-time env vars
+ * yet). Forcing dynamic rendering decouples `pnpm build` from needing any
+ * database access at all — the build only needs to compile; Payload is
+ * only ever contacted at request time, when the deployment's runtime env
+ * vars are guaranteed to be present. See docs/deployment.md.
  */
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload()

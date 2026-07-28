@@ -13,11 +13,42 @@ with Vercel-specific notes called out.
 - An email provider account (Resend, or SMTP credentials) — see
   `docs/environment-variables.md`
 
+## Build does not need database access
+
+Every frontend route sets `export const dynamic = 'force-dynamic'`
+(on `src/app/(frontend)/layout.tsx`, which cascades to all pages under
+it, plus `src/app/sitemap.ts` and `src/app/robots.ts` individually).
+`pnpm build` therefore never queries Postgres or initializes Payload —
+it only compiles. This was a deliberate fix after the first real Vercel
+deploy failed with `Error: missing secret key` during static-page
+generation: Next was trying to pre-render CMS-backed pages (which read
+the `header`/`footer`/`seo-defaults` globals) at build time, which
+requires `PAYLOAD_SECRET` and a reachable `DATABASE_URL` to be present
+as **build-time** env vars — brittle in CI/CD, and unnecessary for a
+CMS-driven site where content changes after deploy anyway. Every page is
+now server-rendered per request instead; Payload is only ever contacted
+at runtime, when the deployment's environment variables are guaranteed
+to be configured. The trade-off is no static/ISR caching at the Next
+level — acceptable for this traffic profile; Vercel's CDN can still
+cache responses via `Cache-Control` headers if that becomes worth adding
+later.
+
+**Runtime access is still required.** The build succeeding does not mean
+the deployed site will serve pages correctly — that still needs
+`DATABASE_URL` and `PAYLOAD_SECRET` configured as environment variables
+in your hosting provider (Vercel Project Settings → Environment
+Variables, or equivalent), reachable from wherever the app actually
+runs. There is no way around this: Payload cannot render a single page
+without a database.
+
 ## First deploy
 
 1. Set every variable in `docs/environment-variables.md` in your
    hosting provider's environment configuration. At minimum:
-   `DATABASE_URL`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`.
+   `DATABASE_URL`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`. On Vercel:
+   Project → Settings → Environment Variables, applied to at least the
+   Production environment (and Preview, if you want preview deployments
+   to render correctly too).
 2. Run migrations against the target database **before** the app
    receives traffic:
    ```bash

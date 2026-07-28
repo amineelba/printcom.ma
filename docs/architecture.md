@@ -87,11 +87,18 @@ itself has full read power via the Local API.
 
 ## Rendering strategy
 
-- Default: Server Components, ISR with a 5-minute `revalidate` set on
-  `src/app/(frontend)/layout.tsx` (applies to statically-shaped pages;
-  routes reading `searchParams`/`cookies()`/`headers()` — `/produits`,
-  `/recherche`, `/demande-de-devis` — are automatically rendered
-  per-request by Next regardless of this setting).
+- Default: Server Components, rendered dynamically (per-request) — not
+  statically generated. `src/app/(frontend)/layout.tsx` sets
+  `export const dynamic = 'force-dynamic'`, which cascades to every page
+  under it (`src/app/sitemap.ts` and `src/app/robots.ts` set it
+  individually, since they're outside that layout). This means
+  `pnpm build` never needs database access — see docs/deployment.md for
+  why (a real Vercel deploy failed until this was in place: `next build`
+  was trying to statically pre-render CMS-backed pages, which requires
+  `PAYLOAD_SECRET`/`DATABASE_URL` as **build-time** env vars). The
+  trade-off is no Next-level static/ISR caching; every request hits
+  Payload. Acceptable at Printcom's traffic profile — revisit with a
+  narrower `revalidate` on specific low-churn pages if it ever isn't.
 - Client Components are used only where interaction requires them:
   navigation disclosure, search overlay, filter bar, the quote wizard,
   file upload, accordions. Everything else is a Server Component.
