@@ -33,18 +33,38 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const payload = await getPayload()
-  const [siteSettings, seoDefaults] = await Promise.all([
+  const [siteSettings, seoDefaults, designSettings] = await Promise.all([
     payload.findGlobal({ slug: 'site-settings', depth: 0 }),
     payload.findGlobal({ slug: 'seo-defaults', depth: 0 }),
+    payload.findGlobal({ slug: 'design-settings', depth: 0 }),
   ])
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
   const siteName = siteSettings.siteName || 'Printcom'
 
+  const brandColor =
+    designSettings.brandColorConfirmed && HEX_COLOR_PATTERN.test(designSettings.brandColorHex || '')
+      ? designSettings.brandColorHex
+      : null
+
   return (
     <html lang="fr">
       <body>
+        {brandColor ? (
+          // Overrides the provisional action-blue fallback (see
+          // docs/assumptions.md § Brand color) once Printcom confirms an
+          // official color in the design-settings global — no deploy
+          // needed. Hover/active/link shades are derived via color-mix()
+          // so a single confirmed hex is enough.
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `:root{--pc-color-brand-600:${brandColor};--pc-color-brand-650:color-mix(in srgb, ${brandColor} 90%, white);--pc-color-brand-700:color-mix(in srgb, ${brandColor} 80%, black);--pc-color-brand-500:color-mix(in srgb, ${brandColor} 88%, black);}`,
+            }}
+          />
+        ) : null}
         {seoDefaults.organizationJsonLd !== false ? (
           <>
             <StructuredData data={organizationJsonLd({ name: siteName, url: baseUrl })} />
