@@ -47,6 +47,7 @@ export const Products: CollectionConfig = {
     { name: 'sectors', type: 'relationship', relationTo: 'sectors', hasMany: true },
     { name: 'relatedProducts', type: 'relationship', relationTo: 'products', hasMany: true },
     { name: 'relatedServices', type: 'relationship', relationTo: 'services', hasMany: true },
+    { name: 'relatedFAQs', type: 'relationship', relationTo: 'faqs', hasMany: true },
 
     // -----------------------------------------------------------------
     // Configuration

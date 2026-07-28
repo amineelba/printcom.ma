@@ -442,6 +442,7 @@ export interface Product {
   sectors?: (number | Sector)[] | null;
   relatedProducts?: (number | Product)[] | null;
   relatedServices?: (number | Service)[] | null;
+  relatedFAQs?: (number | Faq)[] | null;
   availableFormats?:
     | {
         label: string;
@@ -1674,6 +1675,7 @@ export interface ProductsSelect<T extends boolean = true> {
   sectors?: T;
   relatedProducts?: T;
   relatedServices?: T;
+  relatedFAQs?: T;
   availableFormats?:
     | T
     | {

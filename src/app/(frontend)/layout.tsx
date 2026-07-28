@@ -5,6 +5,17 @@ import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { getPayload } from '@/lib/payload/client'
 
+/**
+ * Default ISR window for statically-shaped pages under this layout (about,
+ * services archive, legal pages, etc.). Routes that read searchParams or
+ * call cookies()/headers() (e.g. /produits, /recherche) are automatically
+ * rendered per-request by Next regardless of this value, so CMS edits to
+ * filtered/interactive routes are always immediate; this setting only
+ * controls how quickly edits to otherwise-static editorial pages surface
+ * without a full redeploy.
+ */
+export const revalidate = 300
+
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload()
   const seoDefaults = await payload.findGlobal({ slug: 'seo-defaults', depth: 0 })
