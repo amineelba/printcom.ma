@@ -2373,6 +2373,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "faqs_id": {
+          "name": "faqs_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "materials_id": {
           "name": "materials_id",
           "type": "integer",
@@ -2528,6 +2534,21 @@
           "method": "btree",
           "with": {}
         },
+        "products_rels_faqs_id_idx": {
+          "name": "products_rels_faqs_id_idx",
+          "columns": [
+            {
+              "expression": "faqs_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "products_rels_materials_id_idx": {
           "name": "products_rels_materials_id_idx",
           "columns": [
@@ -2659,6 +2680,19 @@
           "tableTo": "services",
           "columnsFrom": [
             "services_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "products_rels_faqs_fk": {
+          "name": "products_rels_faqs_fk",
+          "tableFrom": "products_rels",
+          "tableTo": "faqs",
+          "columnsFrom": [
+            "faqs_id"
           ],
           "columnsTo": [
             "id"
@@ -12345,6 +12379,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "3d76b064-f970-449e-b56a-61b025302ed4",
+  "id": "0713a0a0-a065-4dfa-8944-3255d74cd94a",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

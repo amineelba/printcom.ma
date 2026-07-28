@@ -1,5 +1,14 @@
 import type { Payload } from 'payload'
 
+/** Pure formatting logic, unit-testable without a database. */
+export function formatReference(year: number, sequence: number): string {
+  return `PC-DEVIS-${year}-${String(sequence).padStart(6, '0')}`
+}
+
+export function referencePrefix(year: number): string {
+  return `PC-DEVIS-${year}-`
+}
+
 /**
  * Generates the next PC-DEVIS-YYYY-000001 reference for the current year.
  * Counts existing references for the year rather than using a dedicated
@@ -9,7 +18,7 @@ import type { Payload } from 'payload'
  */
 export async function generateReference(payload: Payload): Promise<string> {
   const year = new Date().getFullYear()
-  const prefix = `PC-DEVIS-${year}-`
+  const prefix = referencePrefix(year)
 
   const result = await payload.find({
     collection: 'quote-requests',
@@ -18,6 +27,5 @@ export async function generateReference(payload: Payload): Promise<string> {
     depth: 0,
   })
 
-  const next = result.totalDocs + 1
-  return `${prefix}${String(next).padStart(6, '0')}`
+  return formatReference(year, result.totalDocs + 1)
 }

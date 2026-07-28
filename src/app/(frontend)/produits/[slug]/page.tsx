@@ -10,6 +10,8 @@ import { SpecificationList } from '@/components/content/SpecificationList'
 import { FAQAccordion } from '@/components/content/FAQAccordion'
 import { ProductCard } from '@/components/cards/ProductCard'
 import { ServiceCard } from '@/components/cards/ServiceCard'
+import { StructuredData } from '@/components/seo/StructuredData'
+import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonLd'
 import type {
   Product,
   ProductCategory,
@@ -81,6 +83,24 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <StructuredData
+        data={breadcrumbJsonLd(
+          [
+            { label: 'Accueil', href: '/' },
+            { label: 'Produits', href: '/produits' },
+            { label: product.title, href: `/produits/${product.slug}` },
+          ],
+          process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+        )}
+      />
+      <StructuredData
+        data={productJsonLd({
+          name: product.title,
+          description: product.shortDescription,
+          url: `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/produits/${product.slug}`,
+          imageUrl: product.primaryImage && typeof product.primaryImage === 'object' ? product.primaryImage.url || undefined : undefined,
+        })}
+      />
       <Container width="wide" className="py-[var(--pc-space-section-small)]">
         <Breadcrumbs
           items={[

@@ -4,6 +4,8 @@ import './globals.css'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { getPayload } from '@/lib/payload/client'
+import { StructuredData } from '@/components/seo/StructuredData'
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonLd'
 
 /**
  * Default ISR window for statically-shaped pages under this layout (about,
@@ -32,9 +34,23 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const payload = await getPayload()
+  const [siteSettings, seoDefaults] = await Promise.all([
+    payload.findGlobal({ slug: 'site-settings', depth: 0 }),
+    payload.findGlobal({ slug: 'seo-defaults', depth: 0 }),
+  ])
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+  const siteName = siteSettings.siteName || 'Printcom'
+
   return (
     <html lang="fr">
       <body>
+        {seoDefaults.organizationJsonLd !== false ? (
+          <>
+            <StructuredData data={organizationJsonLd({ name: siteName, url: baseUrl })} />
+            <StructuredData data={websiteJsonLd({ name: siteName, url: baseUrl })} />
+          </>
+        ) : null}
         <a href="#main-content" className="pc-skip-link">
           Aller au contenu principal
         </a>

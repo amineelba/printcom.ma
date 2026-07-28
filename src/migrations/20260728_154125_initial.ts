@@ -264,6 +264,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"sectors_id" integer,
   	"products_id" integer,
   	"services_id" integer,
+  	"faqs_id" integer,
   	"materials_id" integer,
   	"finishes_id" integer,
   	"technologies_id" integer
@@ -1029,6 +1030,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_sectors_fk" FOREIGN KEY ("sectors_id") REFERENCES "public"."sectors"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_products_fk" FOREIGN KEY ("products_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_services_fk" FOREIGN KEY ("services_id") REFERENCES "public"."services"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_faqs_fk" FOREIGN KEY ("faqs_id") REFERENCES "public"."faqs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_materials_fk" FOREIGN KEY ("materials_id") REFERENCES "public"."materials"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_finishes_fk" FOREIGN KEY ("finishes_id") REFERENCES "public"."finishes"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_technologies_fk" FOREIGN KEY ("technologies_id") REFERENCES "public"."technologies"("id") ON DELETE cascade ON UPDATE no action;
@@ -1219,6 +1221,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "products_rels_sectors_id_idx" ON "products_rels" USING btree ("sectors_id");
   CREATE INDEX "products_rels_products_id_idx" ON "products_rels" USING btree ("products_id");
   CREATE INDEX "products_rels_services_id_idx" ON "products_rels" USING btree ("services_id");
+  CREATE INDEX "products_rels_faqs_id_idx" ON "products_rels" USING btree ("faqs_id");
   CREATE INDEX "products_rels_materials_id_idx" ON "products_rels" USING btree ("materials_id");
   CREATE INDEX "products_rels_finishes_id_idx" ON "products_rels" USING btree ("finishes_id");
   CREATE INDEX "products_rels_technologies_id_idx" ON "products_rels" USING btree ("technologies_id");

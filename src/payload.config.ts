@@ -106,6 +106,12 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Always migration-driven, even in dev: schema changes are applied via
+    // explicit `payload migrate` runs (see docs/deployment.md), never via
+    // implicit dev-mode schema push. This keeps local/staging/production
+    // parity and avoids drift between formal migrations and an
+    // auto-synced schema.
+    push: false,
   }),
   sharp,
   // Single-language (French) content model — Payload localization is not
