@@ -19,10 +19,11 @@ export function SearchOverlay() {
       if (event.key === 'Escape') setIsOpen(false)
     }
     document.addEventListener('keydown', onKeyDown)
+    const trigger = triggerRef.current
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = ''
-      triggerRef.current?.focus()
+      trigger?.focus()
     }
   }, [isOpen])
 

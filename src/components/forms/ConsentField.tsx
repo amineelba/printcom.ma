@@ -1,4 +1,16 @@
-export function ConsentField({ name = 'consentConfirmed', error }: { name?: string; error?: string }) {
+export function ConsentField({
+  name = 'consentConfirmed',
+  error,
+  checked,
+  onChange,
+}: {
+  name?: string
+  error?: string
+  checked?: boolean
+  onChange?: (checked: boolean) => void
+}) {
+  const isControlled = onChange !== undefined
+
   return (
     <div className="flex flex-col gap-2">
       <label className="flex items-start gap-3 text-[0.9375rem] text-primary">
@@ -7,6 +19,7 @@ export function ConsentField({ name = 'consentConfirmed', error }: { name?: stri
           name={name}
           required
           aria-invalid={Boolean(error) || undefined}
+          {...(isControlled ? { checked: checked ?? false, onChange: (e) => onChange(e.target.checked) } : {})}
           className="mt-1 h-5 w-5 shrink-0 rounded-[var(--pc-radius-xs)] border border-border-default"
         />
         <span>

@@ -37,7 +37,6 @@ export async function sendEmail(input: SendEmailInput): Promise<{ delivered: boo
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '')
-      // eslint-disable-next-line no-console
       console.error('[email] Resend send failed', response.status, errorText)
       return { delivered: false }
     }
@@ -47,7 +46,6 @@ export async function sendEmail(input: SendEmailInput): Promise<{ delivered: boo
 
   // console fallback (also used when a provider is misconfigured, so a
   // submission never silently disappears without at least a server log)
-  // eslint-disable-next-line no-console
   console.info('[email:console]', {
     from,
     to: input.to,
