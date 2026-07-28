@@ -1,0 +1,19 @@
+/**
+ * Token architecture entry point.
+ * Order matters: foundation -> semantic -> component -> template.
+ */
+
+@import './foundation.css';
+@import './semantic.css';
+@import './components.css';
+@import './templates.css';
+
+@media (prefers-color-scheme: dark) {
+  /*
+   * Printcom is a content-and-conversion B2B site: the public frontend
+   * commits to a single light, paper-toned surface (see docs/design-system.md)
+   * rather than a parallel dark theme, matching the "neutral foundation"
+   * principle without duplicating the full semantic layer twice.
+   * Only the admin surfaces (Payload) may follow the OS theme.
+   */
+}

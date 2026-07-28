@@ -1,0 +1,16 @@
+/**
+ * Template tokens — page-level composition values shared across templates.
+ */
+
+:root {
+  --pc-template-hero-min-height-small: 500px;
+  --pc-template-hero-min-height-large: 650px;
+  --pc-template-hero-copy-max-width: var(--pc-width-content-narrow);
+
+  --pc-template-section-gap: var(--pc-space-section);
+  --pc-template-section-gap-small: var(--pc-space-section-small);
+  --pc-template-section-gap-large: var(--pc-space-section-large);
+
+  --pc-template-reading-width: var(--pc-width-content-reading);
+  --pc-template-standard-width: var(--pc-width-content-standard);
+}

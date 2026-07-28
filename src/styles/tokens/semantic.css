@@ -1,0 +1,193 @@
+/**
+ * Semantic tokens — map foundation values to interface roles.
+ * Components should consume these, not foundation.css directly.
+ */
+
+:root {
+  /* ---------------------------------------------------------------------
+   * Text
+   * ------------------------------------------------------------------- */
+  --pc-color-text-primary: var(--pc-color-gray-900);
+  --pc-color-text-secondary: var(--pc-color-gray-600);
+  --pc-color-text-tertiary: var(--pc-color-gray-500);
+  --pc-color-text-disabled: var(--pc-color-gray-400);
+  --pc-color-text-inverse: var(--pc-color-gray-50);
+  --pc-color-text-link: var(--pc-color-brand-500);
+  --pc-color-text-link-hover: var(--pc-color-brand-600);
+
+  /* ---------------------------------------------------------------------
+   * Background / surface
+   * ------------------------------------------------------------------- */
+  --pc-color-background-canvas: var(--pc-color-white);
+  --pc-color-background-alternate: var(--pc-color-gray-50);
+  --pc-color-background-subtle: var(--pc-color-near-white);
+  --pc-color-background-elevated: var(--pc-color-white);
+  --pc-color-background-selected: var(--pc-color-brand-50);
+  --pc-color-background-inverse: var(--pc-color-gray-900);
+  --pc-color-scrim: rgb(0 0 0 / 48%);
+
+  /* ---------------------------------------------------------------------
+   * Border
+   * ------------------------------------------------------------------- */
+  --pc-color-border-subtle: var(--pc-color-gray-100);
+  --pc-color-border-default: var(--pc-color-gray-200);
+  --pc-color-border-strong: var(--pc-color-gray-500);
+  --pc-color-border-error: var(--pc-color-error);
+
+  /* ---------------------------------------------------------------------
+   * Action / interactive
+   * ------------------------------------------------------------------- */
+  --pc-color-action-primary-background: var(--pc-color-brand-600);
+  --pc-color-action-primary-background-hover: var(--pc-color-brand-650);
+  --pc-color-action-primary-background-active: var(--pc-color-brand-700);
+  --pc-color-action-primary-content: var(--pc-color-white);
+  --pc-color-action-primary-border: var(--pc-color-brand-600);
+
+  --pc-color-action-secondary-background: transparent;
+  --pc-color-action-secondary-background-hover: var(--pc-color-brand-50);
+  --pc-color-action-secondary-content: var(--pc-color-brand-500);
+  --pc-color-action-secondary-border: var(--pc-color-brand-600);
+
+  --pc-color-action-disabled-background: var(--pc-color-gray-100);
+  --pc-color-action-disabled-content: var(--pc-color-gray-500);
+
+  --pc-color-focus: var(--pc-color-brand-600);
+
+  /* ---------------------------------------------------------------------
+   * Materials (translucent surfaces — navigation, overlays)
+   * Opaque fallbacks are required wherever backdrop-filter is unsupported
+   * or the user has requested reduced transparency.
+   * ------------------------------------------------------------------- */
+  --pc-material-nav-background: rgb(250 250 252 / 80%);
+  --pc-material-nav-background-fallback: #fafafc;
+  --pc-material-nav-blur: 20px;
+  --pc-material-nav-saturate: 1.8;
+
+  --pc-material-floating-background: rgb(255 255 255 / 85%);
+  --pc-material-floating-background-fallback: var(--pc-color-white);
+  --pc-material-floating-blur: 16px;
+
+  /* ---------------------------------------------------------------------
+   * Elevation
+   * ------------------------------------------------------------------- */
+  --pc-elevation-flat: var(--pc-shadow-none);
+  --pc-elevation-subtle: var(--pc-shadow-subtle);
+  --pc-elevation-card: var(--pc-shadow-card);
+  --pc-elevation-floating: var(--pc-shadow-floating);
+  --pc-elevation-modal: var(--pc-shadow-modal);
+
+  /* ---------------------------------------------------------------------
+   * Radius roles
+   * ------------------------------------------------------------------- */
+  --pc-radius-control: var(--pc-radius-full);
+  --pc-radius-compact-control: var(--pc-radius-sm);
+  --pc-radius-card-small: var(--pc-radius-lg);
+  --pc-radius-card: var(--pc-radius-2xl);
+  --pc-radius-card-large: var(--pc-radius-3xl);
+  --pc-radius-media: var(--pc-radius-xl);
+  --pc-radius-modal: var(--pc-radius-lg);
+  --pc-radius-circle: var(--pc-radius-full);
+
+  /* ---------------------------------------------------------------------
+   * Spacing roles
+   * ------------------------------------------------------------------- */
+  --pc-space-inline-tight: var(--pc-space-2);
+  --pc-space-inline-default: var(--pc-space-4);
+  --pc-space-inline-comfortable: var(--pc-space-6);
+
+  --pc-space-stack-tight: var(--pc-space-2);
+  --pc-space-stack-default: var(--pc-space-4);
+  --pc-space-stack-relaxed: var(--pc-space-6);
+
+  --pc-space-card-small: var(--pc-space-5);
+  --pc-space-card: var(--pc-space-8);
+  --pc-space-card-large: var(--pc-space-12);
+
+  --pc-space-section-small: var(--pc-space-16);
+  --pc-space-section: var(--pc-space-24);
+  --pc-space-section-large: var(--pc-space-36);
+
+  --pc-page-gutter-small: var(--pc-space-4);
+  --pc-page-gutter-medium: var(--pc-space-6);
+  --pc-page-gutter-large: var(--pc-space-8);
+
+  /* ---------------------------------------------------------------------
+   * Layout / grid
+   * ------------------------------------------------------------------- */
+  --pc-layout-columns-small: 4;
+  --pc-layout-columns-medium: 8;
+  --pc-layout-columns-large: 12;
+
+  /* ---------------------------------------------------------------------
+   * Motion roles
+   * ------------------------------------------------------------------- */
+  --pc-motion-interaction-duration: var(--pc-duration-standard);
+  --pc-motion-interaction-easing: var(--pc-easing-standard);
+  --pc-motion-menu-enter-duration: var(--pc-duration-moderate);
+  --pc-motion-menu-enter-easing: var(--pc-easing-enter);
+  --pc-motion-menu-exit-duration: var(--pc-duration-fast);
+  --pc-motion-menu-exit-easing: var(--pc-easing-exit);
+  --pc-motion-gallery-duration: var(--pc-duration-slow);
+  --pc-motion-gallery-easing: var(--pc-easing-smooth);
+
+  /* ---------------------------------------------------------------------
+   * Typography roles
+   * ------------------------------------------------------------------- */
+  --pc-type-global-nav-size: var(--pc-font-size-150);
+  --pc-type-global-nav-weight: var(--pc-font-weight-regular);
+  --pc-type-global-nav-line-height: var(--pc-line-height-compact);
+
+  --pc-type-eyebrow-size: var(--pc-font-size-300);
+  --pc-type-eyebrow-weight: var(--pc-font-weight-semibold);
+  --pc-type-eyebrow-line-height: var(--pc-line-height-compact);
+
+  --pc-type-hero-display-size: clamp(2.5rem, 6vw, var(--pc-font-size-1000));
+  --pc-type-hero-display-weight: var(--pc-font-weight-semibold);
+  --pc-type-hero-display-letter-spacing: var(--pc-letter-spacing-display);
+  --pc-type-hero-display-line-height: var(--pc-line-height-display);
+
+  --pc-type-page-title-size: clamp(2rem, 4.5vw, var(--pc-font-size-900));
+  --pc-type-page-title-weight: var(--pc-font-weight-semibold);
+  --pc-type-page-title-letter-spacing: var(--pc-letter-spacing-heading);
+  --pc-type-page-title-line-height: var(--pc-line-height-heading-tight);
+
+  --pc-type-section-title-size: clamp(1.75rem, 3.5vw, var(--pc-font-size-800));
+  --pc-type-section-title-weight: var(--pc-font-weight-semibold);
+  --pc-type-section-title-letter-spacing: var(--pc-letter-spacing-heading);
+  --pc-type-section-title-line-height: var(--pc-line-height-heading);
+
+  --pc-type-card-title-large-size: var(--pc-font-size-700);
+  --pc-type-card-title-large-weight: var(--pc-font-weight-semibold);
+  --pc-type-card-title-large-line-height: var(--pc-line-height-heading);
+
+  --pc-type-card-title-size: var(--pc-font-size-500);
+  --pc-type-card-title-weight: var(--pc-font-weight-semibold);
+  --pc-type-card-title-line-height: var(--pc-line-height-compact);
+
+  --pc-type-intro-size: var(--pc-font-size-400);
+  --pc-type-intro-weight: var(--pc-font-weight-regular);
+  --pc-type-intro-line-height: var(--pc-line-height-body);
+
+  --pc-type-body-size: var(--pc-font-size-300);
+  --pc-type-body-weight: var(--pc-font-weight-regular);
+  --pc-type-body-line-height: var(--pc-line-height-body);
+
+  --pc-type-body-small-size: var(--pc-font-size-200);
+  --pc-type-body-small-weight: var(--pc-font-weight-regular);
+  --pc-type-body-small-line-height: var(--pc-line-height-body);
+
+  --pc-type-label-size: var(--pc-font-size-200);
+  --pc-type-label-weight: var(--pc-font-weight-semibold);
+  --pc-type-label-line-height: var(--pc-line-height-compact);
+
+  --pc-type-footnote-size: var(--pc-font-size-150);
+  --pc-type-footnote-weight: var(--pc-font-weight-regular);
+  --pc-type-footnote-line-height: var(--pc-line-height-legal);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --pc-material-nav-background: var(--pc-material-nav-background-fallback);
+    --pc-material-floating-background: var(--pc-material-floating-background-fallback);
+  }
+}

@@ -1,0 +1,81 @@
+/**
+ * Component tokens — dimensions and roles scoped to specific UI components.
+ * Consume semantic.css tokens; never raw foundation values.
+ */
+
+:root {
+  /* Global navigation */
+  --pc-nav-height: var(--pc-global-nav-height);
+  --pc-nav-max-width: var(--pc-width-navigation);
+  --pc-nav-item-gap: var(--pc-space-7);
+  --pc-nav-icon-size: var(--pc-icon-size-md);
+  --pc-nav-z: var(--pc-z-global-navigation);
+
+  /* Local navigation (breadcrumb / product context bar) */
+  --pc-local-nav-height-value: var(--pc-local-nav-height);
+  --pc-local-nav-max-width: var(--pc-width-content-standard);
+  --pc-local-nav-z: var(--pc-z-local-navigation);
+
+  /* Buttons */
+  --pc-button-radius: var(--pc-radius-control);
+  --pc-button-height-small: var(--pc-control-sm);
+  --pc-button-height-medium: var(--pc-control-md);
+  --pc-button-height-large: var(--pc-control-lg);
+  --pc-button-padding-inline-small: var(--pc-space-4);
+  --pc-button-padding-inline-medium: var(--pc-space-5);
+  --pc-button-padding-inline-large: var(--pc-space-6);
+  --pc-button-gap: var(--pc-space-2);
+  --pc-button-border-width: var(--pc-border-hairline);
+
+  /* Cards */
+  --pc-card-radius: var(--pc-radius-card);
+  --pc-card-radius-small: var(--pc-radius-card-small);
+  --pc-card-radius-large: var(--pc-radius-card-large);
+  --pc-card-padding: var(--pc-space-card);
+  --pc-card-padding-small: var(--pc-space-card-small);
+  --pc-card-padding-large: var(--pc-space-card-large);
+  --pc-card-gap: var(--pc-space-4);
+  --pc-card-shadow: var(--pc-elevation-flat);
+  --pc-card-shadow-hover: var(--pc-elevation-subtle);
+  --pc-card-media-radius: var(--pc-radius-media);
+
+  /* Rails / horizontal scroll */
+  --pc-rail-gap-small: var(--pc-space-4);
+  --pc-rail-gap-large: var(--pc-space-6);
+  --pc-rail-control-size: var(--pc-control-lg);
+  --pc-rail-control-radius: var(--pc-radius-circle);
+  --pc-rail-control-shadow: var(--pc-elevation-subtle);
+  --pc-rail-transition-duration: var(--pc-motion-gallery-duration);
+  --pc-rail-transition-easing: var(--pc-motion-gallery-easing);
+
+  /* Form controls */
+  --pc-field-height: var(--pc-control-lg);
+  --pc-field-radius: var(--pc-radius-md);
+  --pc-field-border-width: var(--pc-border-hairline);
+  --pc-field-border-color: var(--pc-color-border-default);
+  --pc-field-border-color-focus: var(--pc-color-focus);
+  --pc-field-padding-inline: var(--pc-space-4);
+
+  /* Modal */
+  --pc-modal-radius: var(--pc-radius-modal);
+  --pc-modal-padding-small: var(--pc-space-6);
+  --pc-modal-padding-large: var(--pc-space-10);
+  --pc-modal-shadow: var(--pc-elevation-modal);
+  --pc-modal-max-width-small: 30rem;
+  --pc-modal-max-width-medium: 47.5rem;
+  --pc-modal-max-width-large: 68.75rem;
+  --pc-modal-z: var(--pc-z-modal);
+
+  /* Accordion */
+  --pc-accordion-header-min-height: var(--pc-control-xl);
+  --pc-accordion-padding-block: var(--pc-space-4);
+  --pc-accordion-content-padding-bottom: var(--pc-space-6);
+  --pc-accordion-icon-size: var(--pc-icon-size-md);
+
+  /* Footer */
+  --pc-footer-max-width: var(--pc-width-footer);
+  --pc-footer-padding-top: var(--pc-space-16);
+  --pc-footer-padding-bottom: var(--pc-space-8);
+  --pc-footer-column-gap: var(--pc-space-8);
+  --pc-footer-section-gap: var(--pc-space-6);
+}

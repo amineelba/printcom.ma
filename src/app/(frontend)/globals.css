@@ -1,0 +1,279 @@
+@import 'tailwindcss';
+@import '../../styles/tokens/index.css';
+
+/**
+ * Tailwind v4 theme mapping — expose semantic pc- tokens as Tailwind
+ * utilities (bg-canvas, text-primary, rounded-card, etc.) so components
+ * can use utility classes without ever writing a raw hex value.
+ */
+@theme inline {
+  --color-canvas: var(--pc-color-background-canvas);
+  --color-alternate: var(--pc-color-background-alternate);
+  --color-subtle: var(--pc-color-background-subtle);
+  --color-elevated: var(--pc-color-background-elevated);
+  --color-inverse: var(--pc-color-background-inverse);
+  --color-selected: var(--pc-color-background-selected);
+
+  --color-primary: var(--pc-color-text-primary);
+  --color-secondary: var(--pc-color-text-secondary);
+  --color-tertiary: var(--pc-color-text-tertiary);
+  --color-disabled: var(--pc-color-text-disabled);
+  --color-inverse-text: var(--pc-color-text-inverse);
+  --color-link: var(--pc-color-text-link);
+
+  --color-border-subtle: var(--pc-color-border-subtle);
+  --color-border-default: var(--pc-color-border-default);
+  --color-border-strong: var(--pc-color-border-strong);
+  --color-border-error: var(--pc-color-border-error);
+
+  --color-action: var(--pc-color-action-primary-background);
+  --color-action-hover: var(--pc-color-action-primary-background-hover);
+  --color-action-active: var(--pc-color-action-primary-background-active);
+  --color-action-content: var(--pc-color-action-primary-content);
+
+  --color-success: var(--pc-color-success);
+  --color-warning: var(--pc-color-warning);
+  --color-error: var(--pc-color-error);
+
+  --font-sans: var(--pc-font-family-text);
+  --font-display: var(--pc-font-family-display);
+  --font-mono: var(--pc-font-family-mono);
+
+  --radius-xs: var(--pc-radius-xs);
+  --radius-sm: var(--pc-radius-sm);
+  --radius-md: var(--pc-radius-md);
+  --radius-lg: var(--pc-radius-lg);
+  --radius-xl: var(--pc-radius-xl);
+  --radius-2xl: var(--pc-radius-2xl);
+  --radius-3xl: var(--pc-radius-3xl);
+  --radius-control: var(--pc-radius-control);
+  --radius-card: var(--pc-radius-card);
+  --radius-card-large: var(--pc-radius-card-large);
+  --radius-media: var(--pc-radius-media);
+
+  --spacing-section: var(--pc-space-section);
+  --spacing-section-small: var(--pc-space-section-small);
+  --spacing-section-large: var(--pc-space-section-large);
+  --spacing-card: var(--pc-space-card);
+  --spacing-gutter-small: var(--pc-page-gutter-small);
+  --spacing-gutter-medium: var(--pc-page-gutter-medium);
+  --spacing-gutter-large: var(--pc-page-gutter-large);
+
+  --shadow-subtle: var(--pc-elevation-subtle);
+  --shadow-card: var(--pc-elevation-card);
+  --shadow-floating: var(--pc-elevation-floating);
+  --shadow-modal: var(--pc-elevation-modal);
+
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 735px;
+  --breakpoint-lg: 1069px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-2xl: 2560px;
+
+  --container-narrow: var(--pc-width-content-narrow);
+  --container-reading: var(--pc-width-content-reading);
+  --container-standard: var(--pc-width-content-standard);
+  --container-wide: var(--pc-width-content-wide);
+  --container-ultra: var(--pc-width-content-ultra);
+}
+
+/* ---------------------------------------------------------------------
+ * Base reset
+ * ------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--pc-color-background-canvas);
+  color: var(--pc-color-text-primary);
+  font-family: var(--pc-font-family-text);
+  font-size: var(--pc-font-size-300);
+  line-height: var(--pc-line-height-body);
+  letter-spacing: var(--pc-letter-spacing-body);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+ * Focus visibility — never removed, only restyled
+ * ------------------------------------------------------------------- */
+:focus-visible {
+  outline: var(--pc-border-focus) solid var(--pc-color-focus);
+  outline-offset: 2px;
+  border-radius: var(--pc-radius-xs);
+}
+
+/* ---------------------------------------------------------------------
+ * Skip link
+ * ------------------------------------------------------------------- */
+.pc-skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--pc-z-tooltip);
+  padding: var(--pc-space-3) var(--pc-space-5);
+  background: var(--pc-color-gray-900);
+  color: var(--pc-color-white);
+  border-radius: 0 0 var(--pc-radius-md) 0;
+  transform: translateY(-100%);
+  transition: transform var(--pc-duration-fast) var(--pc-easing-standard);
+}
+
+.pc-skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------
+ * Typography roles as utility classes (used where Tailwind's arbitrary
+ * variants would otherwise duplicate the same clamp() repeatedly)
+ * ------------------------------------------------------------------- */
+.pc-text-eyebrow {
+  font-family: var(--pc-font-family-text);
+  font-size: var(--pc-type-eyebrow-size);
+  font-weight: var(--pc-type-eyebrow-weight);
+  line-height: var(--pc-type-eyebrow-line-height);
+  color: var(--pc-color-text-link);
+}
+
+.pc-text-hero-display {
+  font-family: var(--pc-font-family-display);
+  font-size: var(--pc-type-hero-display-size);
+  font-weight: var(--pc-type-hero-display-weight);
+  letter-spacing: var(--pc-type-hero-display-letter-spacing);
+  line-height: var(--pc-type-hero-display-line-height);
+}
+
+.pc-text-page-title {
+  font-family: var(--pc-font-family-display);
+  font-size: var(--pc-type-page-title-size);
+  font-weight: var(--pc-type-page-title-weight);
+  letter-spacing: var(--pc-type-page-title-letter-spacing);
+  line-height: var(--pc-type-page-title-line-height);
+}
+
+.pc-text-section-title {
+  font-family: var(--pc-font-family-display);
+  font-size: var(--pc-type-section-title-size);
+  font-weight: var(--pc-type-section-title-weight);
+  letter-spacing: var(--pc-type-section-title-letter-spacing);
+  line-height: var(--pc-type-section-title-line-height);
+}
+
+.pc-text-intro {
+  font-size: var(--pc-type-intro-size);
+  line-height: var(--pc-type-intro-line-height);
+  color: var(--pc-color-text-secondary);
+}
+
+.pc-text-footnote {
+  font-size: var(--pc-type-footnote-size);
+  line-height: var(--pc-type-footnote-line-height);
+  letter-spacing: var(--pc-letter-spacing-legal);
+  color: var(--pc-color-text-tertiary);
+}
+
+/* ---------------------------------------------------------------------
+ * Horizontal rail primitive
+ * ------------------------------------------------------------------- */
+.pc-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(16rem, 22rem);
+  gap: var(--pc-rail-gap-small);
+  overflow-x: auto;
+  scroll-snap-type: inline mandatory;
+  scroll-padding-inline: var(--pc-page-gutter-small);
+  padding-bottom: var(--pc-space-2);
+  -ms-overflow-style: none;
+  scrollbar-width: thin;
+}
+
+.pc-rail > * {
+  scroll-snap-align: start;
+}
+
+.pc-container {
+  width: 100%;
+  max-width: var(--pc-width-content-wide);
+  margin-inline: auto;
+  padding-inline: var(--pc-page-gutter-small);
+}
+
+@media (min-width: 735px) {
+  .pc-container {
+    padding-inline: var(--pc-page-gutter-medium);
+  }
+}
+
+@media (min-width: 1069px) {
+  .pc-container {
+    padding-inline: var(--pc-page-gutter-large);
+  }
+}
