@@ -46,7 +46,7 @@ export default async function SitemapPage() {
     { title: 'Pages principales', items: STATIC_PAGES },
     {
       title: 'Familles de produits',
-      items: categories.docs.map((c) => ({ label: c.title, href: `/produits?categorie=${c.slug}` })),
+      items: categories.docs.map((c) => ({ label: c.title, href: `/produits/${c.slug}` })),
     },
     { title: 'Services', items: services.docs.map((s) => ({ label: s.title, href: `/services/${s.slug}` })) },
     { title: 'Solutions', items: solutions.docs.map((s) => ({ label: s.title, href: `/solutions/${s.slug}` })) },

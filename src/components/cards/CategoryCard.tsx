@@ -5,7 +5,7 @@ import type { ProductCategory } from '@/payload-types'
 export function CategoryCard({ category }: { category: ProductCategory }) {
   return (
     <Link
-      href={`/produits?categorie=${category.slug}`}
+      href={`/produits/${category.slug}`}
       className="group flex flex-col overflow-hidden rounded-card bg-elevated shadow-[var(--pc-card-shadow)] transition-shadow hover:shadow-[var(--pc-card-shadow-hover)]"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-card bg-alternate">

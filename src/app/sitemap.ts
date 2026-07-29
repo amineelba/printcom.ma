@@ -31,7 +31,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
   const payload = await getPayload()
 
-  const [products, services, solutions, sectors, resources, materials, finishes, technologies] = await Promise.all([
+  const [categories, products, services, solutions, sectors, resources, materials, finishes, technologies] = await Promise.all([
+    payload.find({ collection: 'product-categories', where: { status: { equals: 'published' } }, limit: 2000, depth: 0 }),
     payload.find({ collection: 'products', where: { status: { equals: 'published' } }, limit: 2000, depth: 0 }),
     payload.find({ collection: 'services', where: { status: { equals: 'published' } }, limit: 2000, depth: 0 }),
     payload.find({ collection: 'solutions', where: { status: { equals: 'published' } }, limit: 2000, depth: 0 }),
@@ -53,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const dynamicSections: Array<{ prefix: string; docs: { slug: string; updatedAt?: string }[] }> = [
+    { prefix: '/produits', docs: categories.docs },
     { prefix: '/produits', docs: products.docs },
     { prefix: '/services', docs: services.docs },
     { prefix: '/solutions', docs: solutions.docs },
