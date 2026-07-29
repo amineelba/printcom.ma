@@ -104,7 +104,7 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI,
     },
     // Always migration-driven, even in dev: schema changes are applied via
     // explicit `payload migrate` runs (see docs/deployment.md), never via
