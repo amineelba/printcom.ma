@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrSalesManager, salesRecordAccess } from '@/lib/payload/access'
+import { quoteRequestPdfEndpoint } from '@/lib/pdf/quoteRequestPdfEndpoint'
 
 /**
  * Structured quote requests (sections 23-24). Never publicly readable or
@@ -20,6 +21,7 @@ export const QuoteRequests: CollectionConfig = {
     update: salesRecordAccess,
     delete: isAdminOrSalesManager,
   },
+  endpoints: [quoteRequestPdfEndpoint],
   fields: [
     {
       name: 'reference',
@@ -28,6 +30,17 @@ export const QuoteRequests: CollectionConfig = {
       unique: true,
       index: true,
       admin: { readOnly: true, description: 'Format PC-DEVIS-AAAA-000001, généré automatiquement.' },
+    },
+    {
+      name: 'downloadPdf',
+      type: 'ui',
+      label: ' ',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@/components/admin/DownloadQuoteRequestPdfButton#DownloadQuoteRequestPdfButtonField',
+        },
+      },
     },
 
     // Étape 1 — Besoin

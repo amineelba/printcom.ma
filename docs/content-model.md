@@ -61,6 +61,31 @@ entered; nothing is invented or auto-computed.
 The plugin ships its collections/global with no `access` config of its
 own (see `docs/access-control.md` for how that's patched).
 
+## Quote request PDF export
+
+Separate from the invoicing plugin above: `quote-requests` documents
+(the public form submissions) can be downloaded as a formatted PDF
+directly from the admin — a "Télécharger en PDF" button in the document
+sidebar (`src/components/admin/DownloadQuoteRequestPdfButton.tsx`) hits a
+custom collection endpoint, `GET /api/quote-requests/:id/pdf`
+(`src/lib/pdf/quoteRequestPdfEndpoint.ts`), which renders every field of
+the request (besoin, configuration, production/livraison, fichiers,
+contact, suivi commercial) via a `@react-pdf/renderer` template
+(`src/components/admin/pdf/QuoteRequestPdfDocument.tsx`) and streams the
+PDF back. This is a plain export of the structured intake data — not a
+priced document — so it's unrelated to `payload-invoicepdf`'s
+`invoices`/`quotes` collections; a real priced quote/invoice still goes
+through that plugin once a human has worked out numbers.
+
+The endpoint reuses `quote-requests`' own `access.read`
+(`salesRecordAccess`) via `overrideAccess: false` instead of a bespoke
+role check, so a sales-agent can only export requests assigned to them —
+same rule as viewing the document in admin, enforced in one place. Never
+reachable by an anonymous caller (`tests/integration/accessControl.int.spec.ts`
+doesn't cover this endpoint directly since it's a Next.js route rather
+than a `payload.find`, but the underlying access function is the same one
+already tested there).
+
 ## Editorial workflow (shared across content collections)
 
 `src/lib/payload/fields.ts` exports `workflowFields`, applied to every

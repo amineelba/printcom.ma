@@ -21,7 +21,16 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
+import { DownloadQuoteRequestPdfButtonField as DownloadQuoteRequestPdfButtonField_bab2a630e7452e378763a0e9c76e0ff7 } from '@/components/admin/DownloadQuoteRequestPdfButton'
+import { ProductAutoFill as ProductAutoFill_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { PdfHistory as PdfHistory_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { SendHistoryRowLabel as SendHistoryRowLabel_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { DownloadPdfButton as DownloadPdfButton_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { GeneratePdfButton as GeneratePdfButton_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { SendEmailButton as SendEmailButton_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { RelatedQuote as RelatedQuote_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { ConvertToInvoiceButton as ConvertToInvoiceButton_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { RelatedInvoices as RelatedInvoices_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -49,6 +58,15 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
+  "@/components/admin/DownloadQuoteRequestPdfButton#DownloadQuoteRequestPdfButtonField": DownloadQuoteRequestPdfButtonField_bab2a630e7452e378763a0e9c76e0ff7,
+  "payload-invoicepdf/client#ProductAutoFill": ProductAutoFill_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#PdfHistory": PdfHistory_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#SendHistoryRowLabel": SendHistoryRowLabel_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#DownloadPdfButton": DownloadPdfButton_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#GeneratePdfButton": GeneratePdfButton_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#SendEmailButton": SendEmailButton_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#RelatedQuote": RelatedQuote_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#ConvertToInvoiceButton": ConvertToInvoiceButton_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "payload-invoicepdf/client#RelatedInvoices": RelatedInvoices_5c138208fc6a6657e86a40fe5d8ab8c0,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
