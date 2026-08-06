@@ -1,6 +1,6 @@
 # Content model
 
-## Collections (22)
+## Collections (24)
 
 | Collection | Purpose | Public read? |
 |---|---|---|
@@ -26,13 +26,40 @@
 | `newsletter-subscribers` | Newsletter opt-ins | **Never** (admin/content-manager only) |
 | `legal-documents` | Mentions légales, confidentialité, cookies | Published only |
 | `redirects` | 301/302 redirect table | Yes (read-only, consumed by `src/proxy.ts`) |
+| `invoices` | Staff-generated client invoices with PDF export (`payload-invoicepdf` plugin) | **Never** (sales team only) |
+| `quotes` | Staff-generated priced quotes with PDF export (`payload-invoicepdf` plugin) — distinct from the public `quote-requests` intake form | **Never** (sales team only) |
 
-## Globals (9)
+## Globals (10)
 
 `site-settings`, `header`, `footer`, `homepage`, `contact-settings`,
 `quote-settings`, `seo-defaults`, `social-links`, `design-settings` —
 all in `src/globals/`. All are publicly readable (they're configuration,
 not data) except writes, which require `admin` or `content-manager`.
+
+`shop-info` (from `payload-invoicepdf`) is the exception: it holds the
+company's bank/IBAN and legal details used on generated invoice PDFs, so
+it's sales-team/admin only, not publicly readable — see
+`docs/access-control.md`.
+
+## Invoicing (payload-invoicepdf plugin)
+
+`src/payload.config.ts` registers the third-party `payload-invoicepdf`
+plugin, which adds `invoices`, `quotes` (collections, admin group
+"Invoicing") and `shop-info` (global). This is an **internal back-office
+tool** for the sales team to produce real, priced PDF invoices/quotes for
+a client after a `quote-requests` submission has been studied and a deal
+is ready to be formalized — it does not add a cart, checkout, or any
+public-facing pricing (see CLAUDE.md's non-negotiable rules). Nothing it
+generates is exposed on the public frontend.
+
+`productFieldMapping.price` points at `products.indicativePrice` — the
+existing admin-only field that stays empty/unused unless a human
+deliberately fills it in per product. The plugin's product-autofill
+convenience feature will only ever pull a price a staff member actually
+entered; nothing is invented or auto-computed.
+
+The plugin ships its collections/global with no `access` config of its
+own (see `docs/access-control.md` for how that's patched).
 
 ## Editorial workflow (shared across content collections)
 

@@ -2,9 +2,13 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
+import type { Config } from 'payload'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { builtInTemplates, invoicePdf } from 'payload-invoicepdf'
+
+import { isAdmin, isAdminOrSalesManager } from './lib/payload/access'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -47,6 +51,41 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN
+
+/**
+ * payload-invoicepdf ships its `invoices`/`quotes` collections and
+ * `shop-info` global with no `access` config of their own, which means
+ * Payload's default (public read/write) would apply — unacceptable for
+ * documents holding client PII, pricing and bank details. This runs as
+ * the next plugin in the chain (plugins compose left-to-right) and locks
+ * them down to the sales team, matching how quote-requests/contact-requests
+ * are treated elsewhere in this config (see docs/access-control.md).
+ */
+function secureInvoicePdfAccess(config: Config): Config {
+  const salesManagedCollections = new Set(['invoices', 'quotes'])
+
+  return {
+    ...config,
+    collections: config.collections?.map((collection) =>
+      salesManagedCollections.has(collection.slug)
+        ? {
+            ...collection,
+            access: {
+              read: isAdminOrSalesManager,
+              create: isAdminOrSalesManager,
+              update: isAdminOrSalesManager,
+              delete: isAdmin,
+            },
+          }
+        : collection,
+    ),
+    globals: config.globals?.map((global) =>
+      global.slug === 'shop-info'
+        ? { ...global, access: { read: isAdminOrSalesManager, update: isAdmin } }
+        : global,
+    ),
+  }
+}
 
 export default buildConfig({
   admin: {
@@ -130,5 +169,29 @@ export default buildConfig({
           }),
         ]
       : []),
+    // Internal back-office invoicing/quoting tool for the sales team — adds
+    // `invoices`, `quotes` (collections) and `shop-info` (global). This is
+    // staff-facing PDF generation for real client invoices after a
+    // quote-request has been studied; it does not add pricing, checkout or
+    // e-commerce to the public site, and nothing it produces is exposed on
+    // the public frontend. `productFieldMapping.price` points at
+    // `products.indicativePrice`, the existing admin-only field that is
+    // empty/disabled unless a human deliberately fills it in per product —
+    // no price is invented or auto-populated (see CLAUDE.md: no automatic
+    // or final pricing).
+    invoicePdf({
+      productCollection: 'products',
+      productFieldMapping: {
+        name: 'title',
+        price: 'indicativePrice',
+        description: 'shortDescription',
+        image: 'primaryImage',
+      },
+      templates: builtInTemplates,
+      currency: 'MAD',
+      invoiceNumberPrefix: 'PC-FACT',
+      quoteNumberPrefix: 'PC-DEVISPDF',
+    }),
+    secureInvoicePdfAccess,
   ],
 })

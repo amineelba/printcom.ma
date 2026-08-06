@@ -89,6 +89,8 @@ export interface Config {
     'newsletter-subscribers': NewsletterSubscriber;
     'legal-documents': LegalDocument;
     redirects: Redirect;
+    invoices: Invoice;
+    quotes: Quote;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -118,6 +120,8 @@ export interface Config {
     'newsletter-subscribers': NewsletterSubscribersSelect<false> | NewsletterSubscribersSelect<true>;
     'legal-documents': LegalDocumentsSelect<false> | LegalDocumentsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    invoices: InvoicesSelect<false> | InvoicesSelect<true>;
+    quotes: QuotesSelect<false> | QuotesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -137,6 +141,7 @@ export interface Config {
     'seo-defaults': SeoDefault;
     'social-links': SocialLink;
     'design-settings': DesignSetting;
+    'shop-info': ShopInfo;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
@@ -148,6 +153,7 @@ export interface Config {
     'seo-defaults': SeoDefaultsSelect<false> | SeoDefaultsSelect<true>;
     'social-links': SocialLinksSelect<false> | SocialLinksSelect<true>;
     'design-settings': DesignSettingsSelect<false> | DesignSettingsSelect<true>;
+    'shop-info': ShopInfoSelect<false> | ShopInfoSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1357,6 +1363,136 @@ export interface Redirect {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices".
+ */
+export interface Invoice {
+  id: number;
+  issueDate?: string | null;
+  dueDate?: string | null;
+  client: {
+    name: string;
+    email?: string | null;
+    address?: {
+      street?: string | null;
+      city?: string | null;
+      postalCode?: string | null;
+      country?: string | null;
+    };
+    vatNumber?: string | null;
+  };
+  items?:
+    | {
+        /**
+         * Select a product to auto-fill description and price
+         */
+        product?: (number | null) | Product;
+        /**
+         * Auto-filled when a product is selected. Changing the product overrides this value.
+         */
+        description: string;
+        quantity: number;
+        /**
+         * Auto-filled when a product is selected. Changing the product overrides this value.
+         */
+        unitPrice: number;
+        taxRate?: number | null;
+        lineTotal?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  notes?: string | null;
+  subtotal?: number | null;
+  taxTotal?: number | null;
+  total?: number | null;
+  generatedPdfs?: (number | Media)[] | null;
+  lastSentAt?: string | null;
+  sendHistory?:
+    | {
+        sentAt?: string | null;
+        to?: string | null;
+        templateUsed?: string | null;
+        subject?: string | null;
+        attachedPdf?: (number | null) | Media;
+        sentBy?: (number | null) | User;
+        id?: string | null;
+      }[]
+    | null;
+  invoiceNumber?: string | null;
+  status?: ('draft' | 'sent' | 'paid' | 'overdue' | 'cancelled') | null;
+  template?: ('Classic' | 'Modern' | 'Minimal' | 'Bold') | null;
+  sourceQuote?: (number | null) | Quote;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quotes".
+ */
+export interface Quote {
+  id: number;
+  issueDate?: string | null;
+  validUntil?: string | null;
+  client: {
+    name: string;
+    email?: string | null;
+    address?: {
+      street?: string | null;
+      city?: string | null;
+      postalCode?: string | null;
+      country?: string | null;
+    };
+    vatNumber?: string | null;
+  };
+  items?:
+    | {
+        /**
+         * Select a product to auto-fill description and price
+         */
+        product?: (number | null) | Product;
+        /**
+         * Auto-filled when a product is selected. Changing the product overrides this value.
+         */
+        description: string;
+        quantity: number;
+        /**
+         * Auto-filled when a product is selected. Changing the product overrides this value.
+         */
+        unitPrice: number;
+        taxRate?: number | null;
+        lineTotal?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  notes?: string | null;
+  subtotal?: number | null;
+  taxTotal?: number | null;
+  total?: number | null;
+  acceptToken?: string | null;
+  rejectToken?: string | null;
+  tokenExpiresAt?: string | null;
+  rejectionReason?: string | null;
+  generatedPdfs?: (number | Media)[] | null;
+  lastSentAt?: string | null;
+  sendHistory?:
+    | {
+        sentAt?: string | null;
+        to?: string | null;
+        templateUsed?: string | null;
+        subject?: string | null;
+        attachedPdf?: (number | null) | Media;
+        sentBy?: (number | null) | User;
+        id?: string | null;
+      }[]
+    | null;
+  quoteNumber?: string | null;
+  status?: ('draft' | 'sent' | 'accepted' | 'rejected' | 'expired') | null;
+  template?: ('Classic' | 'Modern' | 'Minimal' | 'Bold') | null;
+  relatedInvoices?: (number | Invoice)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -1466,6 +1602,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'redirects';
         value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'invoices';
+        value: number | Invoice;
+      } | null)
+    | ({
+        relationTo: 'quotes';
+        value: number | Quote;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -2267,6 +2411,124 @@ export interface RedirectsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices_select".
+ */
+export interface InvoicesSelect<T extends boolean = true> {
+  issueDate?: T;
+  dueDate?: T;
+  client?:
+    | T
+    | {
+        name?: T;
+        email?: T;
+        address?:
+          | T
+          | {
+              street?: T;
+              city?: T;
+              postalCode?: T;
+              country?: T;
+            };
+        vatNumber?: T;
+      };
+  items?:
+    | T
+    | {
+        product?: T;
+        description?: T;
+        quantity?: T;
+        unitPrice?: T;
+        taxRate?: T;
+        lineTotal?: T;
+        id?: T;
+      };
+  notes?: T;
+  subtotal?: T;
+  taxTotal?: T;
+  total?: T;
+  generatedPdfs?: T;
+  lastSentAt?: T;
+  sendHistory?:
+    | T
+    | {
+        sentAt?: T;
+        to?: T;
+        templateUsed?: T;
+        subject?: T;
+        attachedPdf?: T;
+        sentBy?: T;
+        id?: T;
+      };
+  invoiceNumber?: T;
+  status?: T;
+  template?: T;
+  sourceQuote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quotes_select".
+ */
+export interface QuotesSelect<T extends boolean = true> {
+  issueDate?: T;
+  validUntil?: T;
+  client?:
+    | T
+    | {
+        name?: T;
+        email?: T;
+        address?:
+          | T
+          | {
+              street?: T;
+              city?: T;
+              postalCode?: T;
+              country?: T;
+            };
+        vatNumber?: T;
+      };
+  items?:
+    | T
+    | {
+        product?: T;
+        description?: T;
+        quantity?: T;
+        unitPrice?: T;
+        taxRate?: T;
+        lineTotal?: T;
+        id?: T;
+      };
+  notes?: T;
+  subtotal?: T;
+  taxTotal?: T;
+  total?: T;
+  acceptToken?: T;
+  rejectToken?: T;
+  tokenExpiresAt?: T;
+  rejectionReason?: T;
+  generatedPdfs?: T;
+  lastSentAt?: T;
+  sendHistory?:
+    | T
+    | {
+        sentAt?: T;
+        to?: T;
+        templateUsed?: T;
+        subject?: T;
+        attachedPdf?: T;
+        sentBy?: T;
+        id?: T;
+      };
+  quoteNumber?: T;
+  status?: T;
+  template?: T;
+  relatedInvoices?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -2589,6 +2851,33 @@ export interface DesignSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shop-info".
+ */
+export interface ShopInfo {
+  id: number;
+  companyName: string;
+  companyLogo?: (number | null) | Media;
+  address?: {
+    street?: string | null;
+    city?: string | null;
+    postalCode?: string | null;
+    country?: string | null;
+  };
+  phone?: string | null;
+  email?: string | null;
+  website?: string | null;
+  vatNumber?: string | null;
+  siret?: string | null;
+  iban?: string | null;
+  bic?: string | null;
+  bankName?: string | null;
+  legalMentions?: string | null;
+  defaultPaymentTerms?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -2813,6 +3102,35 @@ export interface SocialLinksSelect<T extends boolean = true> {
 export interface DesignSettingsSelect<T extends boolean = true> {
   brandColorConfirmed?: T;
   brandColorHex?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shop-info_select".
+ */
+export interface ShopInfoSelect<T extends boolean = true> {
+  companyName?: T;
+  companyLogo?: T;
+  address?:
+    | T
+    | {
+        street?: T;
+        city?: T;
+        postalCode?: T;
+        country?: T;
+      };
+  phone?: T;
+  email?: T;
+  website?: T;
+  vatNumber?: T;
+  siret?: T;
+  iban?: T;
+  bic?: T;
+  bankName?: T;
+  legalMentions?: T;
+  defaultPaymentTerms?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
