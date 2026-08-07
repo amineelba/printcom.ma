@@ -83,6 +83,24 @@ without a database.
    traffic.
 3. `pnpm build` — if this fails, do not deploy (see
    `docs/testing.md` for what `pnpm build` gates).
+4. If you added/changed any admin-facing plugin or custom admin
+   component, regenerate `src/app/(payload)/admin/importMap.js`
+   (`pnpm generate:importmap`) **with every conditionally-registered
+   plugin active**, i.e. with `BLOB_READ_WRITE_TOKEN` (and any other
+   env-gated plugin flag) set in the environment you run it from —
+   `payload.config.ts` only registers `vercelBlobStorage` when that
+   token is present, so generating the map without it silently omits
+   `VercelBlobClientUploadHandler` from the file. Since production
+   *does* have the token set, the admin's Media upload field then tries
+   to resolve a component the (checked-in, static) import map doesn't
+   contain and the whole `/admin` route throws — this actually happened
+   once (see git history around 2026-08-07: `payload-invoicepdf`
+   install regenerated the map from an environment without the Blob
+   token configured, and every `/admin` hit in production logged
+   `getFromImportMap: PayloadComponent not found in importMap` for
+   `VercelBlobClientUploadHandler` and rendered nothing). Commit the
+   regenerated file and confirm `grep VercelBlobClientUploadHandler
+   src/app/\(payload\)/admin/importMap.js` still matches before pushing.
 
 ## Vercel-specific notes
 

@@ -31,6 +31,7 @@ import { SendEmailButton as SendEmailButton_5c138208fc6a6657e86a40fe5d8ab8c0 } f
 import { RelatedQuote as RelatedQuote_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
 import { ConvertToInvoiceButton as ConvertToInvoiceButton_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
 import { RelatedInvoices as RelatedInvoices_5c138208fc6a6657e86a40fe5d8ab8c0 } from 'payload-invoicepdf/client'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -68,5 +69,6 @@ export const importMap = {
   "payload-invoicepdf/client#RelatedQuote": RelatedQuote_5c138208fc6a6657e86a40fe5d8ab8c0,
   "payload-invoicepdf/client#ConvertToInvoiceButton": ConvertToInvoiceButton_5c138208fc6a6657e86a40fe5d8ab8c0,
   "payload-invoicepdf/client#RelatedInvoices": RelatedInvoices_5c138208fc6a6657e86a40fe5d8ab8c0,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
