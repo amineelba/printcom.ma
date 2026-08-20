@@ -43,10 +43,30 @@ import { SEODefaults } from './globals/SEODefaults'
 import { SocialLinks } from './globals/SocialLinks'
 import { DesignSettings } from './globals/DesignSettings'
 
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
+import type { CollectionSlug } from 'payload'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN
+
+const importExportSlugs: CollectionSlug[] = [
+  'media',
+  'products',
+  'services',
+  'solutions',
+  'sectors',
+  'technologies',
+  'materials',
+  'finishes',
+  'resources',
+  'faqs',
+  'testimonials',
+  'clients',
+  'machines',
+  'redirects',
+]
 
 export default buildConfig({
   admin: {
@@ -130,5 +150,8 @@ export default buildConfig({
           }),
         ]
       : []),
+    importExportPlugin({
+      collections: importExportSlugs.map((slug) => ({ slug })),
+    }),
   ],
 })

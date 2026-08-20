@@ -16,9 +16,10 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      required: true,
+      required: false,
       admin: {
-        description: 'Texte alternatif descriptif. Laisser vide uniquement pour un usage décoratif.',
+        description:
+          'Texte alternatif descriptif. Laisser vide uniquement pour un usage décoratif.',
       },
     },
     {
