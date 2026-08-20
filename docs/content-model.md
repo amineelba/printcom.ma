@@ -1,6 +1,6 @@
 # Content model
 
-## Collections (24)
+## Collections (26)
 
 | Collection | Purpose | Public read? |
 |---|---|---|
@@ -28,6 +28,8 @@
 | `redirects` | 301/302 redirect table | Yes (read-only, consumed by `src/proxy.ts`) |
 | `invoices` | Staff-generated client invoices with PDF export (`payload-invoicepdf` plugin) | **Never** (sales team only) |
 | `quotes` | Staff-generated priced quotes with PDF export (`payload-invoicepdf` plugin) — distinct from the public `quote-requests` intake form | **Never** (sales team only) |
+| `imports` | Bulk CSV/JSON import jobs (`@payloadcms/plugin-import-export`) | **Never** (admin/content-manager only) |
+| `exports` | Generated bulk CSV/JSON export files (`@payloadcms/plugin-import-export`) | **Never** (admin/content-manager only) |
 
 ## Globals (10)
 
@@ -60,6 +62,21 @@ entered; nothing is invented or auto-computed.
 
 The plugin ships its collections/global with no `access` config of its
 own (see `docs/access-control.md` for how that's patched).
+
+## Bulk import/export (@payloadcms/plugin-import-export)
+
+`src/payload.config.ts` also registers the official
+`@payloadcms/plugin-import-export`, scoped via `importExportSlugs` to
+structural/catalogue collections only (media, products, services,
+solutions, sectors, technologies, materials, finishes, resources, faqs,
+testimonials, clients, machines, redirects) — deliberately excludes
+quote-requests, contact-requests, newsletter-subscribers,
+private-quote-files and users, so bulk CSV/JSON tooling never touches
+PII or commercial data. Adds an "Export"/"Import" action to each scoped
+collection's list view (via the kebab menu) plus `imports`/`exports`
+collections and `payload_jobs`/`payload_jobs_log` tables to run the work
+asynchronously through Payload's Jobs Queue. Same access-control gap as
+the invoicing plugin above — see `docs/access-control.md`.
 
 ## Quote request PDF export
 

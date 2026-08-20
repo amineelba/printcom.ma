@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { builtInTemplates, invoicePdf } from 'payload-invoicepdf'
 
-import { isAdmin, isAdminOrSalesManager } from './lib/payload/access'
+import { isAdmin, isAdminOrContentManager, isAdminOrSalesManager } from './lib/payload/access'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -54,6 +54,57 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN
+
+// Structural/catalogue content only — deliberately excludes quote-requests,
+// contact-requests, newsletter-subscribers, private-quote-files and users,
+// so bulk CSV/JSON import-export never touches PII or commercial data.
+const importExportSlugs: CollectionSlug[] = [
+  'media',
+  'products',
+  'services',
+  'solutions',
+  'sectors',
+  'technologies',
+  'materials',
+  'finishes',
+  'resources',
+  'faqs',
+  'testimonials',
+  'clients',
+  'machines',
+  'redirects',
+]
+
+/**
+ * @payloadcms/plugin-import-export adds `imports`/`exports` collections
+ * with only `access.update: () => false` set — `read`/`create`/`delete`
+ * are left at Payload's default (public), which would let an anonymous
+ * caller upload a CSV via the `imports` collection and have it bulk-write
+ * into products/services/etc. Same class of gap as payload-invoicepdf
+ * (see secureInvoicePdfAccess below and docs/access-control.md) — locked
+ * to content-manager/admin, who are the roles that already manage this
+ * catalogue content.
+ */
+function secureImportExportAccess(config: Config): Config {
+  const importExportCollections = new Set(['imports', 'exports'])
+
+  return {
+    ...config,
+    collections: config.collections?.map((collection) =>
+      importExportCollections.has(collection.slug)
+        ? {
+            ...collection,
+            access: {
+              ...collection.access,
+              read: isAdminOrContentManager,
+              create: isAdminOrContentManager,
+              delete: isAdminOrContentManager,
+            },
+          }
+        : collection,
+    ),
+  }
+}
 
 /**
  * payload-invoicepdf ships its `invoices`/`quotes` collections and
@@ -172,6 +223,10 @@ export default buildConfig({
           }),
         ]
       : []),
+    importExportPlugin({
+      collections: importExportSlugs.map((slug) => ({ slug })),
+    }),
+    secureImportExportAccess,
     // Internal back-office invoicing/quoting tool for the sales team — adds
     // `invoices`, `quotes` (collections) and `shop-info` (global). This is
     // staff-facing PDF generation for real client invoices after a

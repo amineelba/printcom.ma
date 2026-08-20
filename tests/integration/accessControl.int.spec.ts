@@ -74,6 +74,35 @@ describe('Access control', () => {
     ).rejects.toThrow('not allowed')
   })
 
+  // @payloadcms/plugin-import-export (src/payload.config.ts,
+  // secureImportExportAccess) ships `imports`/`exports` with only
+  // `access.update: () => false` set — read/create/delete default to
+  // Payload's public behavior otherwise, which would let an anonymous
+  // caller upload a CSV that bulk-writes into products/services/etc via
+  // the import job. Must never regress.
+  it('never allows anonymous reads of imports', async () => {
+    await expect(
+      payload.find({ collection: 'imports', overrideAccess: false, user: null }),
+    ).rejects.toThrow('not allowed')
+  })
+
+  it('never allows anonymous reads of exports', async () => {
+    await expect(
+      payload.find({ collection: 'exports', overrideAccess: false, user: null }),
+    ).rejects.toThrow('not allowed')
+  })
+
+  it('never allows anonymous creation of an import job', async () => {
+    await expect(
+      payload.create({
+        collection: 'imports',
+        data: { collectionSlug: 'products' },
+        overrideAccess: false,
+        user: null,
+      }),
+    ).rejects.toThrow('not allowed')
+  })
+
   it('allows anonymous reads of published products', async () => {
     const category = (await payload.find({ collection: 'product-categories', limit: 1, overrideAccess: true }))
       .docs[0]

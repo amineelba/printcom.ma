@@ -80,6 +80,19 @@ or, worse, that a future version renames the collections and the patch
 stops matching by slug (dangerous — would silently go back to public).
 Covered by `tests/integration/accessControl.int.spec.ts`.
 
+`@payloadcms/plugin-import-export` (added for bulk CSV/JSON import/export
+of catalogue content — `importExportSlugs` in `src/payload.config.ts`,
+deliberately scoped to structural content only, never quote-requests/
+contact-requests/newsletter-subscribers/private-quote-files/users) has
+the same gap: its `imports`/`exports` collections only set
+`access.update: () => false`, leaving `read`/`create`/`delete` at
+Payload's public default — meaning an anonymous caller could otherwise
+`create` an import job (i.e. upload a CSV) that bulk-writes into
+products/services/etc. `secureImportExportAccess`, run right after the
+plugin, locks all three to `isAdminOrContentManager`. Same "double-check
+after a plugin upgrade" caveat as above. Covered by
+`tests/integration/accessControl.int.spec.ts`.
+
 ## Field-level access
 
 `src/lib/payload/fields.ts` → `adminOnlyField()` wraps a field with
