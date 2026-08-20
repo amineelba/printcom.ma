@@ -1,6 +1,6 @@
 # Content model
 
-## Collections (22)
+## Collections (24)
 
 | Collection | Purpose | Public read? |
 |---|---|---|
@@ -26,13 +26,65 @@
 | `newsletter-subscribers` | Newsletter opt-ins | **Never** (admin/content-manager only) |
 | `legal-documents` | Mentions légales, confidentialité, cookies | Published only |
 | `redirects` | 301/302 redirect table | Yes (read-only, consumed by `src/proxy.ts`) |
+| `invoices` | Staff-generated client invoices with PDF export (`payload-invoicepdf` plugin) | **Never** (sales team only) |
+| `quotes` | Staff-generated priced quotes with PDF export (`payload-invoicepdf` plugin) — distinct from the public `quote-requests` intake form | **Never** (sales team only) |
 
-## Globals (9)
+## Globals (10)
 
 `site-settings`, `header`, `footer`, `homepage`, `contact-settings`,
 `quote-settings`, `seo-defaults`, `social-links`, `design-settings` —
 all in `src/globals/`. All are publicly readable (they're configuration,
 not data) except writes, which require `admin` or `content-manager`.
+
+`shop-info` (from `payload-invoicepdf`) is the exception: it holds the
+company's bank/IBAN and legal details used on generated invoice PDFs, so
+it's sales-team/admin only, not publicly readable — see
+`docs/access-control.md`.
+
+## Invoicing (payload-invoicepdf plugin)
+
+`src/payload.config.ts` registers the third-party `payload-invoicepdf`
+plugin, which adds `invoices`, `quotes` (collections, admin group
+"Invoicing") and `shop-info` (global). This is an **internal back-office
+tool** for the sales team to produce real, priced PDF invoices/quotes for
+a client after a `quote-requests` submission has been studied and a deal
+is ready to be formalized — it does not add a cart, checkout, or any
+public-facing pricing (see CLAUDE.md's non-negotiable rules). Nothing it
+generates is exposed on the public frontend.
+
+`productFieldMapping.price` points at `products.indicativePrice` — the
+existing admin-only field that stays empty/unused unless a human
+deliberately fills it in per product. The plugin's product-autofill
+convenience feature will only ever pull a price a staff member actually
+entered; nothing is invented or auto-computed.
+
+The plugin ships its collections/global with no `access` config of its
+own (see `docs/access-control.md` for how that's patched).
+
+## Quote request PDF export
+
+Separate from the invoicing plugin above: `quote-requests` documents
+(the public form submissions) can be downloaded as a formatted PDF
+directly from the admin — a "Télécharger en PDF" button in the document
+sidebar (`src/components/admin/DownloadQuoteRequestPdfButton.tsx`) hits a
+custom collection endpoint, `GET /api/quote-requests/:id/pdf`
+(`src/lib/pdf/quoteRequestPdfEndpoint.ts`), which renders every field of
+the request (besoin, configuration, production/livraison, fichiers,
+contact, suivi commercial) via a `@react-pdf/renderer` template
+(`src/components/admin/pdf/QuoteRequestPdfDocument.tsx`) and streams the
+PDF back. This is a plain export of the structured intake data — not a
+priced document — so it's unrelated to `payload-invoicepdf`'s
+`invoices`/`quotes` collections; a real priced quote/invoice still goes
+through that plugin once a human has worked out numbers.
+
+The endpoint reuses `quote-requests`' own `access.read`
+(`salesRecordAccess`) via `overrideAccess: false` instead of a bespoke
+role check, so a sales-agent can only export requests assigned to them —
+same rule as viewing the document in admin, enforced in one place. Never
+reachable by an anonymous caller (`tests/integration/accessControl.int.spec.ts`
+doesn't cover this endpoint directly since it's a Next.js route rather
+than a `payload.find`, but the underlying access function is the same one
+already tested there).
 
 ## Editorial workflow (shared across content collections)
 

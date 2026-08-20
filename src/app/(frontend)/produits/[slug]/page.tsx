@@ -9,6 +9,7 @@ import { RichTextRenderer } from '@/components/content/RichTextRenderer'
 import { SpecificationList } from '@/components/content/SpecificationList'
 import { FAQAccordion } from '@/components/content/FAQAccordion'
 import { ProductCard } from '@/components/cards/ProductCard'
+import { ProductGrid } from '@/components/cards/ProductGrid'
 import { ServiceCard } from '@/components/cards/ServiceCard'
 import { StructuredData } from '@/components/seo/StructuredData'
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/jsonLd'
@@ -21,6 +22,17 @@ import type {
   Service,
   Faq,
 } from '@/payload-types'
+
+async function getCategory(slug: string) {
+  const payload = await getPayload()
+  const result = await payload.find({
+    collection: 'product-categories',
+    where: { slug: { equals: slug }, status: { equals: 'published' } },
+    depth: 0,
+    limit: 1,
+  })
+  return result.docs[0] as ProductCategory | undefined
+}
 
 async function getProduct(slug: string) {
   const payload = await getPayload()
@@ -35,6 +47,15 @@ async function getProduct(slug: string) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
+  const category = await getCategory(slug)
+  if (category) {
+    return {
+      title: category.seo?.metaTitle || category.title,
+      description: category.seo?.metaDescription || category.shortDescription || undefined,
+      robots: category.seo?.noIndex ? { index: false, follow: false } : undefined,
+    }
+  }
+
   const product = await getProduct(slug)
   if (!product) return {}
 
@@ -45,8 +66,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductOrCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+
+  const matchedCategory = await getCategory(slug)
+  if (matchedCategory) return <CategoryArchive category={matchedCategory} />
+
   const product = await getProduct(slug)
   if (!product) notFound()
 
@@ -107,7 +132,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             { label: 'Accueil', href: '/' },
             { label: 'Produits', href: '/produits' },
             ...(category && typeof category === 'object'
-              ? [{ label: category.title, href: `/produits?categorie=${category.slug}` }]
+              ? [{ label: category.title, href: `/produits/${category.slug}` }]
               : []),
             { label: product.title },
           ]}
@@ -215,6 +240,65 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </p>
           <div className="mt-8 flex justify-center">
             <CTAGroup items={[{ label: 'Demander un devis', href: `/demande-de-devis?produit=${product.slug}` }]} />
+          </div>
+        </Container>
+      </section>
+    </>
+  )
+}
+
+async function CategoryArchive({ category }: { category: ProductCategory }) {
+  const payload = await getPayload()
+  const productsResult = await payload.find({
+    collection: 'products',
+    where: { primaryCategory: { equals: category.id }, status: { equals: 'published' } },
+    depth: 1,
+    limit: 24,
+    sort: '-featured,title',
+  })
+
+  const ctaLabel = `Préparer une demande ${category.title.toLowerCase()}`
+
+  return (
+    <>
+      <StructuredData
+        data={breadcrumbJsonLd(
+          [
+            { label: 'Accueil', href: '/' },
+            { label: 'Produits', href: '/produits' },
+            { label: category.title, href: `/produits/${category.slug}` },
+          ],
+          process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+        )}
+      />
+      <Container width="wide" className="py-[var(--pc-space-section-small)]">
+        <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Produits', href: '/produits' }, { label: category.title }]} />
+        <p className="pc-text-eyebrow mt-4">Produits</p>
+        <h1 className="pc-text-page-title text-primary">{category.title}</h1>
+        {category.shortDescription ? <p className="pc-text-intro mt-4 max-w-(--container-reading)">{category.shortDescription}</p> : null}
+        <div className="mt-8">
+          <CTAGroup
+            items={[
+              { label: 'Demander un devis', href: `/demande-de-devis?categorie=${category.slug}` },
+            ]}
+          />
+        </div>
+      </Container>
+
+      <section className="border-t border-(--pc-color-border-subtle) py-[var(--pc-space-section-small)]">
+        <Container width="wide">
+          <ProductGrid products={productsResult.docs} />
+        </Container>
+      </section>
+
+      <section className="border-t border-(--pc-color-border-subtle) bg-alternate py-[var(--pc-space-section-small)]">
+        <Container width="reading" className="text-center">
+          <h2 className="pc-text-section-title text-primary">Une catégorie. Plusieurs configurations.</h2>
+          <p className="pc-text-intro mt-4">
+            Décrivez votre usage et les caractéristiques déjà connues. Printcom pourra étudier les options pertinentes.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <CTAGroup items={[{ label: ctaLabel, href: `/demande-de-devis?categorie=${category.slug}` }]} />
           </div>
         </Container>
       </section>

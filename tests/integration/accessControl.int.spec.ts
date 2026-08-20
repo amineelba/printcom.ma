@@ -52,6 +52,28 @@ describe('Access control', () => {
     ).rejects.toThrow('not allowed')
   })
 
+  // payload-invoicepdf (src/payload.config.ts, secureInvoicePdfAccess) ships
+  // its collections/global with no `access` of its own, which would
+  // otherwise default to Payload's public read/write — these documents hold
+  // client PII, pricing and bank details, so this must never regress.
+  it('never allows anonymous reads of invoices', async () => {
+    await expect(
+      payload.find({ collection: 'invoices', overrideAccess: false, user: null }),
+    ).rejects.toThrow('not allowed')
+  })
+
+  it('never allows anonymous reads of quotes (invoicepdf plugin)', async () => {
+    await expect(
+      payload.find({ collection: 'quotes', overrideAccess: false, user: null }),
+    ).rejects.toThrow('not allowed')
+  })
+
+  it('never allows anonymous reads of the shop-info global', async () => {
+    await expect(
+      payload.findGlobal({ slug: 'shop-info', overrideAccess: false, user: null }),
+    ).rejects.toThrow('not allowed')
+  })
+
   it('allows anonymous reads of published products', async () => {
     const category = (await payload.find({ collection: 'product-categories', limit: 1, overrideAccess: true }))
       .docs[0]

@@ -1,41 +1,55 @@
 # Taxonomy
 
-Full taxonomy trees as defined in the brief and seeded by
-`src/lib/seed/runSeed.ts` (idempotent — re-running `pnpm seed` upserts by
-slug, never duplicates). Source of truth for the literal labels is the
-brief itself; this file documents where each tree lives and its
-publication status.
+Full taxonomy trees as seeded by `src/lib/seed/runSeed.ts`, sourced from
+the Printcom master content brief. The seed is idempotent — re-running
+`pnpm seed` upserts by slug (create if missing, update in place if it
+already exists), so editing the source content in `src/lib/seed/content/`
+and re-running the seed keeps a database in sync.
 
-## Product categories (§12) — `product-categories`, status `published`
+## Product categories — `product-categories`, status `published`
 
-Two levels: 8 families, each with 9-10 sub-categories (87 terms total).
-Published immediately since categories are structural, not factual
-claims.
+One level: 8 top-level families, each with a real intro/method paragraph
+and formulaic SEO. Published immediately since categories are structural,
+not factual claims. Products (below) are **not** nested under a second
+`product-categories` level — each is its own `products` document with
+`primaryCategory` pointing at one of these 8.
 
 Papeterie d'entreprise · Supports marketing · Édition et documents ·
 Packaging · Étiquettes et stickers · PLV et supports de vente · Affichage
 et grand format · Signalétique.
 
-See `src/lib/seed/runSeed.ts` (`PRODUCT_TAXONOMY`) for the full sub-term
-lists.
+See `src/lib/seed/content/productCategories.ts` for the full content.
 
-## Services (§13) — `services`, status `draft`
+## Products — `products`, status `draft`
 
-6 families, each with 4-6 sub-services (32 terms total). Seeded **draft**
-— per the brief, only confirmed service offerings should ever be
-published. An editor must deliberately promote each one after
-confirming Printcom actually offers it.
+79 real catalogue products (brief sections 7-8), each with a tagline,
+"usages fréquents"/"à configurer" lists, formulaic SEO, and the shared
+file-preparation boilerplate paragraph. Seeded `draft` — the copy is
+publication-ready, but nothing is a confirmed commercial offer until
+Printcom reviews and publishes it (brief section 33, rule 2). Every
+product is `quoteOnly: true` with `indicativePriceEnabled: false`.
+
+See `src/lib/seed/content/products.ts` for the full list.
+
+## Services (brief section 9) — `services`, status `draft`
+
+6 top-level services, each with 4-8 sub-services (35 sub-services total).
+Seeded **draft** — per the brief, only confirmed service offerings should
+ever be published.
 
 Conseil et accompagnement · Studio graphique · Prépresse · Production ·
 Façonnage · Livraison et déploiement.
 
-## Solutions par besoin (§14) — `solutions`, status `draft`
+## Solutions (brief sections 10 and 37) — `solutions`, status `draft`
 
-8 terms, draft: Lancer une entreprise, Promouvoir une offre, Présenter
-des produits, Emballer un produit, Équiper un point de vente, Organiser
-un événement, Déployer une campagne nationale, Imprimer en urgence.
+11 entries in one flat collection: 8 "par besoin" (Lancer une entreprise,
+Promouvoir une offre, Présenter des produits, Emballer un produit,
+Équiper un point de vente, Organiser un événement, Déployer une campagne
+nationale, Imprimer en urgence) plus 3 operational solutions (Production
+en volume, Campagnes multi-sites, Impression urgente — distinct
+CMS entities from their "par besoin" near-namesakes, per the brief).
 
-## Solutions par secteur (§15) — `sectors`, status `draft`
+## Sectors (brief section 11) — `sectors`, status `draft`
 
 15 terms, draft, each seeded with the exact neutral positioning note the
 brief mandates ("Printcom étudie les contraintes d'impression propres à
@@ -47,7 +61,7 @@ construction · Automobile · Banque et assurance · Industrie · Éducation
 et formation · Institutions publiques · Associations et ONG ·
 Événementiel · Agences de communication · E-commerce.
 
-## Technologies (§16) — `technologies`, status `draft`, `verificationStatus: unverified`
+## Technologies (brief section 12) — `technologies`, status `draft`, `verificationStatus: unverified`
 
 8 terms: Impression offset, Impression numérique, Impression grand
 format, Impression sur supports rigides, Sérigraphie, Flexographie,
@@ -55,11 +69,11 @@ Impression UV, Sublimation. **Hidden from the frontend** until an admin
 sets both `status: published` and `verificationStatus: confirmed` — see
 `docs/content-to-confirm.md`.
 
-## Materials (§17) — `materials`, status `published`, grouped
+## Materials (brief section 13) — `materials`, status `draft`, grouped
 
-Published immediately (these are catalogue facts about paper/board/
-substrate types generally available in the printing industry, not claims
-specific to Printcom's capability).
+Seeded `draft` — these describe generally-available substrate types, not
+a confirmed Printcom inventory, so publication is a deliberate editorial
+decision per document.
 
 - **papier**: Couché mat, Couché brillant, Offset, Bristol, Kraft,
   Recyclé, Texturé, Autocollant, Papier synthétique
@@ -69,7 +83,7 @@ specific to Printcom's capability).
 - **supports-rigides**: PVC Forex, Plexiglas, Dibond, Akilux, Carton
   plume, Bois, Métal
 
-## Finishes (§18) — `finishes`, status `published`, grouped
+## Finishes (brief section 14) — `finishes`, status `draft`, grouped
 
 - **pelliculage**: Mat, Brillant, Soft touch, Anti-rayures
 - **vernis**: Vernis machine, Vernis UV, Vernis sélectif, Vernis sélectif
@@ -84,10 +98,22 @@ specific to Printcom's capability).
 Finishes are relationship fields on `products`/`solutions`/quote
 requests, never free-text tags, per the brief.
 
-## Demo products (§32) — `products`, status `draft`
+## Resources (brief section 16) — `resources`, status `review`/`draft`
 
-10 demonstration entries (Carte de visite, Flyer, Dépliant, Brochure,
-Catalogue, Chemise à rabats, Boîte pliante, Étiquette produit, Roll-up,
-Panneau signalétique), each linked to its real category, each explicitly
-described as a demonstration fiche "en cours de qualification" — never
-presented as a confirmed, orderable offer.
+10 practical guides with full editorial body text (file preparation,
+bleed, resolution, RGB/CMYK, paper weight, offset vs digital, finishes,
+cut files, proof validation, accepted file formats). 9 are `review`; the
+guide about accepted file formats stays `draft` since it explicitly needs
+Printcom's real format list before it can be reviewed for publication.
+
+## FAQ (brief section 20) — `faqs`, status `review`
+
+37 question/answer pairs covering quotes, files, colors, products,
+quantities, lead times, proofs, packaging, labels, delivery, installation,
+confidentiality and complaints.
+
+## Legal documents — `legal-documents`, status `draft`
+
+3 placeholders (Mentions légales, Politique de confidentialité, Politique
+des cookies), each holding a `[À confirmer]` marker — legal content must
+never be invented; it needs Printcom's legal counsel before publication.

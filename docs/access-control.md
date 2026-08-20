@@ -63,6 +63,23 @@ includes an explicit `status: 'published'` filter in its `where` clause
 anonymous HTTP client hitting `/api/quote-requests` directly is the
 collection's `access.read` function, which returns `false`.
 
+## Third-party plugin collections
+
+`payload-invoicepdf` (added for staff-facing invoice/quote-PDF generation
+— see `src/payload.config.ts`) ships its `invoices`/`quotes` collections
+and `shop-info` global with **no `access` config of its own**, which
+would default to Payload's public read/write. `secureInvoicePdfAccess`
+runs immediately after the plugin in the `plugins` array and patches
+`access` onto those three by slug (`isAdminOrSalesManager` for
+read/create/update, `isAdmin` for delete/update-shop-info) — the same
+treatment as any other collection holding client PII or commercial data.
+If this plugin is ever upgraded and starts shipping its own `access`
+default, double-check `secureInvoicePdfAccess` isn't silently
+overriding a now-correct default with a more restrictive one (harmless)
+or, worse, that a future version renames the collections and the patch
+stops matching by slug (dangerous — would silently go back to public).
+Covered by `tests/integration/accessControl.int.spec.ts`.
+
 ## Field-level access
 
 `src/lib/payload/fields.ts` → `adminOnlyField()` wraps a field with

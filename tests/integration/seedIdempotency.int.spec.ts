@@ -23,14 +23,14 @@ describe('runSeed idempotency', () => {
     expect(afterProducts.totalDocs).toBe(beforeProducts.totalDocs)
   }, 60_000)
 
-  it('seeds demo products as draft, never as published offers', async () => {
-    const flyer = await payload.find({
+  it('seeds catalogue products as draft, never as published offers', async () => {
+    const flyers = await payload.find({
       collection: 'products',
-      where: { slug: { equals: 'flyer' } },
+      where: { slug: { equals: 'flyers' } },
       overrideAccess: true,
       limit: 1,
     })
-    expect(flyer.docs[0]?.status).toBe('draft')
+    expect(flyers.docs[0]?.status).toBe('draft')
   })
 
   it('seeds sectors as draft with the neutral positioning note (no invented client claims)', async () => {
