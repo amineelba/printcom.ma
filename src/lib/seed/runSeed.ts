@@ -8,8 +8,9 @@
  * Content is sourced from the Printcom master content brief
  * (`src/lib/seed/content/*`) and seeded at the CMS status the brief's
  * publication rules (section 33) specify — draft/review for anything not
- * yet confirmed by Printcom, published only for structural taxonomy that
- * carries no unverified business claim. Nothing here is ever presented as
+ * yet confirmed by Printcom, published for structural taxonomy and for
+ * content Printcom has confirmed (currently: solutions), since neither
+ * carries an unverified business claim. Nothing here is ever presented as
  * a confirmed offer: products stay `quoteOnly`, technologies stay
  * `verificationStatus: unverified`, and no "Réalisations"/portfolio
  * content is ever created.
@@ -160,7 +161,7 @@ export async function runSeed(payload: Payload): Promise<void> {
       status: solution.status,
     })),
   )
-  payload.logger.info(`Seeded ${SOLUTIONS.length} solutions (draft).`)
+  payload.logger.info(`Seeded ${SOLUTIONS.length} solutions (published).`)
 
   // -----------------------------------------------------------------
   // Sectors — solutions par secteur (brief section 11)

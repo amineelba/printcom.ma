@@ -14,7 +14,7 @@ export type SolutionSeed = {
   process: { title: string; description: string }[]
   quoteCTA: string
   seo: { metaTitle: string; metaDescription: string }
-  status: 'draft'
+  status: 'published'
 }
 
 const METHOD_STEPS = [
@@ -135,7 +135,7 @@ const OPERATIONAL_SOLUTIONS: SolutionSeed[] = [
       metaDescription:
         'Structurez une production en volume avec des références, quantités, versions, fichiers et conditions logistiques clairement documentés.',
     },
-    status: 'draft',
+    status: 'published',
   },
   {
     slug: 'campagnes-multi-sites',
@@ -162,7 +162,7 @@ const OPERATIONAL_SOLUTIONS: SolutionSeed[] = [
       metaDescription:
         'Coordonnez produits, versions, kits, points de vente et destinations dans une demande de campagne multi-sites structurée.',
     },
-    status: 'draft',
+    status: 'published',
   },
   {
     slug: 'impression-urgente',
@@ -179,7 +179,7 @@ const OPERATIONAL_SOLUTIONS: SolutionSeed[] = [
       metaDescription:
         'Transmettez immédiatement le fichier, le format, la quantité et la date impérative afin que la faisabilité de votre demande soit étudiée.',
     },
-    status: 'draft',
+    status: 'published',
   },
 ]
 
@@ -193,7 +193,7 @@ export const SOLUTIONS: SolutionSeed[] = [
     process: METHOD_STEPS,
     quoteCTA: 'Étudier cette solution',
     seo: { metaTitle: s.metaTitle, metaDescription: s.metaDescription },
-    status: 'draft' as const,
+    status: 'published' as const,
   })),
   ...OPERATIONAL_SOLUTIONS,
 ]
