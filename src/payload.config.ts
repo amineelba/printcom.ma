@@ -7,6 +7,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { builtInTemplates, invoicePdf } from 'payload-invoicepdf'
+import { mcpPlugin } from '@payloadcms/plugin-mcp'
 
 import { isAdmin, isAdminOrContentManager, isAdminOrSalesManager } from './lib/payload/access'
 
@@ -73,6 +74,29 @@ const importExportSlugs: CollectionSlug[] = [
   'clients',
   'machines',
   'redirects',
+]
+
+// Same "structural/catalogue content only" boundary as importExportSlugs
+// above — see mcpPlugin's config below for why this list, not access
+// control, is the real gate here.
+const mcpCollections: CollectionSlug[] = [
+  'product-categories',
+  'products',
+  'services',
+  'solutions',
+  'sectors',
+  'technologies',
+  'materials',
+  'finishes',
+  'resources',
+  'faqs',
+  'testimonials',
+  'clients',
+  'production-sites',
+  'machines',
+  'legal-documents',
+  'redirects',
+  'media',
 ]
 
 /**
@@ -251,5 +275,33 @@ export default buildConfig({
       quoteNumberPrefix: 'PC-DEVISPDF',
     }),
     secureInvoicePdfAccess,
+    // Lets an MCP client (e.g. an AI agent) manage catalogue/editorial
+    // content through the admin's own access rules — never a bypass.
+    // Verified directly against the installed 3.88.0 source (not just its
+    // docs) before wiring this in:
+    //  - Nothing is exposed unless its slug appears below AND is
+    //    explicitly `enabled` here — `quote-requests`, `contact-requests`,
+    //    `private-quote-files`, `newsletter-subscribers`, `users`,
+    //    `invoices`, `quotes`, `shop-info`, `imports`, `exports` are
+    //    deliberately absent and therefore *impossible* to reach over MCP,
+    //    no matter what any individual API key is configured to allow.
+    //  - Every operation checkbox on an MCP API key defaults to
+    //    unchecked; a human has to opt each one in per key, per
+    //    collection, in the admin (Collections → MCP → API Keys).
+    //  - The plugin never sets `overrideAccess` — every MCP tool call
+    //    still runs through this project's normal `access.ts` role
+    //    functions for whichever user issued the key, exactly like a
+    //    logged-in admin session. No anonymous MCP access is possible;
+    //    every request requires a valid `Authorization: Bearer <key>`.
+    // See docs/access-control.md for the full picture and how to issue a
+    // key.
+    mcpPlugin({
+      collections: Object.fromEntries(mcpCollections.map((slug) => [slug, { enabled: true }])),
+      globals: Object.fromEntries(
+        ['site-settings', 'header', 'footer', 'homepage', 'contact-settings', 'quote-settings', 'seo-defaults', 'social-links', 'design-settings'].map(
+          (slug) => [slug, { enabled: true }],
+        ),
+      ),
+    }),
   ],
 })

@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    'payload-mcp-api-keys': PayloadMcpApiKeyAuthOperations;
   };
   blocks: {};
   collections: {
@@ -93,6 +94,7 @@ export interface Config {
     imports: Import;
     invoices: Invoice;
     quotes: Quote;
+    'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -127,6 +129,7 @@ export interface Config {
     imports: ImportsSelect<false> | ImportsSelect<true>;
     invoices: InvoicesSelect<false> | InvoicesSelect<true>;
     quotes: QuotesSelect<false> | QuotesSelect<true>;
+    'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -165,7 +168,7 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: User | PayloadMcpApiKey;
   jobs: {
     tasks: {
       createCollectionExport: TaskCreateCollectionExport;
@@ -179,6 +182,24 @@ export interface Config {
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface PayloadMcpApiKeyAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -1579,6 +1600,429 @@ export interface Quote {
   createdAt: string;
 }
 /**
+ * API keys control which collections, resources, tools, and prompts MCP clients can access
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-mcp-api-keys".
+ */
+export interface PayloadMcpApiKey {
+  id: number;
+  /**
+   * The user that the API key is associated with.
+   */
+  user: number | User;
+  /**
+   * A useful label for the API key.
+   */
+  label?: string | null;
+  /**
+   * The purpose of the API key.
+   */
+  description?: string | null;
+  productCategories?: {
+    /**
+     * Allow clients to find product-categories.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create product-categories.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update product-categories.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete product-categories.
+     */
+    delete?: boolean | null;
+  };
+  products?: {
+    /**
+     * Allow clients to find products.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create products.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update products.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete products.
+     */
+    delete?: boolean | null;
+  };
+  services?: {
+    /**
+     * Allow clients to find services.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create services.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update services.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete services.
+     */
+    delete?: boolean | null;
+  };
+  solutions?: {
+    /**
+     * Allow clients to find solutions.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create solutions.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update solutions.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete solutions.
+     */
+    delete?: boolean | null;
+  };
+  sectors?: {
+    /**
+     * Allow clients to find sectors.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create sectors.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update sectors.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete sectors.
+     */
+    delete?: boolean | null;
+  };
+  technologies?: {
+    /**
+     * Allow clients to find technologies.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create technologies.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update technologies.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete technologies.
+     */
+    delete?: boolean | null;
+  };
+  materials?: {
+    /**
+     * Allow clients to find materials.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create materials.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update materials.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete materials.
+     */
+    delete?: boolean | null;
+  };
+  finishes?: {
+    /**
+     * Allow clients to find finishes.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create finishes.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update finishes.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete finishes.
+     */
+    delete?: boolean | null;
+  };
+  resources?: {
+    /**
+     * Allow clients to find resources.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create resources.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update resources.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete resources.
+     */
+    delete?: boolean | null;
+  };
+  faqs?: {
+    /**
+     * Allow clients to find faqs.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create faqs.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update faqs.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete faqs.
+     */
+    delete?: boolean | null;
+  };
+  testimonials?: {
+    /**
+     * Allow clients to find testimonials.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create testimonials.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update testimonials.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete testimonials.
+     */
+    delete?: boolean | null;
+  };
+  clients?: {
+    /**
+     * Allow clients to find clients.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create clients.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update clients.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete clients.
+     */
+    delete?: boolean | null;
+  };
+  productionSites?: {
+    /**
+     * Allow clients to find production-sites.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create production-sites.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update production-sites.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete production-sites.
+     */
+    delete?: boolean | null;
+  };
+  machines?: {
+    /**
+     * Allow clients to find machines.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create machines.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update machines.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete machines.
+     */
+    delete?: boolean | null;
+  };
+  legalDocuments?: {
+    /**
+     * Allow clients to find legal-documents.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create legal-documents.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update legal-documents.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete legal-documents.
+     */
+    delete?: boolean | null;
+  };
+  redirects?: {
+    /**
+     * Allow clients to find redirects.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create redirects.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update redirects.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete redirects.
+     */
+    delete?: boolean | null;
+  };
+  media?: {
+    /**
+     * Allow clients to find media.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create media.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update media.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete media.
+     */
+    delete?: boolean | null;
+  };
+  siteSettings?: {
+    /**
+     * Allow clients to find site-settings global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update site-settings global.
+     */
+    update?: boolean | null;
+  };
+  header?: {
+    /**
+     * Allow clients to find header global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update header global.
+     */
+    update?: boolean | null;
+  };
+  footer?: {
+    /**
+     * Allow clients to find footer global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update footer global.
+     */
+    update?: boolean | null;
+  };
+  homepage?: {
+    /**
+     * Allow clients to find homepage global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update homepage global.
+     */
+    update?: boolean | null;
+  };
+  contactSettings?: {
+    /**
+     * Allow clients to find contact-settings global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update contact-settings global.
+     */
+    update?: boolean | null;
+  };
+  quoteSettings?: {
+    /**
+     * Allow clients to find quote-settings global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update quote-settings global.
+     */
+    update?: boolean | null;
+  };
+  seoDefaults?: {
+    /**
+     * Allow clients to find seo-defaults global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update seo-defaults global.
+     */
+    update?: boolean | null;
+  };
+  socialLinks?: {
+    /**
+     * Allow clients to find social-links global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update social-links global.
+     */
+    update?: boolean | null;
+  };
+  designSettings?: {
+    /**
+     * Allow clients to find design-settings global.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update design-settings global.
+     */
+    update?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+  collection: 'payload-mcp-api-keys';
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1789,12 +2233,21 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'quotes';
         value: number | Quote;
+      } | null)
+    | ({
+        relationTo: 'payload-mcp-api-keys';
+        value: number | PayloadMcpApiKey;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'payload-mcp-api-keys';
+        value: number | PayloadMcpApiKey;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -1804,10 +2257,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'payload-mcp-api-keys';
+        value: number | PayloadMcpApiKey;
+      };
   key?: string | null;
   value?:
     | {
@@ -2763,6 +3221,210 @@ export interface QuotesSelect<T extends boolean = true> {
   relatedInvoices?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-mcp-api-keys_select".
+ */
+export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
+  user?: T;
+  label?: T;
+  description?: T;
+  productCategories?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  products?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  services?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  solutions?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  sectors?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  technologies?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  materials?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  finishes?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  resources?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  faqs?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  testimonials?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  clients?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  productionSites?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  machines?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  legalDocuments?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  redirects?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  media?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  siteSettings?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  header?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  footer?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  homepage?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  contactSettings?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  quoteSettings?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  seoDefaults?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  designSettings?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

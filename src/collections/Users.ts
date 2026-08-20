@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { isAdmin, isAdminFieldLevel } from '@/lib/payload/access'
+import { isAdmin, isAdminFieldLevel, isStaffUser } from '@/lib/payload/access'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -12,13 +12,14 @@ export const Users: CollectionConfig = {
     tokenExpiration: 60 * 60 * 8,
   },
   access: {
-    read: ({ req }) => Boolean(req.user),
+    read: ({ req }) => Boolean(isStaffUser(req)),
     create: isAdmin,
     update: ({ req, id }) => {
-      if (!req.user) return false
-      if (req.user.role === 'admin') return true
+      const user = isStaffUser(req)
+      if (!user) return false
+      if (user.role === 'admin') return true
       // Users may edit their own profile, but not their own role.
-      return req.user.id === id
+      return user.id === id
     },
     delete: isAdmin,
   },

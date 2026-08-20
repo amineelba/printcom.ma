@@ -103,6 +103,48 @@ describe('Access control', () => {
     ).rejects.toThrow('not allowed')
   })
 
+  // @payloadcms/plugin-mcp's `payload-mcp-api-keys` collection ships with its
+  // own `access` config (see node_modules source, reviewed before wiring the
+  // plugin in), so it's exercised here mainly as a regression guard.
+  it('never allows anonymous reads of payload-mcp-api-keys', async () => {
+    await expect(
+      payload.find({ collection: 'payload-mcp-api-keys', overrideAccess: false, user: null }),
+    ).rejects.toThrow('not allowed')
+  })
+
+  // The MCP plugin gives `payload-mcp-api-keys` its own native Payload
+  // API-key auth strategy (auth.useAPIKey), so a valid key authenticates
+  // `req.user` directly against the plain REST/GraphQL/Local API — not just
+  // the plugin's own /api/mcp endpoint — with a principal that has no
+  // `role` field. src/lib/payload/access.ts's role-based checks must treat
+  // that principal as unauthenticated (see `isStaffUser`), otherwise any MCP
+  // key — however narrowly scoped in the MCP tool config — could read/write
+  // staff-only data by calling the ordinary API directly. This was a real
+  // gap introduced by the plugin upgrade and is the reason this test exists.
+  it('never treats an MCP API key principal as a staff user', async () => {
+    const apiKeyPrincipal = { id: 999999, collection: 'payload-mcp-api-keys' }
+
+    await expect(
+      payload.find({ collection: 'quote-requests', overrideAccess: false, user: apiKeyPrincipal }),
+    ).rejects.toThrow('not allowed')
+
+    await expect(
+      payload.find({ collection: 'private-quote-files', overrideAccess: false, user: apiKeyPrincipal }),
+    ).rejects.toThrow('not allowed')
+
+    await expect(
+      payload.find({ collection: 'users', overrideAccess: false, user: apiKeyPrincipal }),
+    ).rejects.toThrow('not allowed')
+
+    const draftProducts = await payload.find({
+      collection: 'products',
+      where: { status: { equals: 'draft' } },
+      overrideAccess: false,
+      user: apiKeyPrincipal,
+    })
+    expect(draftProducts.docs).toHaveLength(0)
+  })
+
   it('allows anonymous reads of published products', async () => {
     const category = (await payload.find({ collection: 'product-categories', limit: 1, overrideAccess: true }))
       .docs[0]

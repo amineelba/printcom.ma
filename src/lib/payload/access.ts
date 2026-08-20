@@ -3,38 +3,62 @@ import type { User } from '@/payload-types'
 
 export type Role = User['role']
 
-export const isAdmin: Access = ({ req }) => Boolean(req.user && req.user.role === 'admin')
+/**
+ * `@payloadcms/plugin-mcp` gives its `payload-mcp-api-keys` collection its
+ * own native Payload API-key auth strategy (`auth.useAPIKey`), so a bearer
+ * token scoped only to a few catalogue collections in the MCP tool config
+ * can still authenticate `req.user` directly against the plain Payload
+ * REST/GraphQL/Local API — completely outside the MCP plugin's own
+ * per-collection/per-operation checkboxes. That principal has no `role`
+ * field, so every check below must narrow to a genuine `Users` document
+ * before trusting it — `Boolean(req.user)` alone is not "is staff".
+ */
+export const isStaffUser = (req: { user?: unknown }): User | null => {
+  const user = req.user
+  return user && typeof user === 'object' && 'role' in user ? (user as User) : null
+}
+const staffUser = isStaffUser
 
-export const isAdminFieldLevel: FieldAccess = ({ req }) =>
-  Boolean(req.user && req.user.role === 'admin')
+export const isAdmin: Access = ({ req }) => staffUser(req)?.role === 'admin'
 
-export const isAdminOrContentManager: Access = ({ req }) =>
-  Boolean(req.user && ['admin', 'content-manager'].includes(req.user.role))
+export const isAdminFieldLevel: FieldAccess = ({ req }) => staffUser(req)?.role === 'admin'
 
-export const isAdminOrContentManagerFieldLevel: FieldAccess = ({ req }) =>
-  Boolean(req.user && ['admin', 'content-manager'].includes(req.user.role))
+export const isAdminOrContentManager: Access = ({ req }) => {
+  const role = staffUser(req)?.role
+  return Boolean(role && ['admin', 'content-manager'].includes(role))
+}
 
-export const isAdminOrSalesManager: Access = ({ req }) =>
-  Boolean(req.user && ['admin', 'sales-manager'].includes(req.user.role))
+export const isAdminOrContentManagerFieldLevel: FieldAccess = ({ req }) => {
+  const role = staffUser(req)?.role
+  return Boolean(role && ['admin', 'content-manager'].includes(role))
+}
 
-export const isSalesTeam: Access = ({ req }) =>
-  Boolean(req.user && ['admin', 'sales-manager', 'sales-agent'].includes(req.user.role))
+export const isAdminOrSalesManager: Access = ({ req }) => {
+  const role = staffUser(req)?.role
+  return Boolean(role && ['admin', 'sales-manager'].includes(role))
+}
+
+export const isSalesTeam: Access = ({ req }) => {
+  const role = staffUser(req)?.role
+  return Boolean(role && ['admin', 'sales-manager', 'sales-agent'].includes(role))
+}
 
 /** Sales agents may only read/update leads assigned to them; managers and admins see all. */
 export const salesRecordAccess: Access = ({ req }) => {
-  if (!req.user) return false
-  if (['admin', 'sales-manager'].includes(req.user.role)) return true
-  if (req.user.role === 'sales-agent') {
+  const user = staffUser(req)
+  if (!user) return false
+  if (['admin', 'sales-manager'].includes(user.role)) return true
+  if (user.role === 'sales-agent') {
     return {
       assignedTo: {
-        equals: req.user.id,
+        equals: user.id,
       },
     }
   }
   return false
 }
 
-export const isLoggedIn: Access = ({ req }) => Boolean(req.user)
+export const isLoggedIn: Access = ({ req }) => Boolean(staffUser(req))
 
 /**
  * Public catalogue/editorial read access: anonymous visitors only ever see
@@ -42,7 +66,7 @@ export const isLoggedIn: Access = ({ req }) => Boolean(req.user)
  * everything (drafts included) so editors can preview their own work.
  */
 export const publicReadPublished: Access = ({ req }) => {
-  if (req.user) return true
+  if (staffUser(req)) return true
   return {
     status: {
       equals: 'published',
@@ -51,4 +75,4 @@ export const publicReadPublished: Access = ({ req }) => {
 }
 
 /** Never exposed to the public API — internal/commercial data only. */
-export const internalOnly: Access = ({ req }) => Boolean(req.user)
+export const internalOnly: Access = ({ req }) => Boolean(staffUser(req))

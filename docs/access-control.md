@@ -93,6 +93,49 @@ plugin, locks all three to `isAdminOrContentManager`. Same "double-check
 after a plugin upgrade" caveat as above. Covered by
 `tests/integration/accessControl.int.spec.ts`.
 
+`@payloadcms/plugin-mcp` (added so an MCP client/AI agent can manage
+catalogue/editorial content through the admin's own access rules — see
+`mcpCollections` in `src/payload.config.ts`) is different from the two
+plugins above: its `payload-mcp-api-keys` collection ships with a correct
+`access` config out of the box (`create: isAuthenticated`,
+`read`/`update`/`delete`/`unlock` scoped to the requesting user's own keys
+via a query constraint — verified directly against the installed source,
+not just its docs), so no `secure*Access` patch is needed for it. The real
+gate is exposure, not the key collection's own access: a collection or
+global is reachable over MCP only if its slug appears in `mcpCollections`
+(or the `globals` allowlist next to it) **and** is `enabled: true` there —
+`quote-requests`, `contact-requests`, `private-quote-files`,
+`newsletter-subscribers`, `users`, `invoices`, `quotes`, `shop-info`,
+`imports`, `exports` are deliberately absent and therefore unreachable via
+`/api/mcp` no matter how a given key is configured. Every individual
+find/create/update/delete checkbox on an API key document also defaults to
+unchecked and must be opted in per key, per collection, by an admin in
+**Collections → MCP → API Keys**. The plugin never sets `overrideAccess`
+— every MCP tool call still runs through this project's normal
+`access.ts` role functions for whichever `Users` doc the key is bound to,
+and every request requires a valid `Authorization: Bearer <key>` header
+(confirmed via a live smoke test: no header or a bogus token both return
+401; the JSON-RPC handshake only proceeds with a real key).
+
+**The one real gap this plugin introduces**, and the reason
+`src/lib/payload/access.ts` changed alongside it: `payload-mcp-api-keys`
+has its own native Payload API-key auth strategy
+(`auth: { useAPIKey: true }`), so a valid key authenticates `req.user`
+directly against the *plain* Payload REST/GraphQL/Local API — not only
+the plugin's own `/api/mcp` endpoint — with a principal that has no
+`role` field. Before this was caught, several access functions
+(`isLoggedIn`, `publicReadPublished`, `internalOnly`, and
+`Users`'s own `read`/`update`) only checked `Boolean(req.user)`, which an
+MCP key — however narrowly scoped in the MCP tool config — would
+satisfy, letting it read `private-quote-files`, list `users`, or see
+draft catalogue content by calling the ordinary API directly, bypassing
+the MCP allowlist entirely. Every role-checking function in `access.ts`
+now goes through `isStaffUser(req)`, which only recognizes a genuine
+`Users` document (narrowed by the presence of a `role` field) as staff;
+an MCP API key principal always evaluates as "not logged in" for these
+purposes. Covered by `tests/integration/accessControl.int.spec.ts`
+("never treats an MCP API key principal as a staff user").
+
 ## Field-level access
 
 `src/lib/payload/fields.ts` → `adminOnlyField()` wraps a field with

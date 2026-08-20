@@ -1,6 +1,6 @@
 # Content model
 
-## Collections (26)
+## Collections (27)
 
 | Collection | Purpose | Public read? |
 |---|---|---|
@@ -30,6 +30,7 @@
 | `quotes` | Staff-generated priced quotes with PDF export (`payload-invoicepdf` plugin) — distinct from the public `quote-requests` intake form | **Never** (sales team only) |
 | `imports` | Bulk CSV/JSON import jobs (`@payloadcms/plugin-import-export`) | **Never** (admin/content-manager only) |
 | `exports` | Generated bulk CSV/JSON export files (`@payloadcms/plugin-import-export`) | **Never** (admin/content-manager only) |
+| `payload-mcp-api-keys` | MCP client API keys, scoped per-key to specific collections/operations (`@payloadcms/plugin-mcp`) | **Never** (key owner only, via a query constraint) |
 
 ## Globals (10)
 
@@ -77,6 +78,25 @@ collection's list view (via the kebab menu) plus `imports`/`exports`
 collections and `payload_jobs`/`payload_jobs_log` tables to run the work
 asynchronously through Payload's Jobs Queue. Same access-control gap as
 the invoicing plugin above — see `docs/access-control.md`.
+
+## MCP tool access (@payloadcms/plugin-mcp)
+
+`src/payload.config.ts` also registers the official
+`@payloadcms/plugin-mcp`, which exposes an `/api/mcp` JSON-RPC endpoint so
+an MCP client (e.g. an AI agent) can manage content through the same
+access rules as the admin panel. Exposure is scoped via `mcpCollections`
+(and a parallel globals list) to structural/catalogue content only — the
+same "no PII, no commercial data" boundary as the import/export plugin
+above, deliberately excluding `quote-requests`, `contact-requests`,
+`private-quote-files`, `newsletter-subscribers`, `users`, `invoices`,
+`quotes`, `shop-info`, `imports`, `exports`. Adds the
+`payload-mcp-api-keys` collection (admin group "MCP") where a human issues
+per-key, per-collection, per-operation permissions. See
+`docs/access-control.md` for the full security model, including the one
+real gap this plugin introduced (`payload-mcp-api-keys`'s native API-key
+auth strategy authenticating against the plain REST/GraphQL/Local API,
+not just `/api/mcp`) and how `src/lib/payload/access.ts` was hardened
+against it.
 
 ## Quote request PDF export
 
