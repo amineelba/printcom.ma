@@ -5,7 +5,6 @@ import { Container } from '@/components/ui/Container'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { CTAGroup } from '@/components/ui/CTAGroup'
 import { ResponsiveImage } from '@/components/ui/ResponsiveImage'
-import { HorizontalRail } from '@/components/rails/HorizontalRail'
 import { CategoryCard } from '@/components/cards/CategoryCard'
 import { SolutionCard } from '@/components/cards/SolutionCard'
 import { ServiceCard } from '@/components/cards/ServiceCard'
@@ -87,11 +86,11 @@ export default async function HomePage() {
           />
           <div className="mt-10">
             {categories.length ? (
-              <HorizontalRail label="Familles de produits">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {categories.map((category) => (
                   <CategoryCard key={category.id} category={category} />
                 ))}
-              </HorizontalRail>
+              </div>
             ) : (
               <EmptyState title="Catalogue en cours de préparation" description="Les familles de produits seront publiées prochainement." />
             )}
