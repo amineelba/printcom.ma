@@ -10,7 +10,7 @@ export function ResourceCard({ resource }: { resource: Resource }) {
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-card bg-alternate">
         {resource.coverImage ? (
-          <ResponsiveImage media={resource.coverImage} sizes="(min-width: 1069px) 33vw, 50vw" fill />
+          <ResponsiveImage media={resource.coverImage} sizes="(min-width: 1069px) 363px, 50vw" fill />
         ) : null}
       </div>
       <div className="p-[var(--pc-card-padding-small)]">

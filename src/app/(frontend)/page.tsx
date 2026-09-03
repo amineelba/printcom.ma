@@ -49,7 +49,11 @@ export default async function HomePage() {
         eyebrow={homepage.hero?.eyebrow || undefined}
         title={homepage.hero?.title || 'Vos supports imprimés, structurés autour de vos objectifs commerciaux.'}
         description={homepage.hero?.description || undefined}
-        media={homepage.hero?.media ? <ResponsiveImage media={homepage.hero.media} fill sizes="(min-width: 1069px) 50vw, 100vw" priority /> : null}
+        media={
+          homepage.hero?.media ? (
+            <ResponsiveImage media={homepage.hero.media} fill sizes="(min-width: 1069px) 548px, 100vw" priority />
+          ) : null
+        }
         ctas={[
           { label: homepage.hero?.primaryCtaLabel || 'Demander un devis', href: homepage.hero?.primaryCtaHref || '/demande-de-devis' },
           { label: homepage.hero?.secondaryCtaLabel || 'Explorer les produits', href: homepage.hero?.secondaryCtaHref || '/produits', variant: 'secondary' },
