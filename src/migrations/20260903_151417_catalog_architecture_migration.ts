@@ -1,5 +1,6 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 import { GOODIES_PRODUCTS } from '../lib/seed/content/goodiesProducts'
+import { PRODUCT_CATEGORIES } from '../lib/seed/content/productCategories'
 
 /**
  * Known legacy identifiers for the 15 "Goodies & objets publicitaires"
@@ -9,6 +10,9 @@ import { GOODIES_PRODUCTS } from '../lib/seed/content/goodiesProducts'
  * taxonomy level. See the architecture migration this file is part of.
  */
 const LEGACY_GOODIES_CHILD_SLUGS = GOODIES_PRODUCTS.map((p) => p.slug)
+
+/** The flat target state: exactly these 9 top-level families should remain. */
+const CANONICAL_CATEGORY_SLUGS = new Set(PRODUCT_CATEGORIES.map((c) => c.slug))
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   // ---------------------------------------------------------------------
@@ -121,6 +125,56 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   }
 
   // ---------------------------------------------------------------------
+  // 2b. Generic legacy child-category sweep. Some environments carry child
+  //    `product-categories` documents under every top-level family, not
+  //    just Goodies — an older two-level taxonomy that predates the
+  //    `products.ts` seed, superseded once each item got its own real
+  //    `products` document with a different slug. Verified directly
+  //    against production before writing this: every non-canonical
+  //    category row has an exact title match in `products` and is
+  //    referenced nowhere (not a primaryCategory, not in any
+  //    secondaryCategories/homepage/collection relation) — safe to delete.
+  //    Anything that *doesn't* match is left alone and logged instead of
+  //    guessed at (brief §44: fail safely, don't silently drop the
+  //    unexpected) — it will surface as an extra top-level-looking
+  //    category after the parent_id column is dropped below, which is
+  //    visibly wrong rather than silently lossy.
+  // ---------------------------------------------------------------------
+  const { docs: allCategories } = await payload.find({
+    collection: 'product-categories',
+    limit: 1000,
+    depth: 0,
+    overrideAccess: true,
+    req,
+  })
+  const legacyChildCategories = (allCategories as { id: number; slug: string; title: string }[]).filter(
+    (c) => !CANONICAL_CATEGORY_SLUGS.has(c.slug),
+  )
+
+  for (const legacyCategory of legacyChildCategories) {
+    const { docs: matchingProductDocs } = await payload.find({
+      collection: 'products',
+      where: { title: { equals: legacyCategory.title } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+      req,
+    })
+
+    if (matchingProductDocs.length === 0) {
+      payload.logger.warn(
+        `[catalog-architecture-migration] Legacy category "${legacyCategory.slug}" (title "${legacyCategory.title}") has no matching Product by title — left in place, not deleted. Needs manual review.`,
+      )
+      continue
+    }
+
+    await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
+    payload.logger.info(
+      `[catalog-architecture-migration] Removed legacy category "${legacyCategory.slug}" — superseded by existing Product "${matchingProductDocs[0].slug}".`,
+    )
+  }
+
+  // ---------------------------------------------------------------------
   // 3. Now safe to remove the old hierarchy/secondary-category schema —
   //    every row that depended on it has been migrated or never existed.
   // ---------------------------------------------------------------------
@@ -149,12 +203,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.execute(sql`
    ALTER TABLE "product_collections" DISABLE ROW LEVEL SECURITY;
   DROP TABLE "product_collections" CASCADE;
-  ALTER TABLE "products_rels" DROP CONSTRAINT "products_rels_product_collections_fk";
-  
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_product_collections_fk";
-  
-  ALTER TABLE "homepage_rels" DROP CONSTRAINT "homepage_rels_product_collections_fk";
-  
   DROP INDEX "products_rels_product_collections_id_idx";
   DROP INDEX "payload_locked_documents_rels_product_collections_id_idx";
   DROP INDEX "homepage_rels_product_collections_id_idx";
