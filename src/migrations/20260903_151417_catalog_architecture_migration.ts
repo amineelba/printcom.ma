@@ -2,15 +2,6 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 import { GOODIES_PRODUCTS } from '../lib/seed/content/goodiesProducts'
 import { PRODUCT_CATEGORIES } from '../lib/seed/content/productCategories'
 
-/**
- * Known legacy identifiers for the 15 "Goodies & objets publicitaires"
- * items that previously existed as `product-categories` documents (children
- * of the "goodies-objets-publicitaires" category), before this migration's
- * architecture change: Goodies items are ordinary Products, not a second
- * taxonomy level. See the architecture migration this file is part of.
- */
-const LEGACY_GOODIES_CHILD_SLUGS = GOODIES_PRODUCTS.map((p) => p.slug)
-
 /** The flat target state: exactly these 9 top-level families should remain. */
 const CANONICAL_CATEGORY_SLUGS = new Set(PRODUCT_CATEGORIES.map((c) => c.slug))
 
@@ -52,93 +43,32 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "homepage_rels_product_collections_id_idx" ON "homepage_rels" USING btree ("product_collections_id");`)
 
   // ---------------------------------------------------------------------
-  // 2. Legacy Goodies data migration (brief: safe migration order —
-  //    resolve parent, detect known children, upsert equivalent Products,
-  //    then delete only the known legacy category records). Runs BEFORE
-  //    the parent_id/secondaryCategories columns are dropped below, and is
-  //    a no-op (not an error) on an environment that never had this legacy
-  //    shape — e.g. a fresh database seeded directly with the new model.
-  // ---------------------------------------------------------------------
-  const { docs: goodiesCategoryDocs } = await payload.find({
-    collection: 'product-categories',
-    where: { slug: { equals: 'goodies-objets-publicitaires' } },
-    limit: 1,
-    depth: 0,
-    overrideAccess: true,
-    req,
-  })
-  const goodiesCategory = goodiesCategoryDocs[0] as { id: number } | undefined
-
-  if (goodiesCategory) {
-    for (const slug of LEGACY_GOODIES_CHILD_SLUGS) {
-      const { docs: legacyDocs } = await payload.find({
-        collection: 'product-categories',
-        where: { slug: { equals: slug } },
-        limit: 1,
-        depth: 0,
-        overrideAccess: true,
-        req,
-      })
-      const legacyCategory = legacyDocs[0] as { id: number } | undefined
-      if (!legacyCategory) continue // never existed on this environment — nothing to migrate for this slug
-
-      const productSeed = GOODIES_PRODUCTS.find((p) => p.slug === slug)
-      if (!productSeed) {
-        // Should be unreachable — LEGACY_GOODIES_CHILD_SLUGS is derived from
-        // GOODIES_PRODUCTS itself — but fail loudly rather than silently
-        // dropping a legacy record we don't know how to migrate.
-        throw new Error(`Legacy Goodies category "${slug}" has no matching Product seed entry — aborting migration.`)
-      }
-
-      const { docs: existingProductDocs } = await payload.find({
-        collection: 'products',
-        where: { slug: { equals: slug } },
-        limit: 1,
-        depth: 0,
-        overrideAccess: true,
-        req,
-      })
-      const existingProduct = existingProductDocs[0] as { id: number } | undefined
-
-      const productData = {
-        slug: productSeed.slug,
-        title: productSeed.title,
-        primaryCategory: goodiesCategory.id,
-        shortDescription: productSeed.shortDescription,
-        longDescription: productSeed.longDescription,
-        filePreparationInstructions: productSeed.filePreparationInstructions,
-        seo: productSeed.seo,
-        status: productSeed.status,
-        quoteOnly: productSeed.quoteOnly,
-        indicativePriceEnabled: productSeed.indicativePriceEnabled,
-      }
-
-      if (existingProduct) {
-        await payload.update({ collection: 'products', id: existingProduct.id, data: productData, overrideAccess: true, req })
-      } else {
-        await payload.create({ collection: 'products', data: productData, overrideAccess: true, req })
-      }
-
-      await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
-      payload.logger.info(`[catalog-architecture-migration] Migrated legacy Goodies category "${slug}" to a Product.`)
-    }
-  }
-
-  // ---------------------------------------------------------------------
-  // 2b. Generic legacy child-category sweep. Some environments carry child
-  //    `product-categories` documents under every top-level family, not
-  //    just Goodies — an older two-level taxonomy that predates the
-  //    `products.ts` seed, superseded once each item got its own real
-  //    `products` document with a different slug. Verified directly
-  //    against production before writing this: every non-canonical
-  //    category row has an exact title match in `products` and is
-  //    referenced nowhere (not a primaryCategory, not in any
-  //    secondaryCategories/homepage/collection relation) — safe to delete.
-  //    Anything that *doesn't* match is left alone and logged instead of
-  //    guessed at (brief §44: fail safely, don't silently drop the
-  //    unexpected) — it will surface as an extra top-level-looking
-  //    category after the parent_id column is dropped below, which is
-  //    visibly wrong rather than silently lossy.
+  // 2. Legacy child-category sweep. Some environments carry child
+  //    `product-categories` documents under every top-level family — an
+  //    older two-level taxonomy that predates the `products.ts`/
+  //    `goodiesProducts.ts` seeds, superseded once each item got its own
+  //    real `products` document. Matched by TITLE, not slug: verified
+  //    directly against production that the real Goodies Products carry a
+  //    "goodies-"-prefixed slug (e.g. "goodies-stylos-personnalises")
+  //    that does NOT match the legacy category's un-prefixed slug (e.g.
+  //    "stylos-personnalises") or GOODIES_PRODUCTS' seed slug — an
+  //    earlier version of this migration matched on slug for Goodies
+  //    specifically, which would have missed every existing Goodies
+  //    Product and created 15 duplicates. Title matches exactly for all
+  //    known legacy rows in production (94/94, zero ambiguous), and is
+  //    referenced nowhere else (not a primaryCategory, not in any
+  //    secondaryCategories/homepage/collection relation) — safe to delete
+  //    once matched.
+  //
+  //    Only if NO Product exists yet by title AND the legacy category is a
+  //    known Goodies item do we fall back to creating one from
+  //    GOODIES_PRODUCTS (covers a hypothetical environment that has the
+  //    old taxonomy but never got the Goodies Products created). Anything
+  //    else unmatched is left alone and logged instead of guessed at
+  //    (brief §44: fail safely, don't silently drop the unexpected) — it
+  //    will surface as an extra top-level-looking category after the
+  //    parent_id column is dropped below, which is visibly wrong rather
+  //    than silently lossy.
   // ---------------------------------------------------------------------
   const { docs: allCategories } = await payload.find({
     collection: 'product-categories',
@@ -161,16 +91,54 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
       req,
     })
 
-    if (matchingProductDocs.length === 0) {
-      payload.logger.warn(
-        `[catalog-architecture-migration] Legacy category "${legacyCategory.slug}" (title "${legacyCategory.title}") has no matching Product by title — left in place, not deleted. Needs manual review.`,
+    if (matchingProductDocs.length > 0) {
+      await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
+      payload.logger.info(
+        `[catalog-architecture-migration] Removed legacy category "${legacyCategory.slug}" — superseded by existing Product "${matchingProductDocs[0].slug}".`,
       )
       continue
     }
 
-    await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
-    payload.logger.info(
-      `[catalog-architecture-migration] Removed legacy category "${legacyCategory.slug}" — superseded by existing Product "${matchingProductDocs[0].slug}".`,
+    const goodiesSeed = GOODIES_PRODUCTS.find((p) => p.slug === legacyCategory.slug)
+    if (goodiesSeed) {
+      const { docs: goodiesCategoryDocs } = await payload.find({
+        collection: 'product-categories',
+        where: { slug: { equals: 'goodies-objets-publicitaires' } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+        req,
+      })
+      const goodiesCategory = goodiesCategoryDocs[0] as { id: number } | undefined
+
+      if (goodiesCategory) {
+        await payload.create({
+          collection: 'products',
+          data: {
+            slug: goodiesSeed.slug,
+            title: goodiesSeed.title,
+            primaryCategory: goodiesCategory.id,
+            shortDescription: goodiesSeed.shortDescription,
+            longDescription: goodiesSeed.longDescription,
+            filePreparationInstructions: goodiesSeed.filePreparationInstructions,
+            seo: goodiesSeed.seo,
+            status: goodiesSeed.status,
+            quoteOnly: goodiesSeed.quoteOnly,
+            indicativePriceEnabled: goodiesSeed.indicativePriceEnabled,
+          },
+          overrideAccess: true,
+          req,
+        })
+        await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
+        payload.logger.info(
+          `[catalog-architecture-migration] Migrated legacy Goodies category "${legacyCategory.slug}" to a new Product (no existing Product found by title).`,
+        )
+        continue
+      }
+    }
+
+    payload.logger.warn(
+      `[catalog-architecture-migration] Legacy category "${legacyCategory.slug}" (title "${legacyCategory.title}") has no matching Product by title and no seed fallback — left in place. Needs manual review.`,
     )
   }
 
