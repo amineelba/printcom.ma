@@ -18,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-card bg-alternate">
         {product.primaryImage ? (
-          <ResponsiveImage media={product.primaryImage} sizes="(min-width: 1069px) 363px, 50vw" fill />
+          <ResponsiveImage media={product.primaryImage} payloadSize="card" sizes="(min-width: 1069px) 363px, 50vw" fill />
         ) : null}
       </div>
       <div className="flex flex-1 flex-col p-[var(--pc-card-padding-small)]">

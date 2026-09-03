@@ -10,7 +10,7 @@ export function CategoryCard({ category }: { category: ProductCategory }) {
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-card bg-alternate">
         {category.image ? (
-          <ResponsiveImage media={category.image} sizes="(min-width: 1069px) 363px, 50vw" fill />
+          <ResponsiveImage media={category.image} payloadSize="card" sizes="(min-width: 1069px) 363px, 50vw" fill />
         ) : null}
       </div>
       <div className="p-[var(--pc-card-padding-small)]">

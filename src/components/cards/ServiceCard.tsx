@@ -10,7 +10,7 @@ export function ServiceCard({ service }: { service: Service }) {
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-card bg-alternate">
         {service.image ? (
-          <ResponsiveImage media={service.image} sizes="(min-width: 1069px) 363px, 50vw" fill />
+          <ResponsiveImage media={service.image} payloadSize="card" sizes="(min-width: 1069px) 363px, 50vw" fill />
         ) : null}
       </div>
       <div className="p-[var(--pc-card-padding-small)]">
