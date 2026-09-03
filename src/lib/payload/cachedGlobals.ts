@@ -1,6 +1,6 @@
 import { unstable_cache } from 'next/cache'
 import { getPayload } from './client'
-import type { SiteSetting, SeoDefault, DesignSetting, Header, Footer } from '@/payload-types'
+import type { SiteSetting, SeoDefault, DesignSetting, Header, Footer, Homepage } from '@/payload-types'
 
 /**
  * Cached readers for the Payload globals read on (almost) every frontend
@@ -75,56 +75,39 @@ export function getFooterGlobal(): Promise<Footer> {
 }
 
 /**
- * `depth: 2` is kept deliberately: 3 of the 6 featured relations
- * (featuredCategories, featuredServices, featuredResources) render a
- * thumbnail from a relationship field nested inside the populated doc
- * (image/coverImage), which needs a 2nd population level to resolve to a
- * real Media object at all — depth: 1 would leave those as raw IDs and
- * ResponsiveImage would silently render nothing. Verified with a real
- * query against local Postgres (a temporary media row linked through
- * featuredCategories[].image) that Payload 3.88.0 correctly resolves
- * `populate` two levels deep and returns exactly the selected keys
- * (`{id, alt, url}`), not the full Media document.
+ * Plain `depth: 2`, deliberately with NO `select`/`populate`.
  *
- * `select` + `populate` together are the actual weight reduction here:
- * every populated doc (category/service/solution/sector/resource/faq)
- * otherwise comes back with its full SEO group, workflow/timestamp
- * fields and every other relation, none of which this page reads.
+ * This previously used `select` + `populate` to shape the response (only
+ * the fields each card component reads). That broke images in production:
+ * `populate` on a nested relation silently returns `url: null` (and every
+ * `sizes.*.url: null`) for the populated Media doc, even when the
+ * document has a real, correctly uploaded file — `url` is computed by a
+ * read hook that `populate`'s field-selection path doesn't run, unlike a
+ * plain/`select`-only query. Confirmed directly: with a real image
+ * uploaded via the Local API (not a raw SQL row) and linked through
+ * featuredCategories[].image and hero.media, `findGlobal` with plain
+ * `depth: 2` (or `select` alone, no `populate`) returns the real `url`;
+ * adding `populate` — with or without `select` alongside it — turns that
+ * same field to `null`. ResponsiveImage then has nothing to render
+ * (`media.sizes?.[size]?.url || media.url` both null) and silently shows
+ * nothing, which is exactly what broke on / (Hero + every CategoryCard)
+ * after the select/populate change shipped.
+ *
+ * `depth: 2` alone is still required (not 1): 3 of the 6 featured
+ * relations (featuredCategories, featuredServices, featuredResources)
+ * render a thumbnail from a relationship field nested inside the
+ * populated doc (image/coverImage), which needs a 2nd population level to
+ * resolve to a Media object at all — depth: 1 leaves those as raw IDs.
+ *
+ * If the response weight here needs cutting again later, `select` alone
+ * (no `populate`) verified fine above and is worth revisiting — the
+ * `populate` bug is specific to shaping fields on populated relations.
  */
-export function getHomepageGlobal() {
+export function getHomepageGlobal(): Promise<Homepage> {
   return unstable_cache(
     async () => {
       const payload = await getPayload()
-      return payload.findGlobal({
-        slug: 'homepage',
-        depth: 2,
-        select: {
-          hero: true,
-          valueProposition: true,
-          featuredCategories: true,
-          featuredSolutions: true,
-          featuredServices: true,
-          featuredSectors: true,
-          process: true,
-          featuredResources: true,
-          featuredFAQs: true,
-          finalCTA: true,
-        },
-        populate: {
-          // `sizes.card` matches the `payloadSize="card"` passed to
-          // ResponsiveImage by CategoryCard/ServiceCard/ResourceCard —
-          // without it, those homepage-fed cards would fall back to the
-          // full original `url` (still correct, just not the intended
-          // optimization; ResponsiveImage never breaks on a missing size).
-          media: { url: true, alt: true, sizes: { card: { url: true } } },
-          'product-categories': { title: true, slug: true, shortDescription: true, image: true },
-          services: { title: true, slug: true, shortDescription: true, image: true },
-          solutions: { title: true, slug: true, shortDescription: true },
-          sectors: { title: true, slug: true, shortDescription: true },
-          resources: { title: true, slug: true, introduction: true, coverImage: true },
-          faqs: { question: true, answer: true },
-        },
-      })
+      return payload.findGlobal({ slug: 'homepage', depth: 2 })
     },
     ['global-homepage'],
     { revalidate: REVALIDATE_SECONDS, tags: ['global-homepage'] },
