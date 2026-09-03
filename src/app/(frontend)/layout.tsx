@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
-import { getPayload } from '@/lib/payload/client'
+import { getSiteSettings, getSeoDefaults, getDesignSettings } from '@/lib/payload/cachedGlobals'
 import { StructuredData } from '@/components/seo/StructuredData'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonLd'
 
@@ -26,8 +26,7 @@ import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonLd'
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload()
-  const seoDefaults = await payload.findGlobal({ slug: 'seo-defaults', depth: 0 })
+  const seoDefaults = await getSeoDefaults()
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
@@ -43,11 +42,10 @@ export async function generateMetadata(): Promise<Metadata> {
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const payload = await getPayload()
   const [siteSettings, seoDefaults, designSettings] = await Promise.all([
-    payload.findGlobal({ slug: 'site-settings', depth: 0 }),
-    payload.findGlobal({ slug: 'seo-defaults', depth: 0 }),
-    payload.findGlobal({ slug: 'design-settings', depth: 0 }),
+    getSiteSettings(),
+    getSeoDefaults(),
+    getDesignSettings(),
   ])
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
   const siteName = siteSettings.siteName || 'Printcom'

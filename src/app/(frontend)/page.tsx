@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getPayload } from '@/lib/payload/client'
+import { getSeoDefaults, getHomepageGlobal } from '@/lib/payload/cachedGlobals'
 import { Hero } from '@/components/heroes/Hero'
 import { Container } from '@/components/ui/Container'
 import { SectionHeader } from '@/components/ui/SectionHeader'
@@ -23,8 +23,7 @@ import type {
 } from '@/payload-types'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload()
-  const seoDefaults = await payload.findGlobal({ slug: 'seo-defaults', depth: 0 })
+  const seoDefaults = await getSeoDefaults()
   return {
     title: seoDefaults.defaultMetaTitle || 'Printcom — Impression commerciale B2B au Maroc',
     description: seoDefaults.defaultMetaDescription || undefined,
@@ -32,8 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const payload = await getPayload()
-  const homepage = await payload.findGlobal({ slug: 'homepage', depth: 2 })
+  const homepage = await getHomepageGlobal()
 
   const categories = (homepage.featuredCategories ?? []).filter(
     (c): c is ProductCategory => typeof c === 'object',

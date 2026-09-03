@@ -1,15 +1,11 @@
 import Link from 'next/link'
-import { getPayload } from '@/lib/payload/client'
+import { getHeaderGlobal, getSiteSettings } from '@/lib/payload/cachedGlobals'
 import { DesktopNavigation } from '@/components/navigation/DesktopNavigation'
 import { MobileNavigation } from '@/components/navigation/MobileNavigation'
 import { SearchOverlay } from '@/components/navigation/SearchOverlay'
 
 export async function SiteHeader() {
-  const payload = await getPayload()
-  const [header, siteSettings] = await Promise.all([
-    payload.findGlobal({ slug: 'header', depth: 0 }),
-    payload.findGlobal({ slug: 'site-settings', depth: 1 }),
-  ])
+  const [header, siteSettings] = await Promise.all([getHeaderGlobal(), getSiteSettings(1)])
 
   const menus = header.menus ?? []
   const quoteCTA = header.quoteCTA

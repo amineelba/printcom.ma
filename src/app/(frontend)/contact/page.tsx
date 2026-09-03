@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getPayload } from '@/lib/payload/client'
+import { getSiteSettings } from '@/lib/payload/cachedGlobals'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs'
 import { ContactForm } from '@/components/forms/ContactForm'
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default async function ContactPage() {
   const payload = await getPayload()
   const [siteSettings, contactSettings] = await Promise.all([
-    payload.findGlobal({ slug: 'site-settings', depth: 0 }),
+    getSiteSettings(),
     payload.findGlobal({ slug: 'contact-settings', depth: 0 }),
   ])
 

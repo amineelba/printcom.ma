@@ -1,14 +1,10 @@
 import Link from 'next/link'
-import { getPayload } from '@/lib/payload/client'
+import { getFooterGlobal, getSiteSettings } from '@/lib/payload/cachedGlobals'
 import { Container } from '@/components/ui/Container'
 import { FooterAccordionColumn } from '@/components/navigation/FooterAccordionColumn'
 
 export async function SiteFooter() {
-  const payload = await getPayload()
-  const [footer, siteSettings] = await Promise.all([
-    payload.findGlobal({ slug: 'footer', depth: 0 }),
-    payload.findGlobal({ slug: 'site-settings', depth: 0 }),
-  ])
+  const [footer, siteSettings] = await Promise.all([getFooterGlobal(), getSiteSettings()])
 
   const columns = footer.columns ?? []
   const legalLinks = footer.legalLinks ?? []

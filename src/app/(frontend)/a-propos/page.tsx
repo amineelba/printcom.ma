@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getPayload } from '@/lib/payload/client'
+import { getSiteSettings } from '@/lib/payload/cachedGlobals'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs'
 import { CTAGroup } from '@/components/ui/CTAGroup'
@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 }
 
 export default async function AboutPage() {
-  const payload = await getPayload()
-  const siteSettings = await payload.findGlobal({ slug: 'site-settings', depth: 0 })
+  const siteSettings = await getSiteSettings()
 
   return (
     <Container width="reading" className="py-[var(--pc-space-section-small)]">
