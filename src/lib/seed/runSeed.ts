@@ -20,7 +20,7 @@
  * runner must never do).
  */
 import type { Payload } from 'payload'
-import { PRODUCT_CATEGORIES } from './content/productCategories'
+import { PRODUCT_CATEGORIES, GOODIES_SUBCATEGORIES } from './content/productCategories'
 import { PRODUCTS } from './content/products'
 import { SERVICES } from './content/services'
 import { SOLUTIONS } from './content/solutions'
@@ -82,7 +82,7 @@ export async function runSeed(payload: Payload): Promise<void> {
   payload.logger.info('Starting Printcom seed…')
 
   // -----------------------------------------------------------------
-  // Product categories — 8 top-level families (brief section 7)
+  // Product categories — top-level families (brief section 7 + goodies)
   // -----------------------------------------------------------------
   const categoryIds = await upsertBySlug(
     payload,
@@ -97,6 +97,24 @@ export async function runSeed(payload: Payload): Promise<void> {
     })),
   )
   payload.logger.info(`Seeded ${PRODUCT_CATEGORIES.length} product categories (published).`)
+
+  // -----------------------------------------------------------------
+  // Product sub-categories — "Goodies & objets publicitaires"
+  // -----------------------------------------------------------------
+  await upsertBySlug(
+    payload,
+    'product-categories',
+    GOODIES_SUBCATEGORIES.map((subCategory) => ({
+      slug: subCategory.slug,
+      title: subCategory.title,
+      parent: categoryIds[subCategory.parent],
+      order: subCategory.order,
+      shortDescription: subCategory.shortDescription,
+      status: 'published',
+      seo: subCategory.seo,
+    })),
+  )
+  payload.logger.info(`Seeded ${GOODIES_SUBCATEGORIES.length} goodies sub-categories (published).`)
 
   // -----------------------------------------------------------------
   // Products — full catalogue, 79 items (brief sections 7-8)

@@ -98,7 +98,7 @@ export default async function ProductsArchivePage({
       <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Produits' }]} />
       <h1 className="pc-text-page-title mt-4 text-primary">Produits</h1>
       <p className="pc-text-intro mt-4 max-w-(--container-reading)">
-        Huit familles de produits imprimés, structurées par usage, secteur et support. Toutes nos
+        Neuf familles de produits imprimés, structurées par usage, secteur et support. Toutes nos
         réalisations sont établies sur devis.
       </p>
 

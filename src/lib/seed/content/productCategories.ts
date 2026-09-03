@@ -110,6 +110,18 @@ export const PRODUCT_CATEGORIES: ProductCategorySeed[] = [
         'Enseignes, plaques, panneaux et marquages : identifiez les lieux, orientez les visiteurs et rendez l’information immédiatement lisible.',
     },
   },
+  {
+    slug: 'goodies-objets-publicitaires',
+    title: 'Goodies & objets publicitaires',
+    shortDescription:
+      'Votre marque, dans le quotidien. Un goodie prolonge un échange au-delà du moment où il a lieu : sur un bureau, dans un sac, lors d’un événement. Précisez l’objet envisagé, la quantité, le mode de marquage et le délai souhaité pour faire étudier la demande.',
+    order: 9,
+    seo: {
+      metaTitle: 'Goodies et objets publicitaires personnalisés | Printcom',
+      metaDescription:
+        'Stylos, textile, mugs, clés USB et cadeaux d’affaires : des objets publicitaires personnalisés pour prolonger votre présence de marque.',
+    },
+  },
 ]
 
 /** Category-level quote CTA label, shown on each `/produits/<categorie>` archive page. */
@@ -122,4 +134,50 @@ export const CATEGORY_CTA_LABEL: Record<string, string> = {
   'plv-supports-vente': 'Préparer une demande plv et supports de vente',
   'affichage-grand-format': 'Préparer une demande affichage et grand format',
   signaletique: 'Préparer une demande signalétique',
+  'goodies-objets-publicitaires': 'Préparer une demande goodies et objets publicitaires',
 }
+
+/**
+ * Sub-categories of "Goodies & objets publicitaires" — second level of the
+ * two-level taxonomy the `product-categories` collection already supports
+ * (see its `parent` field). `parent` here is the parent's slug, resolved to
+ * an id during seeding the same way SERVICES resolves its own parent slugs.
+ */
+export type ProductSubCategorySeed = {
+  slug: string
+  title: string
+  parent: string
+  order: number
+  shortDescription: string
+  seo: { metaTitle: string; metaDescription: string }
+}
+
+const GOODIES_ITEMS: { slug: string; title: string; shortDescription: string }[] = [
+  { slug: 'stylos-personnalises', title: 'Stylos personnalisés', shortDescription: 'Stylos marqués au nom ou au logo de votre entreprise.' },
+  { slug: 'carnets-notebooks', title: 'Carnets & notebooks', shortDescription: 'Carnets et notebooks personnalisés pour un usage professionnel ou événementiel.' },
+  { slug: 'mugs-tasses', title: 'Mugs & tasses', shortDescription: 'Mugs et tasses personnalisés pour le bureau ou l’offre cadeau.' },
+  { slug: 'gourdes-bouteilles', title: 'Gourdes & bouteilles', shortDescription: 'Gourdes et bouteilles réutilisables personnalisées.' },
+  { slug: 'tote-bags', title: 'Tote bags', shortDescription: 'Sacs en toile personnalisés, réutilisables au quotidien.' },
+  { slug: 'sacs-personnalises', title: 'Sacs personnalisés', shortDescription: 'Sacs personnalisés pour la distribution, l’événementiel ou la vente.' },
+  { slug: 'textile-personnalise', title: 'Textile personnalisé', shortDescription: 'Vêtements et textiles marqués à votre identité.' },
+  { slug: 'casquettes', title: 'Casquettes', shortDescription: 'Casquettes personnalisées pour équipes, événements ou distribution.' },
+  { slug: 'tours-de-cou-badges', title: 'Tours de cou & badges', shortDescription: 'Tours de cou et badges personnalisés pour équipes ou événements.' },
+  { slug: 'cles-usb', title: 'Clés USB', shortDescription: 'Clés USB personnalisées au nom ou au logo de votre entreprise.' },
+  { slug: 'accessoires-technologiques', title: 'Accessoires technologiques', shortDescription: 'Accessoires technologiques personnalisés (chargeurs, supports, étuis…).' },
+  { slug: 'porte-cles', title: 'Porte-clés', shortDescription: 'Porte-clés personnalisés au nom ou au logo de votre entreprise.' },
+  { slug: 'parapluies', title: 'Parapluies', shortDescription: 'Parapluies personnalisés pour la distribution ou l’offre cadeau.' },
+  { slug: 'cadeaux-affaires', title: 'Cadeaux d’affaires', shortDescription: 'Cadeaux d’affaires personnalisés pour clients et partenaires.' },
+  { slug: 'coffrets-personnalises', title: 'Coffrets personnalisés', shortDescription: 'Coffrets personnalisés regroupant plusieurs objets publicitaires.' },
+]
+
+export const GOODIES_SUBCATEGORIES: ProductSubCategorySeed[] = GOODIES_ITEMS.map((item, index) => ({
+  slug: item.slug,
+  title: item.title,
+  parent: 'goodies-objets-publicitaires',
+  order: index + 1,
+  shortDescription: item.shortDescription,
+  seo: {
+    metaTitle: `${item.title} personnalisés | Printcom`,
+    metaDescription: `${item.shortDescription} Demandez un devis pour votre projet ${item.title.toLowerCase()}.`,
+  },
+}))

@@ -81,7 +81,7 @@ export default async function HomePage() {
           <SectionHeader
             eyebrow="Catalogue"
             title="Nos familles de produits"
-            description="Huit familles de produits imprimés, structurées pour répondre à chaque usage commercial."
+            description="Neuf familles de produits imprimés, structurées pour répondre à chaque usage commercial."
             action={<CTAGroup items={[{ label: 'Explorer tous les produits', href: '/produits', variant: 'secondary' }]} />}
           />
           <div className="mt-10">
