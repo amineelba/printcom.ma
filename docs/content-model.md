@@ -1,14 +1,15 @@
 # Content model
 
-## Collections (27)
+## Collections (28)
 
 | Collection | Purpose | Public read? |
 |---|---|---|
 | `users` | Admin accounts (roles: admin, content-manager, sales-manager, sales-agent) | No |
 | `media` | Public images (5 generated sizes) | Yes |
 | `private-quote-files` | Files attached to quote requests | **Never** |
-| `product-categories` | Two-level product taxonomy (§12) | Published only |
+| `product-categories` | Flat product taxonomy — catalogue ownership only (§12) | Published only |
 | `products` | Catalogue (§19 field groups) | Published only |
+| `product-collections` | Transversal merchandising groupings (campaigns/themes) a Product may opt into via `collections[]` — not a page, no SEO fields | Active only |
 | `services` | Services and sub-services (§13) | Published only |
 | `solutions` | Solutions "par besoin" (§14) | Published only |
 | `sectors` | Solutions "par secteur" (§15) | Published only |

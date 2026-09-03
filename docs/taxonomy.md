@@ -8,28 +8,46 @@ and re-running the seed keeps a database in sync.
 
 ## Product categories — `product-categories`, status `published`
 
-One level: 8 top-level families, each with a real intro/method paragraph
-and formulaic SEO. Published immediately since categories are structural,
-not factual claims. Products (below) are **not** nested under a second
-`product-categories` level — each is its own `products` document with
-`primaryCategory` pointing at one of these 8.
+Flat: 9 top-level families, each with a real intro/method paragraph and
+formulaic SEO. Published immediately since categories are structural, not
+factual claims. There is no second `product-categories` level — a
+category is catalogue *ownership* only. Every product is its own
+`products` document with `primaryCategory` pointing at exactly one of
+these 9; cross-cutting/transversal groupings (seasonal campaigns,
+merchandising themes) live in `product-collections` instead — see below.
 
 Papeterie d'entreprise · Supports marketing · Édition et documents ·
 Packaging · Étiquettes et stickers · PLV et supports de vente · Affichage
-et grand format · Signalétique.
+et grand format · Signalétique · Goodies & objets publicitaires.
 
 See `src/lib/seed/content/productCategories.ts` for the full content.
 
 ## Products — `products`, status `draft`
 
-79 real catalogue products (brief sections 7-8), each with a tagline,
-"usages fréquents"/"à configurer" lists, formulaic SEO, and the shared
-file-preparation boilerplate paragraph. Seeded `draft` — the copy is
-publication-ready, but nothing is a confirmed commercial offer until
-Printcom reviews and publishes it (brief section 33, rule 2). Every
-product is `quoteOnly: true` with `indicativePriceEnabled: false`.
+94 real catalogue products: 79 from the brief (sections 7-8) plus 15
+Goodies & objets publicitaires items (stylos, mugs, tote bags, etc. —
+`src/lib/seed/content/goodiesProducts.ts`), which are ordinary Products
+with `primaryCategory` set to "Goodies & objets publicitaires", not a
+taxonomy sub-level. Each has a tagline, "usages fréquents"/"à configurer"
+lists, formulaic SEO, and the shared file-preparation boilerplate
+paragraph. Seeded `draft` — the copy is publication-ready, but nothing is
+a confirmed commercial offer until Printcom reviews and publishes it
+(brief section 33, rule 2). Every product is `quoteOnly: true` with
+`indicativePriceEnabled: false`.
 
-See `src/lib/seed/content/products.ts` for the full list.
+See `src/lib/seed/content/products.ts` and `goodiesProducts.ts` for the
+full list.
+
+## Product collections — `product-collections`, status `draft` (none seeded)
+
+Transversal semantic merchandising groupings (e.g. "Ramadan",
+"Événementiel") — a curated context a Product may be surfaced in via
+`Products.collections[]`, independent of its `primaryCategory`
+ownership. Not a content type with its own page: no SEO fields, no slug
+implying a public URL (`key` is an internal identifier only). Not seeded
+by default — `Homepage.collectionBoard` chooses which active collections
+(if any) a given page surfaces, as a presentation decision separate from
+a collection's own lifecycle.
 
 ## Services (brief section 9) — `services`, status `draft`
 

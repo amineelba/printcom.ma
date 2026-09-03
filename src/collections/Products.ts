@@ -42,7 +42,16 @@ export const Products: CollectionConfig = {
       required: true,
       index: true,
     },
-    { name: 'secondaryCategories', type: 'relationship', relationTo: 'product-categories', hasMany: true },
+    {
+      name: 'collections',
+      type: 'relationship',
+      relationTo: 'product-collections',
+      hasMany: true,
+      admin: {
+        description:
+          'Regroupements transversaux (campagnes, thèmes) dans lesquels ce produit peut être mis en avant — n’affecte pas sa catégorie propriétaire (primaryCategory).',
+      },
+    },
     { name: 'needs', type: 'relationship', relationTo: 'solutions', hasMany: true },
     { name: 'sectors', type: 'relationship', relationTo: 'sectors', hasMany: true },
     { name: 'relatedProducts', type: 'relationship', relationTo: 'products', hasMany: true },

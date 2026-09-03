@@ -3,15 +3,19 @@ import { isAdminOrContentManager, publicReadPublished } from '@/lib/payload/acce
 import { seoFields, slugField, workflowFields } from '@/lib/payload/fields'
 
 /**
- * Two-level product taxonomy (family -> sub-category) per section 12 of the
- * brief. No "Réalisations" term may ever be seeded under this collection.
+ * Flat product taxonomy — catalogue ownership only (§12 of the brief).
+ * Every category is a top-level family; there is no sub-category layer.
+ * A Product belongs to exactly one category via `Products.primaryCategory`.
+ * Cross-cutting/transversal groupings (seasonal campaigns, merchandising
+ * themes) belong in `product-collections`, not here — see ProductCollections.ts.
+ * No "Réalisations" term may ever be seeded under this collection.
  */
 export const ProductCategories: CollectionConfig = {
   slug: 'product-categories',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'parent', 'status'],
-    description: 'Familles et sous-catégories de produits (section 12).',
+    defaultColumns: ['title', 'status'],
+    description: 'Familles de produits (section 12).',
   },
   access: {
     read: publicReadPublished,
@@ -26,15 +30,6 @@ export const ProductCategories: CollectionConfig = {
       required: true,
     },
     ...slugField(),
-    {
-      name: 'parent',
-      type: 'relationship',
-      relationTo: 'product-categories',
-      admin: {
-        description: 'Laisser vide pour une famille de premier niveau.',
-      },
-      filterOptions: ({ id }) => (id ? { id: { not_equals: id } } : true),
-    },
     {
       name: 'shortDescription',
       type: 'textarea',

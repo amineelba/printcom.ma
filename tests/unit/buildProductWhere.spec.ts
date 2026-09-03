@@ -8,14 +8,9 @@ describe('buildProductWhere', () => {
     expect(where.and).toHaveLength(1)
   })
 
-  it('adds a category filter across primary and secondary categories', () => {
+  it('adds a category filter on primaryCategory only', () => {
     const where = buildProductWhere({ categorie: 'papeterie-entreprise' })
-    expect(where.and).toContainEqual({
-      or: [
-        { 'primaryCategory.slug': { equals: 'papeterie-entreprise' } },
-        { 'secondaryCategories.slug': { equals: 'papeterie-entreprise' } },
-      ],
-    })
+    expect(where.and).toContainEqual({ 'primaryCategory.slug': { equals: 'papeterie-entreprise' } })
   })
 
   it('combines multiple filters cumulatively (AND)', () => {

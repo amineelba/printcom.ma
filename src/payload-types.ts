@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     'private-quote-files': PrivateQuoteFile;
     'product-categories': ProductCategory;
+    'product-collections': ProductCollection;
     products: Product;
     services: Service;
     solutions: Solution;
@@ -107,6 +108,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     'private-quote-files': PrivateQuoteFilesSelect<false> | PrivateQuoteFilesSelect<true>;
     'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
+    'product-collections': ProductCollectionsSelect<false> | ProductCollectionsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     solutions: SolutionsSelect<false> | SolutionsSelect<true>;
@@ -477,7 +479,10 @@ export interface Product {
   primaryImage?: (number | null) | Media;
   gallery?: (number | Media)[] | null;
   primaryCategory: number | ProductCategory;
-  secondaryCategories?: (number | ProductCategory)[] | null;
+  /**
+   * Regroupements transversaux (campagnes, thèmes) dans lesquels ce produit peut être mis en avant — n’affecte pas sa catégorie propriétaire (primaryCategory).
+   */
+  collections?: (number | ProductCollection)[] | null;
   needs?: (number | Solution)[] | null;
   sectors?: (number | Sector)[] | null;
   relatedProducts?: (number | Product)[] | null;
@@ -607,7 +612,7 @@ export interface Product {
   createdAt: string;
 }
 /**
- * Familles et sous-catégories de produits (section 12).
+ * Familles de produits (section 12).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "product-categories".
@@ -619,10 +624,6 @@ export interface ProductCategory {
    * URL générée à partir de "title". Modifiable manuellement.
    */
   slug: string;
-  /**
-   * Laisser vide pour une famille de premier niveau.
-   */
-  parent?: (number | null) | ProductCategory;
   shortDescription?: string | null;
   icon?: (number | null) | Media;
   image?: (number | null) | Media;
@@ -656,6 +657,27 @@ export interface ProductCategory {
   reviewNotes?: string | null;
   publishedAt?: string | null;
   archivedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Regroupements transversaux de produits (campagnes, thèmes) — jamais une page publique.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-collections".
+ */
+export interface ProductCollection {
+  id: number;
+  title: string;
+  /**
+   * Identifiant technique interne (ex. "ramadan"). Ne génère aucune URL publique — un produit reste uniquement accessible via /produits/<slug>.
+   */
+  key: string;
+  /**
+   * Cycle de vie de ce regroupement — indépendant de sa mise en avant sur une page donnée.
+   */
+  status: 'draft' | 'active' | 'archived';
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1637,6 +1659,24 @@ export interface PayloadMcpApiKey {
      */
     delete?: boolean | null;
   };
+  productCollections?: {
+    /**
+     * Allow clients to find product-collections.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create product-collections.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update product-collections.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete product-collections.
+     */
+    delete?: boolean | null;
+  };
   products?: {
     /**
      * Allow clients to find products.
@@ -2155,6 +2195,10 @@ export interface PayloadLockedDocument {
         value: number | ProductCategory;
       } | null)
     | ({
+        relationTo: 'product-collections';
+        value: number | ProductCollection;
+      } | null)
+    | ({
         relationTo: 'products';
         value: number | Product;
       } | null)
@@ -2413,7 +2457,6 @@ export interface PrivateQuoteFilesSelect<T extends boolean = true> {
 export interface ProductCategoriesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  parent?: T;
   shortDescription?: T;
   icon?: T;
   image?: T;
@@ -2439,6 +2482,18 @@ export interface ProductCategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-collections_select".
+ */
+export interface ProductCollectionsSelect<T extends boolean = true> {
+  title?: T;
+  key?: T;
+  status?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products_select".
  */
 export interface ProductsSelect<T extends boolean = true> {
@@ -2451,7 +2506,7 @@ export interface ProductsSelect<T extends boolean = true> {
   primaryImage?: T;
   gallery?: T;
   primaryCategory?: T;
-  secondaryCategories?: T;
+  collections?: T;
   needs?: T;
   sectors?: T;
   relatedProducts?: T;
@@ -3238,6 +3293,14 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         update?: T;
         delete?: T;
       };
+  productCollections?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
   products?:
     | T
     | {
@@ -3652,6 +3715,14 @@ export interface Homepage {
   };
   featuredResources?: (number | Resource)[] | null;
   featuredFAQs?: (number | Faq)[] | null;
+  /**
+   * Composition layer only — chooses which ProductCollections this page surfaces. Does not affect a collection’s own lifecycle (status) or the products within it.
+   */
+  collectionBoard?: {
+    enabled?: boolean | null;
+    title?: string | null;
+    collections?: (number | ProductCollection)[] | null;
+  };
   finalCTA?: {
     title?: string | null;
     description?: string | null;
@@ -3948,6 +4019,13 @@ export interface HomepageSelect<T extends boolean = true> {
       };
   featuredResources?: T;
   featuredFAQs?: T;
+  collectionBoard?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        collections?: T;
+      };
   finalCTA?:
     | T
     | {
@@ -4089,6 +4167,7 @@ export interface TaskCreateCollectionExport {
       | 'media'
       | 'private-quote-files'
       | 'product-categories'
+      | 'product-collections'
       | 'products'
       | 'services'
       | 'solutions'

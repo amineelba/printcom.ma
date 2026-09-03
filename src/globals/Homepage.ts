@@ -100,6 +100,24 @@ export const Homepage: GlobalConfig = {
       hasMany: true,
     },
     {
+      name: 'collectionBoard',
+      type: 'group',
+      admin: {
+        description:
+          'Composition layer only — chooses which ProductCollections this page surfaces. Does not affect a collection’s own lifecycle (status) or the products within it.',
+      },
+      fields: [
+        { name: 'enabled', type: 'checkbox', defaultValue: false },
+        { name: 'title', type: 'text', defaultValue: 'Collections' },
+        {
+          name: 'collections',
+          type: 'relationship',
+          relationTo: 'product-collections',
+          hasMany: true,
+        },
+      ],
+    },
+    {
       name: 'finalCTA',
       type: 'group',
       fields: [

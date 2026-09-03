@@ -16,6 +16,7 @@ import { Media } from './collections/Media'
 import { PrivateQuoteFiles } from './collections/PrivateQuoteFiles'
 
 import { ProductCategories } from './collections/ProductCategories'
+import { ProductCollections } from './collections/ProductCollections'
 import { Products } from './collections/Products'
 import { Services } from './collections/Services'
 import { Solutions } from './collections/Solutions'
@@ -62,6 +63,7 @@ const blobToken = process.env.BLOB_READ_WRITE_TOKEN
 const importExportSlugs: CollectionSlug[] = [
   'media',
   'products',
+  'product-collections',
   'services',
   'solutions',
   'sectors',
@@ -81,6 +83,7 @@ const importExportSlugs: CollectionSlug[] = [
 // control, is the real gate here.
 const mcpCollections: CollectionSlug[] = [
   'product-categories',
+  'product-collections',
   'products',
   'services',
   'solutions',
@@ -181,6 +184,7 @@ export default buildConfig({
     PrivateQuoteFiles,
 
     ProductCategories,
+    ProductCollections,
     Products,
     Services,
     Solutions,

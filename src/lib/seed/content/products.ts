@@ -687,7 +687,7 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, '')
 }
 
-const FILE_PREP_INSTRUCTIONS = richText([
+export const FILE_PREP_INSTRUCTIONS = richText([
   {
     p: 'Vérifiez les dimensions finales, les marges, les fonds perdus, la résolution des images et le mode colorimétrique. Lorsqu’un gabarit est nécessaire, utilisez uniquement la version fournie ou validée pour la configuration retenue.',
   },

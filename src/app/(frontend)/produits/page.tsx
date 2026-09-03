@@ -38,7 +38,7 @@ export default async function ProductsArchivePage({
 
   const [productsResult, categories, needs, sectors, materials, finishes, technologies] = await Promise.all([
     payload.find({ collection: 'products', where, page, limit: PAGE_SIZE, depth: 1, sort: '-featured,title' }),
-    payload.find({ collection: 'product-categories', where: { status: { equals: 'published' }, parent: { exists: false } }, limit: 100 }),
+    payload.find({ collection: 'product-categories', where: { status: { equals: 'published' } }, limit: 100 }),
     payload.find({ collection: 'solutions', where: { status: { equals: 'published' } }, limit: 100 }),
     payload.find({ collection: 'sectors', where: { status: { equals: 'published' } }, limit: 100 }),
     payload.find({ collection: 'materials', where: { status: { equals: 'published' } }, limit: 100 }),

@@ -19,12 +19,7 @@ export function buildProductWhere(params: ProductFilterParams): Where {
   const and: Where[] = [{ status: { equals: 'published' } }]
 
   if (params.categorie) {
-    and.push({
-      or: [
-        { 'primaryCategory.slug': { equals: params.categorie } },
-        { 'secondaryCategories.slug': { equals: params.categorie } },
-      ],
-    })
+    and.push({ 'primaryCategory.slug': { equals: params.categorie } })
   }
 
   if (params.besoin) {

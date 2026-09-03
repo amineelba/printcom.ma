@@ -20,8 +20,9 @@
  * runner must never do).
  */
 import type { Payload } from 'payload'
-import { PRODUCT_CATEGORIES, GOODIES_SUBCATEGORIES } from './content/productCategories'
+import { PRODUCT_CATEGORIES } from './content/productCategories'
 import { PRODUCTS } from './content/products'
+import { GOODIES_PRODUCTS } from './content/goodiesProducts'
 import { SERVICES } from './content/services'
 import { SOLUTIONS } from './content/solutions'
 import { SECTORS } from './content/sectors'
@@ -99,30 +100,15 @@ export async function runSeed(payload: Payload): Promise<void> {
   payload.logger.info(`Seeded ${PRODUCT_CATEGORIES.length} product categories (published).`)
 
   // -----------------------------------------------------------------
-  // Product sub-categories — "Goodies & objets publicitaires"
+  // Products — full catalogue (brief sections 7-8) + Goodies items.
+  // Goodies are ordinary Products (primaryCategory = "Goodies & objets
+  // publicitaires"), not a second category level — see goodiesProducts.ts.
   // -----------------------------------------------------------------
-  await upsertBySlug(
-    payload,
-    'product-categories',
-    GOODIES_SUBCATEGORIES.map((subCategory) => ({
-      slug: subCategory.slug,
-      title: subCategory.title,
-      parent: categoryIds[subCategory.parent],
-      order: subCategory.order,
-      shortDescription: subCategory.shortDescription,
-      status: 'published',
-      seo: subCategory.seo,
-    })),
-  )
-  payload.logger.info(`Seeded ${GOODIES_SUBCATEGORIES.length} goodies sub-categories (published).`)
-
-  // -----------------------------------------------------------------
-  // Products — full catalogue, 79 items (brief sections 7-8)
-  // -----------------------------------------------------------------
+  const ALL_PRODUCTS = [...PRODUCTS, ...GOODIES_PRODUCTS]
   await upsertBySlug(
     payload,
     'products',
-    PRODUCTS.map((product) => ({
+    ALL_PRODUCTS.map((product) => ({
       slug: product.slug,
       title: product.title,
       primaryCategory: categoryIds[product.category],
@@ -135,7 +121,7 @@ export async function runSeed(payload: Payload): Promise<void> {
       indicativePriceEnabled: product.indicativePriceEnabled,
     })),
   )
-  payload.logger.info(`Seeded ${PRODUCTS.length} products (draft — quote-only, no confirmed pricing).`)
+  payload.logger.info(`Seeded ${ALL_PRODUCTS.length} products (draft — quote-only, no confirmed pricing).`)
 
   // -----------------------------------------------------------------
   // Services and sub-services (brief section 9)
