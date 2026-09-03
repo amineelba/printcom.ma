@@ -69,6 +69,15 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   //    will surface as an extra top-level-looking category after the
   //    parent_id column is dropped below, which is visibly wrong rather
   //    than silently lossy.
+  //
+  //    Before any legacy category is deleted, any `quote-requests` document
+  //    whose `need.category` still points at it is repointed to that
+  //    category's canonical parent first — `quote_requests_need_category_id_
+  //    product_categories_id_fk` is ON DELETE SET NULL, so without this a
+  //    delete would silently blank out a real sales lead's stated need
+  //    instead of failing loudly. `parent_id` is read via raw SQL because
+  //    `ProductCategories.parent` no longer exists in the Payload config as
+  //    of this migration, so the Local API can't return it.
   // ---------------------------------------------------------------------
   const { docs: allCategories } = await payload.find({
     collection: 'product-categories',
@@ -81,6 +90,38 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
     (c) => !CANONICAL_CATEGORY_SLUGS.has(c.slug),
   )
 
+  const parentIdRows = await db.execute(sql`SELECT id, parent_id FROM product_categories WHERE parent_id IS NOT NULL`)
+  const legacyParentIds = new Map<number, number>(
+    (parentIdRows.rows as { id: number; parent_id: number }[]).map((r) => [r.id, r.parent_id]),
+  )
+
+  const deleteLegacyCategory = async (legacyCategory: { id: number; slug: string }) => {
+    const parentId = legacyParentIds.get(legacyCategory.id)
+    if (parentId) {
+      const { docs: affectedQuoteRequests } = await payload.find({
+        collection: 'quote-requests',
+        where: { 'need.category': { equals: legacyCategory.id } },
+        limit: 1000,
+        depth: 0,
+        overrideAccess: true,
+        req,
+      })
+      for (const quoteRequest of affectedQuoteRequests as { id: number }[]) {
+        await payload.update({
+          collection: 'quote-requests',
+          id: quoteRequest.id,
+          data: { need: { category: parentId } },
+          overrideAccess: true,
+          req,
+        })
+        payload.logger.info(
+          `[catalog-architecture-migration] Repointed quote-request #${quoteRequest.id}'s need.category from legacy "${legacyCategory.slug}" to its parent category (id ${parentId}).`,
+        )
+      }
+    }
+    await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
+  }
+
   for (const legacyCategory of legacyChildCategories) {
     const { docs: matchingProductDocs } = await payload.find({
       collection: 'products',
@@ -92,7 +133,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
     })
 
     if (matchingProductDocs.length > 0) {
-      await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
+      await deleteLegacyCategory(legacyCategory)
       payload.logger.info(
         `[catalog-architecture-migration] Removed legacy category "${legacyCategory.slug}" — superseded by existing Product "${matchingProductDocs[0].slug}".`,
       )
@@ -129,7 +170,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
           overrideAccess: true,
           req,
         })
-        await payload.delete({ collection: 'product-categories', id: legacyCategory.id, overrideAccess: true, req })
+        await deleteLegacyCategory(legacyCategory)
         payload.logger.info(
           `[catalog-architecture-migration] Migrated legacy Goodies category "${legacyCategory.slug}" to a new Product (no existing Product found by title).`,
         )
