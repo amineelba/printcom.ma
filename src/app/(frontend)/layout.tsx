@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
+import { Rubik } from 'next/font/google'
 import './globals.css'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
@@ -41,6 +42,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/
 
+const rubik = Rubik({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-rubik',
+  display: 'swap',
+})
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [siteSettings, seoDefaults, designSettings] = await Promise.all([
     getSiteSettings(),
@@ -56,7 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       : null
 
   return (
-    <html lang="fr">
+    <html lang="fr" className={rubik.variable}>
       <body>
         {brandColor ? (
           // Overrides the provisional action-blue fallback (see

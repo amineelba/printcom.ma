@@ -52,12 +52,14 @@
   --pc-color-info-subtle: var(--pc-color-brand-50);
 
   /* ---------------------------------------------------------------------
-   * Typography — families (no proprietary font files bundled)
+   * Typography — families
+   * Rubik is the Printcom typeface (explicit exception — see
+   * docs/design-system.md § Typography — bundled/self-hosted via
+   * next/font/google in src/app/(frontend)/layout.tsx, exposed here as
+   * --font-rubik; Arial is the system fallback while it loads.
    * ------------------------------------------------------------------- */
-  --pc-font-family-display:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --pc-font-family-text:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --pc-font-family-display: var(--font-rubik), Arial, sans-serif;
+  --pc-font-family-text: var(--font-rubik), Arial, sans-serif;
   --pc-font-family-mono: ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
 
   /* Typography — weights */
