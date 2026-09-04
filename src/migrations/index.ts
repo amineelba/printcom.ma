@@ -3,6 +3,7 @@ import * as migration_20260806_150320_add_invoicepdf_plugin from './20260806_150
 import * as migration_20260820_021258 from './20260820_021258';
 import * as migration_20260820_163249_add_mcp_plugin from './20260820_163249_add_mcp_plugin';
 import * as migration_20260903_151417_catalog_architecture_migration from './20260903_151417_catalog_architecture_migration';
+import * as migration_20260904_032835_add_homepage_sections from './20260904_032835_add_homepage_sections';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20260903_151417_catalog_architecture_migration.up,
     down: migration_20260903_151417_catalog_architecture_migration.down,
-    name: '20260903_151417_catalog_architecture_migration'
+    name: '20260903_151417_catalog_architecture_migration',
+  },
+  {
+    up: migration_20260904_032835_add_homepage_sections.up,
+    down: migration_20260904_032835_add_homepage_sections.down,
+    name: '20260904_032835_add_homepage_sections'
   },
 ];

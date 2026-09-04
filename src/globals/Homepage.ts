@@ -33,6 +33,25 @@ export const Homepage: GlobalConfig = {
       ],
     },
     {
+      name: 'heroSlider',
+      type: 'group',
+      admin: {
+        description:
+          'Grand slider média sous le hero (section 4 du brief) — distinct de hero.media. Masqué si désactivé ou vide.',
+      },
+      fields: [
+        { name: 'enabled', type: 'checkbox', defaultValue: false },
+        {
+          name: 'slides',
+          type: 'array',
+          fields: [
+            { name: 'media', type: 'upload', relationTo: 'media', required: true },
+            { name: 'label', type: 'text' },
+          ],
+        },
+      ],
+    },
+    {
       name: 'valueProposition',
       type: 'group',
       fields: [
@@ -71,6 +90,20 @@ export const Homepage: GlobalConfig = {
       type: 'relationship',
       relationTo: 'sectors',
       hasMany: true,
+    },
+    {
+      name: 'featuredMaterials',
+      type: 'relationship',
+      relationTo: 'materials',
+      hasMany: true,
+      admin: { description: 'Supports / matières mis en avant (section 10 du brief).' },
+    },
+    {
+      name: 'featuredFinishes',
+      type: 'relationship',
+      relationTo: 'finishes',
+      hasMany: true,
+      admin: { description: 'Finitions mises en avant (section 11 du brief).' },
     },
     {
       name: 'process',

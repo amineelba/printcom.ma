@@ -3686,6 +3686,19 @@ export interface Homepage {
     secondaryCtaHref?: string | null;
     media?: (number | null) | Media;
   };
+  /**
+   * Grand slider média sous le hero (section 4 du brief) — distinct de hero.media. Masqué si désactivé ou vide.
+   */
+  heroSlider?: {
+    enabled?: boolean | null;
+    slides?:
+      | {
+          media: number | Media;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   valueProposition?: {
     title?: string | null;
     points?:
@@ -3703,6 +3716,14 @@ export interface Homepage {
   featuredSolutions?: (number | Solution)[] | null;
   featuredServices?: (number | Service)[] | null;
   featuredSectors?: (number | Sector)[] | null;
+  /**
+   * Supports / matières mis en avant (section 10 du brief).
+   */
+  featuredMaterials?: (number | Material)[] | null;
+  /**
+   * Finitions mises en avant (section 11 du brief).
+   */
+  featuredFinishes?: (number | Finish)[] | null;
   process?: {
     title?: string | null;
     steps?:
@@ -3989,6 +4010,18 @@ export interface HomepageSelect<T extends boolean = true> {
         secondaryCtaHref?: T;
         media?: T;
       };
+  heroSlider?:
+    | T
+    | {
+        enabled?: T;
+        slides?:
+          | T
+          | {
+              media?: T;
+              label?: T;
+              id?: T;
+            };
+      };
   valueProposition?:
     | T
     | {
@@ -4005,6 +4038,8 @@ export interface HomepageSelect<T extends boolean = true> {
   featuredSolutions?: T;
   featuredServices?: T;
   featuredSectors?: T;
+  featuredMaterials?: T;
+  featuredFinishes?: T;
   process?:
     | T
     | {
