@@ -23,6 +23,7 @@ import type { Payload } from 'payload'
 import { PRODUCT_CATEGORIES } from './content/productCategories'
 import { PRODUCTS } from './content/products'
 import { GOODIES_PRODUCTS } from './content/goodiesProducts'
+import { PRODUCT_COLLECTIONS } from './content/productCollections'
 import { SERVICES } from './content/services'
 import { SOLUTIONS } from './content/solutions'
 import { SECTORS } from './content/sectors'
@@ -105,7 +106,7 @@ export async function runSeed(payload: Payload): Promise<void> {
   // publicitaires"), not a second category level — see goodiesProducts.ts.
   // -----------------------------------------------------------------
   const ALL_PRODUCTS = [...PRODUCTS, ...GOODIES_PRODUCTS]
-  await upsertBySlug(
+  const productIds = await upsertBySlug(
     payload,
     'products',
     ALL_PRODUCTS.map((product) => ({
@@ -122,6 +123,52 @@ export async function runSeed(payload: Payload): Promise<void> {
     })),
   )
   payload.logger.info(`Seeded ${ALL_PRODUCTS.length} products (draft — quote-only, no confirmed pricing).`)
+
+  // -----------------------------------------------------------------
+  // Product Collections — transversal merchandising groupings for the
+  // homepage "Collection Board" (brief §5). Never a page/route; members
+  // are set on each Product's `collections[]` field, not owned here.
+  // Upserted by `key` (its own identifying field — this collection has no
+  // `slug`, deliberately, so it can never imply a public URL).
+  // -----------------------------------------------------------------
+  const collectionIds: Record<string, number> = {}
+  for (const collection of PRODUCT_COLLECTIONS) {
+    const existing = await payload.find({
+      collection: 'product-collections',
+      where: { key: { equals: collection.key } },
+      limit: 1,
+      depth: 0,
+    })
+    const existingDoc = existing.docs[0] as { id: number } | undefined
+    const data = { key: collection.key, title: collection.title, order: collection.order, status: 'active' as const }
+    if (existingDoc) {
+      await payload.update({ collection: 'product-collections', id: existingDoc.id, data, overrideAccess: true })
+      collectionIds[collection.key] = existingDoc.id
+    } else {
+      const created = await payload.create({ collection: 'product-collections', data, overrideAccess: true })
+      collectionIds[collection.key] = created.id
+    }
+  }
+
+  const productCollectionMembership = new Map<string, number[]>()
+  for (const collection of PRODUCT_COLLECTIONS) {
+    for (const productSlug of collection.productSlugs) {
+      const ids = productCollectionMembership.get(productSlug) ?? []
+      ids.push(collectionIds[collection.key])
+      productCollectionMembership.set(productSlug, ids)
+    }
+  }
+  for (const [productSlug, memberOfCollectionIds] of productCollectionMembership) {
+    await payload.update({
+      collection: 'products',
+      id: productIds[productSlug],
+      data: { collections: memberOfCollectionIds },
+      overrideAccess: true,
+    })
+  }
+  payload.logger.info(
+    `Seeded ${PRODUCT_COLLECTIONS.length} product collections (active) and tagged ${productCollectionMembership.size} products into them.`,
+  )
 
   // -----------------------------------------------------------------
   // Services and sub-services (brief section 9)
@@ -150,7 +197,7 @@ export async function runSeed(payload: Payload): Promise<void> {
   // -----------------------------------------------------------------
   // Solutions — par besoin + opérationnelles (brief sections 10 and 37)
   // -----------------------------------------------------------------
-  await upsertBySlug(
+  const solutionIds = await upsertBySlug(
     payload,
     'solutions',
     SOLUTIONS.map((solution) => ({
@@ -207,7 +254,7 @@ export async function runSeed(payload: Payload): Promise<void> {
   // -----------------------------------------------------------------
   // Materials and finishes (brief sections 13-14)
   // -----------------------------------------------------------------
-  await upsertBySlug(
+  const materialIds = await upsertBySlug(
     payload,
     'materials',
     MATERIALS.map((material) => ({
@@ -221,7 +268,7 @@ export async function runSeed(payload: Payload): Promise<void> {
   )
   payload.logger.info(`Seeded ${MATERIALS.length} materials (draft).`)
 
-  await upsertBySlug(
+  const finishIds = await upsertBySlug(
     payload,
     'finishes',
     FINISHES.map((finish) => ({
@@ -397,14 +444,61 @@ export async function runSeed(payload: Payload): Promise<void> {
 
   const homepage = await payload.findGlobal({ slug: 'homepage', depth: 0 })
   if (!homepage.featuredCategories || homepage.featuredCategories.length === 0) {
-    const topCategoryIds = PRODUCT_CATEGORIES.slice(0, 6).map((category) => categoryIds[category.slug])
+    // Only featuredCategories, featuredSolutions and collectionBoard are
+    // populated here — those are the only entities currently seeded
+    // `published`/`active`. featuredServices/featuredSectors/
+    // featuredMaterials/featuredFinishes/featuredResources/featuredFAQs
+    // stay unset: their underlying collections are seeded `draft`/`review`
+    // (brief §33 rule 2 — only confirmed content is ever published), so
+    // those homepage sections correctly stay hidden until Printcom
+    // reviews and publishes that content, same as the rest of the site.
+    const allCategoryIds = PRODUCT_CATEGORIES.map((category) => categoryIds[category.slug])
     await payload.updateGlobal({
       slug: 'homepage',
       data: {
-        featuredCategories: topCategoryIds,
+        hero: {
+          eyebrow: 'Impression commerciale',
+          title: 'Tout ce qui porte votre marque. Imprimé avec intention.',
+          description:
+            "Printcom accompagne les entreprises dans la préparation de leurs supports imprimés. Du premier fichier au choix du format, chaque décision devient plus simple, plus lisible et mieux structurée.",
+          primaryCtaLabel: 'Demander un devis',
+          primaryCtaHref: '/demande-de-devis',
+          secondaryCtaLabel: 'Explorer les produits',
+          secondaryCtaHref: '/produits',
+        },
+        valueProposition: {
+          title: 'Le bon support. Pour le bon message.',
+          points: [
+            { title: 'Comprendre avant d’imprimer', description: 'Nous qualifions le produit, le format et le contexte d’utilisation avant toute proposition.' },
+            { title: 'Configurer avec précision', description: 'Chaque paramètre — support, quantité, finition — est défini clairement, sans ambiguïté.' },
+            { title: 'Préparer pour produire', description: 'Vos fichiers sont vérifiés selon les exigences techniques de production avant lancement.' },
+          ],
+        },
+        featuredCategories: allCategoryIds,
+        featuredSolutions: SOLUTIONS.map((solution) => solutionIds[solution.slug]),
+        process: {
+          title: 'De votre besoin à une demande prête à étudier.',
+          steps: [
+            { title: 'Comprendre votre besoin', description: 'Nous qualifions le produit, le format et le contexte d’utilisation.' },
+            { title: 'Configurer votre projet', description: 'Support, quantité, finition : chaque paramètre est défini clairement.' },
+            { title: 'Préparer les fichiers', description: 'Vos fichiers sont vérifiés selon les exigences techniques de production.' },
+            { title: 'Recevoir une demande prête à étudier', description: 'Votre demande de devis est transmise à notre équipe commerciale pour étude.' },
+          ],
+        },
+        finalCTA: {
+          title: 'Votre projet commence par une configuration claire.',
+          description: 'Décrivez votre besoin, nous vous répondons avec une étude adaptée à votre projet.',
+          ctaLabel: 'Demander un devis',
+          ctaHref: '/demande-de-devis',
+        },
+        collectionBoard: {
+          enabled: true,
+          title: 'Collections',
+          collections: PRODUCT_COLLECTIONS.map((collection) => collectionIds[collection.key]),
+        },
       },
     })
-    payload.logger.info('Seeded homepage featured categories.')
+    payload.logger.info('Seeded homepage content (hero, value proposition, categories, process, final CTA, collection board).')
   }
 
   payload.logger.info('Printcom seed complete.')
