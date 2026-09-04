@@ -69,14 +69,21 @@ WCAG-checked values, reused for the same reason.
 
 ## Typography
 
-`-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-sans-serif` — the standards-compliant system-font stack, which resolves
-to whatever the visitor's OS already has installed (San Francisco on
-Apple devices, Segoe UI on Windows). No font files are downloaded,
-converted, or bundled. Type scale, weights, and line-heights mirror the
-reference doc's reconstructed values (an 11px→96px size ramp, 400-700
-weight range, 1.0-1.47 line-height range) — these are generic type-scale
-numbers, not distinctive Apple IP.
+**Font family — explicit exception.** `--pc-font-family-display` and
+`--pc-font-family-text` resolve to **Rubik** (`var(--font-rubik), Arial,
+sans-serif`), not the original system-font stack — a deliberate exception
+mandated by `PRINTCOM-HOMEPAGE-UI-UX-BRIEF-UNIQUE.md` §10 ("Rubik devient
+la police Printcom"). Do not "fix" this back to `-apple-system, ...`; that
+was the pre-brief default, not a regression. Rubik is self-hosted via
+`next/font/google` in `src/app/(frontend)/layout.tsx` (weights
+400/500/600/700, `display: swap`) — no external request at runtime, no
+FOUC — and exposed as the `--font-rubik` CSS variable on `<html>`, which
+`foundation.css` then references. Every component already consuming the
+`--pc-font-family-*` tokens picked this up automatically; no per-component
+changes were needed. Type scale, weights, and line-heights are untouched
+and still mirror the reference doc's reconstructed values (an 11px→96px
+size ramp, 400-700 weight range, 1.0-1.47 line-height range) — these are
+generic type-scale numbers, not distinctive Apple IP.
 
 Large headings use `clamp()` for fluid responsive sizing (see
 `--pc-type-hero-display-size` etc. in `semantic.css`) rather than a fixed

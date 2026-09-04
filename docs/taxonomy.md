@@ -38,16 +38,31 @@ a confirmed commercial offer until Printcom reviews and publishes it
 See `src/lib/seed/content/products.ts` and `goodiesProducts.ts` for the
 full list.
 
-## Product collections — `product-collections`, status `draft` (none seeded)
+## Product collections — `product-collections`, status `active`, 6 seeded
 
-Transversal semantic merchandising groupings (e.g. "Ramadan",
-"Événementiel") — a curated context a Product may be surfaced in via
-`Products.collections[]`, independent of its `primaryCategory`
-ownership. Not a content type with its own page: no SEO fields, no slug
-implying a public URL (`key` is an internal identifier only). Not seeded
-by default — `Homepage.collectionBoard` chooses which active collections
-(if any) a given page surfaces, as a presentation decision separate from
-a collection's own lifecycle.
+Transversal semantic merchandising groupings — a curated context a
+Product may be surfaced in via `Products.collections[]`, independent of
+its `primaryCategory` ownership. Not a content type with its own page: no
+SEO fields, no slug implying a public URL (`key` is an internal
+identifier only).
+
+Seeded per `PRINTCOM-HOMEPAGE-UI-UX-BRIEF-UNIQUE.md`'s example list
+(`src/lib/seed/content/productCollections.ts`), `active` from the start —
+a structural/organizational grouping, not a factual claim, same
+reasoning already used to publish the 9 categories immediately:
+
+Ramadan · Yennayer · Nouvel An · Eid al-Adha · Coupe du Monde 2030 ·
+Événementiel — each with a curated set of real, already-seeded catalogue
+products tagged in (23 products total; pure re-organization, no new
+catalogue content).
+
+`Homepage.collectionBoard` (seeded `enabled: true`) chooses which active
+collections a given page surfaces, as a presentation decision separate
+from a collection's own lifecycle — the homepage's "Collection Board"
+section (pills/tabs filtering product cards, no `/collections/*` route)
+only shows a collection once it has at least one currently-*published*
+matching product, so it may render fewer than all 6 until more products
+are published.
 
 ## Services (brief section 9) — `services`, status `draft`
 

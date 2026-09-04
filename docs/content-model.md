@@ -45,6 +45,52 @@ company's bank/IBAN and legal details used on generated invoice PDFs, so
 it's sales-team/admin only, not publicly readable — see
 `docs/access-control.md`.
 
+### Homepage (`src/globals/Homepage.ts`)
+
+Anatomy follows `PRINTCOM-HOMEPAGE-UI-UX-BRIEF-UNIQUE.md` §7. Beyond the
+original `hero`, `valueProposition`, `featuredCategories`,
+`featuredSolutions`, `featuredServices`, `featuredSectors` (now unused by
+the homepage route — see below), `process`, `featuredResources`,
+`featuredFAQs`, `collectionBoard`, `finalCTA`:
+
+- `heroSlider { enabled, slides[] }` — the hero media slider (brief §4),
+  deliberately separate from `hero.media`.
+- `featuredMaterials` / `featuredFinishes` — relationships for the
+  "Supports/matières" and "Finitions" sections (brief §10-11). The
+  homepage route re-filters these to `status: published` before
+  rendering — `materials`/`finishes` are seeded `draft`, and a populated
+  relationship on a global doesn't independently re-check access-control
+  status the way a direct `find()` does.
+
+`featuredServices`/`featuredSectors`/`featuredResources`/`featuredFAQs`
+stay unpopulated by the seed today: their underlying content is seeded
+`draft`/`review` (brief §33 rule 2), so those sections correctly render
+nothing until Printcom reviews and publishes that content. The homepage
+no longer has a "Secteurs" section at all (not part of the brief's
+18-section anatomy) — `featuredSectors` stays in the schema, unused, per
+the "don't run an unrequested destructive migration" principle; the
+Sectors collection and its own pages (`/solutions/par-secteur/...`) are
+unaffected.
+
+The trust bar and "Technologies confirmées" sections are **not**
+curated via a Homepage field — they're direct, double-filtered queries
+(`status: published` AND `authorizationConfirmed`/`verificationStatus:
+confirmed`) in the homepage route itself, matching the existing
+`/technologies` page pattern, so only ever-confirmed content can reach
+them regardless of editorial curation.
+
+### Global navigation (`src/globals/Header.ts` + the product catalogue)
+
+Level 1 (navbar) is still `Header.menus`, editor-configurable. Levels 2-3
+(the sticky category bar and its full-width mega menu, brief §2) are
+**not** editorial content — they're derived live from the 9 published
+`product-categories` and their published `products` via
+`src/lib/payload/cachedCategories.ts`'s `getNavCategories()` (cached,
+mirrors `cachedGlobals.ts`'s pattern), rendered site-wide by
+`SiteHeader`/`CategoryBar`/`MegaMenu`. The "Produits" entry in
+`Header.menus` is a plain link (`href: '/produits'`, no `columns`) — the
+mega menu is a separate UI layer beneath it, not a `Header` column.
+
 ## Invoicing (payload-invoicepdf plugin)
 
 `src/payload.config.ts` registers the third-party `payload-invoicepdf`
