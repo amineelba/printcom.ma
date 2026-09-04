@@ -3,15 +3,19 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import type { Header } from '@/payload-types'
+import type { NavCategory } from '@/lib/payload/cachedCategories'
 
 type Menu = NonNullable<Header['menus']>[number]
 
 export function MobileNavigation({
   menus,
   quoteCTA,
+  navCategories = [],
 }: {
   menus: Menu[]
   quoteCTA?: { label?: string | null; href?: string | null } | null
+  /** Catalog-driven mega menu content for the "Produits" entry (brief §2, level 3, mobile drawer). */
+  navCategories?: NavCategory[]
 }) {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
@@ -91,8 +95,9 @@ export function MobileNavigation({
           <div className="flex-1 overflow-y-auto px-6 py-6">
             <ul className="flex flex-col divide-y divide-(--pc-color-border-subtle)">
               {menus.map((menu, index) => {
+                const isProductsMenu = menu.href === '/produits' && navCategories.length > 0
                 const hasColumns = Boolean(menu.columns?.length)
-                if (!hasColumns && menu.href) {
+                if (!isProductsMenu && !hasColumns && menu.href) {
                   return (
                     <li key={menu.id ?? menu.label} className="py-4">
                       <Link href={menu.href} className="text-[1.0625rem] font-medium text-primary" onClick={() => setIsOpen(false)}>
@@ -118,7 +123,21 @@ export function MobileNavigation({
                         ⌄
                       </span>
                     </button>
-                    {isExpanded ? (
+                    {isExpanded && isProductsMenu ? (
+                      <div id={`mobile-nav-group-${index}`} className="flex flex-col gap-3 pb-4 pl-2">
+                        {navCategories.map((category) => (
+                          <Link
+                            key={category.id}
+                            href={`/produits/${category.slug}`}
+                            className="text-secondary"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {category.title}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
+                    {isExpanded && !isProductsMenu ? (
                       <div id={`mobile-nav-group-${index}`} className="flex flex-col gap-5 pb-4 pl-2">
                         {menu.columns?.map((column, columnIndex) => (
                           <div key={column.id ?? columnIndex}>
