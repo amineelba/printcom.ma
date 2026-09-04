@@ -4,7 +4,7 @@ test.describe('Frontend — golden paths', () => {
   test('homepage loads with the real hero content', async ({ page }) => {
     await page.goto('/')
     await expect(page).toHaveTitle(/Printcom/)
-    await expect(page.locator('h1').first()).toContainText('supports imprimés')
+    await expect(page.locator('h1').first()).toContainText('Tout ce qui porte votre marque')
     await expect(page.getByRole('link', { name: 'Demander un devis' }).first()).toBeVisible()
   })
 
