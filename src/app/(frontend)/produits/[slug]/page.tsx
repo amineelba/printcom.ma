@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import { getPayload } from '@/lib/payload/client'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs'
-import { ResponsiveImage } from '@/components/ui/ResponsiveImage'
+import { ProductConfigurator } from '@/components/configurator/ProductConfigurator'
+import { buildProductConfiguratorData } from '@/lib/configurator/buildProductConfiguratorData'
 import { CTAGroup } from '@/components/ui/CTAGroup'
 import { RichTextRenderer } from '@/components/content/RichTextRenderer'
 import { SpecificationList } from '@/components/content/SpecificationList'
@@ -76,8 +77,14 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
   if (!product) notFound()
 
   const category = product.primaryCategory as ProductCategory | number | null | undefined
-  const materials = (product.materials ?? []).filter((m): m is Material => typeof m === 'object')
-  const finishes = (product.finishes ?? []).filter((f): f is Finish => typeof f === 'object')
+  // Populated relationships don't re-check access control: only published
+  // supports/finitions may be listed publicly.
+  const materials = (product.materials ?? []).filter(
+    (m): m is Material => typeof m === 'object' && m.status === 'published',
+  )
+  const finishes = (product.finishes ?? []).filter(
+    (f): f is Finish => typeof f === 'object' && f.status === 'published',
+  )
   const technologies = (product.recommendedTechnologies ?? []).filter(
     (t): t is Technology => typeof t === 'object' && t.verificationStatus === 'confirmed',
   )
@@ -138,24 +145,18 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
           ]}
         />
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-card-large bg-alternate">
-            {product.primaryImage ? (
-              <ResponsiveImage media={product.primaryImage} fill sizes="(min-width: 1069px) 50vw, 100vw" priority />
-            ) : null}
-          </div>
-          <div>
-            {category && typeof category === 'object' ? (
-              <p className="pc-text-eyebrow">{category.title}</p>
-            ) : null}
-            <h1 className="pc-text-page-title text-primary">{product.title}</h1>
-            <p className="pc-text-intro mt-4">{product.shortDescription}</p>
-            <CTAGroup
-              className="mt-8"
-              items={[{ label: 'Demander un devis', href: `/demande-de-devis?produit=${product.slug}` }]}
-            />
-          </div>
-        </div>
+        <ProductConfigurator
+          data={buildProductConfiguratorData(product)}
+          intro={
+            <div>
+              {category && typeof category === 'object' ? (
+                <p className="pc-text-eyebrow">{category.title}</p>
+              ) : null}
+              <h1 className="pc-text-page-title text-primary">{product.title}</h1>
+              <p className="pc-text-intro mt-4">{product.shortDescription}</p>
+            </div>
+          }
+        />
       </Container>
 
       {product.longDescription ? (
@@ -236,10 +237,10 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
         <Container width="reading" className="text-center">
           <h2 className="pc-text-section-title text-primary">Un projet {product.title.toLowerCase()} ?</h2>
           <p className="pc-text-intro mt-4">
-            Décrivez votre besoin, nous établissons un devis adapté à votre production.
+            Configurez votre produit ci-dessus, ou laissez-nous vos coordonnées : notre équipe vous contacte pour finaliser votre demande.
           </p>
           <div className="mt-8 flex justify-center">
-            <CTAGroup items={[{ label: 'Demander un devis', href: `/demande-de-devis?produit=${product.slug}` }]} />
+            <CTAGroup items={[{ label: 'Obtenir mon devis', href: `/demande-de-devis?produit=${product.slug}` }]} />
           </div>
         </Container>
       </section>

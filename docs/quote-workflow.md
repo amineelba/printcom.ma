@@ -2,6 +2,10 @@
 
 ## Public-facing flow
 
+Configuration happens on the product page (`docs/product-configurator.md`);
+its "Obtenir mon devis" button leads here with `?produit=<slug>`. Selected
+options are **not** transferred yet (planned for a later sprint).
+
 `/demande-de-devis` (`src/app/(frontend)/demande-de-devis/page.tsx`)
 renders `QuoteCheckout`: **one single-scroll page, no stepper, no
 next/back, no recap step.** It replaced the former six-step wizard

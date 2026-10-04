@@ -16,6 +16,7 @@ arg — none in application code).
 |---|---|
 | `buildProductWhere.spec.ts` | The `/produits` filter-query builder — cumulative AND filters, empty-param handling |
 | `quoteValidation.spec.ts` | `quoteCheckoutSchema` — required name/phone/email/`designSource`/consent, exact `designSource` enum, optional company/comment (normalized), comment length cap, honeypot passthrough, missing idempotency key |
+| `configuratorData.spec.ts` / `configuratorState.spec.ts` / `ProductConfigurator.spec.tsx` | Product configurator: normalizer (omitted groups, order, labels, relationships, images, custom format), state/summary logic, and the rendered component (radio/checkbox semantics, selection, summary, gallery, CTA, no price/cart UI). `.spec.tsx` is picked up via `vitest.config.mts` |
 | `quoteEmails.spec.ts` | Notification/confirmation email rendering (no `undefined`, company only when present, HTML escaping, no promises) and `mapCheckoutToQuoteRequest` normalization |
 | `generateReference.spec.ts` | `formatReference`'s zero-padding and non-truncation of large sequences |
 | `normalize.spec.ts` | Accent-stripping/lowercasing for search |
@@ -47,6 +48,8 @@ routes return an actual 404 status with the styled not-found page,
 media query doesn't break rendering.
 
 `quoteCheckout.e2e.spec.ts` (4 tests): `/demande-de-devis` is a single-scroll form (no stepper/next-back/file upload/brief), required errors are tied to their fields and focus the first one, `designSource` is a mutually exclusive keyboard-operable radio group, and the short form submits through to `/demande-de-devis/merci?reference=PC-DEVIS-…`.
+
+`productConfigurator.e2e.spec.ts` (7 tests, creates its own published fixtures): configure → summary → quote link, keyboard radios/checkboxes, custom format, no price/cart UI, product without configuration, category archive unaffected, mobile no-overflow.
 
 `admin.e2e.spec.ts` (3 tests): admin login → dashboard, collection list
 view, collection create view.

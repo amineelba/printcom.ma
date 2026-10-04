@@ -1,10 +1,21 @@
 import Image from 'next/image'
-import type { Media as MediaType } from '@/payload-types'
-
-type MediaLike = MediaType | number | null | undefined
-
 /** Matches the `imageSizes` names configured in src/collections/Media.ts. */
 type PayloadImageSize = 'thumbnail' | 'card' | 'listing' | 'hero' | 'openGraph'
+
+/**
+ * The subset of a Payload Media document this component reads. Structural,
+ * so both a full `Media` and a trimmed serializable copy (e.g. the product
+ * configurator's `ConfiguratorMedia`) can be rendered.
+ */
+export interface ResponsiveImageMedia {
+  url?: string | null
+  alt?: string | null
+  width?: number | null
+  height?: number | null
+  sizes?: Partial<Record<PayloadImageSize, { url?: string | null } | undefined>>
+}
+
+type MediaLike = ResponsiveImageMedia | number | null | undefined
 
 export function ResponsiveImage({
   media,

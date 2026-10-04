@@ -109,7 +109,9 @@ Tailwind's stock 1024px default.
 Eyebrow, SectionHeader, CTAGroup, ResponsiveImage), `layout/`
 (SiteHeader, SiteFooter), `navigation/` (DesktopNavigation,
 MobileNavigation, SearchOverlay, Breadcrumbs, FooterAccordionColumn),
-`heroes/` (Hero), `cards/` (one per content type — ProductCard,
+`configurator/` (the product-page configurator — ProductConfigurator/
+ProductPreview/ConfiguratorGroup/ConfiguratorOption/ConfiguratorSummary,
+see `docs/product-configurator.md`), `heroes/` (Hero), `cards/` (one per content type — ProductCard,
 CategoryCard, ServiceCard, SolutionCard, SectorCard, TechnologyCard,
 MaterialCard, FinishCard, ResourceCard, ProductGrid), `rails/`
 (HorizontalRail — native scroll-snap, keyboard-operable prev/next, no
