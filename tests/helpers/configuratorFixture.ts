@@ -77,9 +77,11 @@ export async function createConfiguratorFixtures(): Promise<void> {
       customFormatAvailable: true,
       orientations: ['portrait', 'landscape'],
       printSides: ['single', 'double'],
+      colorModes: ['cmyk', 'bw'],
       materials: materials.map((m) => m.id),
+      grammages: [{ label: '350 g' }, { label: '400 g' }],
       finishes: finishes.map((f) => f.id),
-      quantities: [{ label: '100' }, { label: '500' }],
+      quantities: [{ label: '100 ex.' }, { label: '500 ex.' }, { label: 'Sur devis' }],
     },
     overrideAccess: true,
   })
@@ -128,4 +130,30 @@ export async function createConfiguratorFixtures(): Promise<void> {
     },
     overrideAccess: true,
   })
+}
+
+/** Reads back a submitted lead (depth 0) so e2e can assert what was really persisted. */
+export async function findQuoteByReference(reference: string) {
+  const payload = await getPayload({ config })
+  const result = await payload.find({
+    collection: 'quote-requests',
+    where: { reference: { equals: reference } },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+  })
+  return result.docs[0]
+}
+
+export async function removeQuotesByReference(references: string[]): Promise<void> {
+  if (!references.length) return
+  const payload = await getPayload({ config })
+  await payload.delete({ collection: 'quote-requests', where: { reference: { in: references } }, overrideAccess: true })
+}
+
+/** Id of a fixture material/finish, to compare against persisted relationships. */
+export async function fixtureDocId(collection: 'materials' | 'finishes', slug: string): Promise<number> {
+  const payload = await getPayload({ config })
+  const result = await payload.find({ collection, where: { slug: { equals: slug } }, limit: 1, depth: 0, overrideAccess: true })
+  return result.docs[0].id
 }

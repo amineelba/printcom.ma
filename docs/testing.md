@@ -17,12 +17,15 @@ arg — none in application code).
 | `buildProductWhere.spec.ts` | The `/produits` filter-query builder — cumulative AND filters, empty-param handling |
 | `quoteValidation.spec.ts` | `quoteCheckoutSchema` — required name/phone/email/`designSource`/consent, exact `designSource` enum, optional company/comment (normalized), comment length cap, honeypot passthrough, missing idempotency key |
 | `configuratorData.spec.ts` / `configuratorState.spec.ts` / `ProductConfigurator.spec.tsx` | Product configurator: normalizer (omitted groups, order, labels, relationships, images, custom format), state/summary logic, and the rendered component (radio/checkbox semantics, selection, summary, gallery, CTA, no price/cart UI). `.spec.tsx` is picked up via `vitest.config.mts` |
+| `configuratorTransport.spec.ts` / `configuratorResolve.spec.ts` | Sprint 4 transport (round trip, determinism, URL safety, fail-closed parsing, URLs) and server-side canonicalization (foreign/stale/unpublished values rejected, custom-format dimensions, legacy slugs, safe count/dimension parsers) |
+| `configuratorHydration.spec.tsx` / `analytics.spec.ts` / `QuoteRequestSummary.spec.tsx` | Restored configurator state (inputs, summary, preview, CTA round-trip), event semantics (started once, selected/deselected, completed, StrictMode once-per-view, no PII), provider isolation, "Modifier" link |
+| `quoteConfigurationMapping.spec.ts` | Canonical configuration → `quote-requests` fields (no `NaN`, labels kept when not numeric, custom dimensions, square) and the notification/confirmation emails |
 | `quoteEmails.spec.ts` | Notification/confirmation email rendering (no `undefined`, company only when present, HTML escaping, no promises) and `mapCheckoutToQuoteRequest` normalization |
 | `generateReference.spec.ts` | `formatReference`'s zero-padding and non-truncation of large sequences |
 | `normalize.spec.ts` | Accent-stripping/lowercasing for search |
 | `noForbiddenTaxonomy.spec.ts` | Asserts `Products`/`ProductCategories`/`Solutions`/`Sectors`/`Services` never define a forbidden slug (réalisations/projects/portfolio/etc.), and `Products` has no cart-shaped fields |
 
-19 tests, all passing.
+239 tests, all passing (run with `--workers=1`).
 
 ## Integration tests (`tests/integration/`, `pnpm test:integration`, requires `DATABASE_URL`)
 
@@ -31,10 +34,11 @@ arg — none in application code).
 | `api.int.spec.ts` | Payload Local API boots correctly; config never registers a forbidden collection |
 | `accessControl.int.spec.ts` | Draft products invisible to anonymous reads; published products visible; `quote-requests`/`private-quote-files` reject anonymous reads outright (see `docs/access-control.md` for why this throws rather than returning empty) |
 | `quoteCheckout.int.spec.ts` | The real `submitQuoteRequest` server action (only `next/headers` mocked) against Postgres: both `designSource` answers persist with normalized values, company/comment optional, published-only product/support/finition context, honeypot writes nothing, same idempotency key → one lead, malformed input rejected server-side, per-IP rate limit, anonymous reads still refused. Cleans up the leads it creates |
+| `quoteConfigurationPersistence.int.spec.ts` | Sprint 4: the real action persists the full canonical configuration (relationships, labels, numbers), keeps labels when counts aren't numeric, rejects tampering/malformed/unpublished input, legacy slugs, generic quote, idempotent replay, honeypot, anonymous read still refused. Creates and removes its own catalogue fixtures |
 | `productOptionMedia.int.spec.ts` | Image-capable product option rows: legacy label-only rows stay valid, `image`/`previewImage` persist distinctly on formats/grammages, description length validation, materials/finishes stay shared (no `previewImage`), public read exposes no price |
 | `seedIdempotency.int.spec.ts` | `runSeed()` executed twice produces identical document counts (proves the upsert-by-slug logic is actually idempotent, not just "should be"); demo products seed as `draft`; sectors seed with the mandated neutral positioning note |
 
-9 tests, all passing. Run against a real local Postgres in this session
+54 tests, all passing. Run against a real local Postgres in this session
 (not mocked) — see `docs/deployment.md` for how migrations are applied
 before these run.
 
@@ -52,10 +56,12 @@ media query doesn't break rendering.
 
 `productConfigurator.e2e.spec.ts` (9 tests, creates its own published fixtures incl. generated flat-colour PNGs): configure → summary → quote link, keyboard radios/checkboxes, custom format, no price/cart UI, product without configuration, category archive unaffected, mobile no-overflow; plus a visual-options flow (thumbnails, main preview following `previewImage`, text-only options, mobile image cards).
 
+`quoteConfigurationFunnel.e2e.spec.ts` (13 tests): configure → server-rendered "Votre demande" → "Modifier" → restored product → edit → submit → the persisted lead; product-only and generic quotes; legacy `support`/`finition` links; tampered, stale, malformed and unknown-product links; custom-format round trip; analytics sequence (once-per-view, nothing on category archives or failed validation, no PII); mobile. Each test sends its own `x-forwarded-for` so the 3/min/IP limiter of the shared dev server isn't tripped.
+
 `admin.e2e.spec.ts` (3 tests): admin login → dashboard, collection list
 view, collection create view.
 
-14 tests, all passing.
+39 tests, all passing (run with `--workers=1`).
 
 ### A note on what surfaced during actual test execution (not hypothetical)
 

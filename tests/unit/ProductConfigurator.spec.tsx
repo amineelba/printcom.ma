@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import { ProductConfigurator } from '@/components/configurator/ProductConfigurator'
 import { buildProductConfiguratorData } from '@/lib/configurator/buildProductConfiguratorData'
 import { makeFinish, makeFullProduct, makeMaterial, makeMedia, makeProduct } from './helpers/configuratorFixtures'
+import { parseConfigurationTransport } from '@/lib/configurator/transport'
 import type { Product } from '@/payload-types'
 
 afterEach(cleanup)
@@ -160,15 +161,36 @@ describe('ProductConfigurator — gallery', () => {
 })
 
 describe('ProductConfigurator — quote CTA', () => {
-  it('links to the quote checkout with the product slug only', () => {
+  const cfgOf = () =>
+    parseConfigurationTransport(
+      new URL(screen.getByRole('link', { name: 'Obtenir mon devis' }).getAttribute('href')!, 'http://x').searchParams.get('cfg'),
+    )
+
+  it('links to the quote checkout with the product slug and the auto-selected singleton only', () => {
     renderConfigurator(makeFullProduct())
-    const cta = screen.getByRole('link', { name: 'Obtenir mon devis' })
-    expect(cta.getAttribute('href')).toBe('/demande-de-devis?produit=cartes-de-visite')
+    const href = screen.getByRole('link', { name: 'Obtenir mon devis' }).getAttribute('href')!
+    const url = new URL(href, 'http://x')
+    expect(url.pathname).toBe('/demande-de-devis')
+    expect(url.searchParams.get('produit')).toBe('cartes-de-visite')
+    expect(cfgOf()).toEqual({ status: 'ok', configuration: { single: { pageCount: '4 pages' }, finishes: [] } })
   })
 
-  it('does not change the link when options are selected (no state hand-off yet)', () => {
+  it('carries the live selection into the link', () => {
     renderConfigurator(makeFullProduct())
     fireEvent.click(within(group('Format')).getByRole('radio', { name: 'A5' }))
+    fireEvent.click(within(group('Finition')).getByRole('checkbox', { name: 'Soft Touch' }))
+    fireEvent.click(within(group('Finition')).getByRole('checkbox', { name: 'Vernis UV' }))
+    expect(cfgOf()).toEqual({
+      status: 'ok',
+      configuration: {
+        single: { format: 'A5', pageCount: '4 pages' },
+        finishes: ['soft-touch', 'vernis-uv'],
+      },
+    })
+  })
+
+  it('a product without configuration groups links to the plain product', () => {
+    renderConfigurator(makeProduct())
     expect(screen.getByRole('link', { name: 'Obtenir mon devis' }).getAttribute('href')).toBe(
       '/demande-de-devis?produit=cartes-de-visite',
     )

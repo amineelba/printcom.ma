@@ -31,6 +31,16 @@ export const quoteCheckoutContextSchema = z.object({
 })
 
 /**
+ * Product + configuration hand-off from the product page (Sprint 4). Both
+ * values are untrusted: the server action re-resolves the product against
+ * published documents and canonicalizes the transport against its options.
+ */
+export const quoteProductContextSchema = z.object({
+  productSlug: z.string().trim().max(200).optional(),
+  configurationTransport: z.string().trim().max(2000).optional(),
+})
+
+/**
  * What the public `/demande-de-devis` checkout actually collects (Sprint 1).
  * Deliberately NOT the persisted quote-request shape — see
  * `mapCheckoutToQuoteRequest` for how this is normalized into the Payload
@@ -57,6 +67,7 @@ export const quoteCheckoutSchema = z.object({
     errorMap: () => ({ message: 'Le consentement est requis pour traiter votre demande.' }),
   }),
   context: quoteCheckoutContextSchema.optional(),
+  productContext: quoteProductContextSchema.optional(),
   honeypot: z.string().optional(),
   idempotencyKey: z.string().min(1).max(100),
 })

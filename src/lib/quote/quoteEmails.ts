@@ -24,11 +24,13 @@ export function buildQuoteNotificationEmail(
   // subject never ends with a dangling "—".
   const who = data.company ? `${data.fullName} (${data.company})` : data.fullName
 
-  const requestLines = [
-    row('Produit', context.product?.title),
-    row('Support', context.material?.title),
-    row('Finition', context.finish?.title),
-  ].join('')
+  // Same canonical rows as the checkout summary: selected values only. Without
+  // a canonical configuration (generic quote, legacy links) fall back to the
+  // plain material/finish lookup.
+  const configurationRows = context.configuration
+    ? context.configuration.rows.map((item) => row(item.label, item.value))
+    : [row('Support', context.material?.title), row('Finition', context.finish?.title)]
+  const requestLines = [row('Produit', context.product?.title), ...configurationRows].join('')
 
   const html = [
     `<p><strong>${escapeHtml(reference)}</strong></p>`,

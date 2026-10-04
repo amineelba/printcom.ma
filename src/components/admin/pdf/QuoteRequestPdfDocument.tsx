@@ -178,10 +178,12 @@ export function QuoteRequestPdfDocument({ quoteRequest }: { quoteRequest: QuoteR
                 ? 'Portrait'
                 : configuration?.orientation === 'landscape'
                   ? 'Paysage'
-                  : undefined
+                  : configuration?.orientation === 'square'
+                    ? 'Carré'
+                    : undefined
             }
           />
-          <Row label="Nombre de pages" value={configuration?.pageCount} />
+          <Row label="Nombre de pages" value={configuration?.pageCountLabel || configuration?.pageCount} />
           <Row
             label="Impression"
             value={
@@ -197,7 +199,7 @@ export function QuoteRequestPdfDocument({ quoteRequest }: { quoteRequest: QuoteR
           <Row label="Grammage" value={configuration?.grammage} />
           <Row label="Finitions" value={finishes} />
           <Row label="Reliure" value={configuration?.binding} />
-          <Row label="Quantité" value={configuration?.quantity} />
+          <Row label="Quantité" value={configuration?.quantityLabel || configuration?.quantity} />
           <Row label="Nombre de versions" value={configuration?.versionsCount} />
           <Row label="Personnalisation variable" value={configuration?.variablePersonalization !== undefined ? yesNo(configuration.variablePersonalization) : undefined} />
         </Section>

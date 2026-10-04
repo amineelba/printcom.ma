@@ -97,4 +97,22 @@ describe('quoteCheckoutSchema — optional fields', () => {
     const result = quoteCheckoutSchema.safeParse({ ...valid, honeypot: 'bot' })
     expect(result.success && result.data.honeypot).toBe('bot')
   })
+
+  it('accepts an optional product context and trims its slug', () => {
+    const result = quoteCheckoutSchema.safeParse({
+      ...valid,
+      productContext: { productSlug: '  cartes-de-visite ', configurationTransport: '1.abc' },
+    })
+    expect(result.success && result.data.productContext).toEqual({
+      productSlug: 'cartes-de-visite',
+      configurationTransport: '1.abc',
+    })
+    expect(quoteCheckoutSchema.safeParse(valid).success).toBe(true)
+  })
+
+  it('caps the transported configuration size', () => {
+    expect(
+      issueFor({ ...valid, productContext: { configurationTransport: 'x'.repeat(2001) } }, 'productContext.configurationTransport'),
+    ).toBeDefined()
+  })
 })

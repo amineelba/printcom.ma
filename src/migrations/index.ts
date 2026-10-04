@@ -6,6 +6,7 @@ import * as migration_20260903_151417_catalog_architecture_migration from './202
 import * as migration_20260904_032835_add_homepage_sections from './20260904_032835_add_homepage_sections';
 import * as migration_20261004_021246_quote_checkout_design_source from './20261004_021246_quote_checkout_design_source';
 import * as migration_20261004_025908_add_visual_metadata_to_product_options from './20261004_025908_add_visual_metadata_to_product_options';
+import * as migration_20261004_031420_quote_configuration_snapshot from './20261004_031420_quote_configuration_snapshot';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20261004_025908_add_visual_metadata_to_product_options.up,
     down: migration_20261004_025908_add_visual_metadata_to_product_options.down,
-    name: '20261004_025908_add_visual_metadata_to_product_options'
+    name: '20261004_025908_add_visual_metadata_to_product_options',
+  },
+  {
+    up: migration_20261004_031420_quote_configuration_snapshot.up,
+    down: migration_20261004_031420_quote_configuration_snapshot.down,
+    name: '20261004_031420_quote_configuration_snapshot'
   },
 ];

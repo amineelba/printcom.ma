@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { quoteCheckoutSchema, type DesignSource, type QuoteCheckoutInput } from '@/lib/validation/quote'
+import { trackEvent } from '@/lib/analytics/track'
 import { submitQuoteRequest } from '@/app/(frontend)/demande-de-devis/actions'
 import { FormField } from './FormField'
 import { FormErrorSummary } from './FormErrorSummary'
@@ -13,6 +14,7 @@ import { TextInput, TextArea } from './inputs'
 import { Button } from '@/components/ui/Button'
 
 export type QuoteCheckoutContext = NonNullable<QuoteCheckoutInput['context']>
+export type QuoteCheckoutProductContext = NonNullable<QuoteCheckoutInput['productContext']>
 
 interface CheckoutState {
   fullName: string
@@ -43,11 +45,20 @@ const FIELD_FOCUS_ORDER: { key: keyof CheckoutState; elementId: string }[] = [
  */
 export function QuoteCheckout({
   summaryItems,
+  editHref,
   context,
+  productContext,
+  selectedGroupCount = 0,
 }: {
   summaryItems: QuoteRequestSummaryItem[]
-  /** Slugs of the catalogue items already resolved for the summary; re-validated server-side. */
+  /** "Modifier" target — the product page with the configuration restored. */
+  editHref?: string
+  /** Legacy catalogue slugs (no product); re-validated server-side. */
   context?: QuoteCheckoutContext
+  /** Product + canonical configuration transport; re-canonicalized server-side. */
+  productContext?: QuoteCheckoutProductContext
+  /** Count of selected configuration groups — analytics only. */
+  selectedGroupCount?: number
 }) {
   const router = useRouter()
   const [state, setState] = useState<CheckoutState>({
@@ -90,6 +101,7 @@ export function QuoteCheckout({
       comments: state.comments,
       consentConfirmed: state.consentConfirmed as true,
       context,
+      productContext,
       honeypot: (new FormData(event.currentTarget).get('website') as string | null) ?? '',
       idempotencyKey,
     }
@@ -113,6 +125,14 @@ export function QuoteCheckout({
       const result = await submitQuoteRequest(input)
 
       if (result.status === 'success' && result.reference) {
+        // Only now: the server has confirmed the lead exists. No PII.
+        trackEvent('quote_submitted', {
+          has_product: Boolean(productContext?.productSlug),
+          product_slug: productContext?.productSlug,
+          has_configuration: selectedGroupCount > 0,
+          selected_group_count: selectedGroupCount,
+          design_source: parsed.data.designSource,
+        })
         router.push(`/demande-de-devis/merci?reference=${encodeURIComponent(result.reference)}`)
         return
       }
@@ -131,7 +151,7 @@ export function QuoteCheckout({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-10" aria-busy={isSubmitting}>
-      <QuoteRequestSummary items={summaryItems} />
+      <QuoteRequestSummary items={summaryItems} editHref={editHref} />
 
       <FormErrorSummary errors={errors} />
       {submitError ? (

@@ -7,6 +7,7 @@ import {
   type ProductConfiguratorData,
 } from './types'
 import { CUSTOM_FORMAT_LABEL } from './labels'
+import { buildQuoteCheckoutHref, serializeConfiguration } from './transport'
 
 type SingleKey = keyof ProductConfigurationState['single']
 
@@ -100,7 +101,11 @@ export function buildConfigurationSummary(
   return rows
 }
 
-/** Where the "Obtenir mon devis" button leads. Product context only (Sprint 2). */
-export function buildQuoteHref(slug: string): string {
-  return `/demande-de-devis?produit=${encodeURIComponent(slug)}`
+/**
+ * Where the "Obtenir mon devis" button leads: the checkout, carrying the
+ * product and (when anything is selected) the serialized configuration.
+ * Without state it is the plain product link of Sprint 2.
+ */
+export function buildQuoteHref(slug: string, state?: ProductConfigurationState): string {
+  return buildQuoteCheckoutHref(slug, state ? serializeConfiguration(state) : undefined)
 }

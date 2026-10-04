@@ -4,7 +4,14 @@ import { getPayload } from '@/lib/payload/client'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs'
 import { ProductConfigurator } from '@/components/configurator/ProductConfigurator'
+import { TrackProductView } from '@/components/analytics/TrackProductView'
 import { buildProductConfiguratorData } from '@/lib/configurator/buildProductConfiguratorData'
+import { resolveProductConfiguration } from '@/lib/configurator/resolveConfiguration'
+import {
+  buildQuoteCheckoutHref,
+  parseConfigurationTransport,
+  readConfigurationParam,
+} from '@/lib/configurator/transport'
 import { CTAGroup } from '@/components/ui/CTAGroup'
 import { RichTextRenderer } from '@/components/content/RichTextRenderer'
 import { SpecificationList } from '@/components/content/SpecificationList'
@@ -63,11 +70,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: product.seo?.metaTitle || product.title,
     description: product.seo?.metaDescription || product.shortDescription,
+    // Restored-configuration URLs (`?cfg=`) are the same page as far as search is concerned.
+    alternates: { canonical: `/produits/${product.slug}` },
     robots: product.seo?.noIndex ? { index: false, follow: false } : undefined,
   }
 }
 
-export default async function ProductOrCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductOrCategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
   const { slug } = await params
 
   const matchedCategory = await getCategory(slug)
@@ -77,6 +92,17 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
   if (!product) notFound()
 
   const category = product.primaryCategory as ProductCategory | number | null | undefined
+  const configuratorData = buildProductConfiguratorData(product)
+
+  // A configuration carried in the URL (the checkout's "Modifier" link, a
+  // shared link) is canonicalized against this product before it touches the
+  // UI: stale or foreign values are dropped, a malformed payload is ignored.
+  const restored = resolveProductConfiguration({
+    product,
+    transport: parseConfigurationTransport(readConfigurationParam(await searchParams)),
+  })
+  const restoredState = restored.rows.length ? restored.state : undefined
+
   // Populated relationships don't re-check access control: only published
   // supports/finitions may be listed publicly.
   const materials = (product.materials ?? []).filter(
@@ -133,6 +159,12 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
           imageUrl: product.primaryImage && typeof product.primaryImage === 'object' ? product.primaryImage.url || undefined : undefined,
         })}
       />
+      <TrackProductView
+        productSlug={product.slug}
+        categorySlug={category && typeof category === 'object' ? category.slug : undefined}
+        hasConfigurator={configuratorData.groups.length > 0}
+        restoredConfiguration={Boolean(restoredState)}
+      />
       <Container width="wide" className="py-[var(--pc-space-section-small)]">
         <Breadcrumbs
           items={[
@@ -146,7 +178,8 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
         />
 
         <ProductConfigurator
-          data={buildProductConfiguratorData(product)}
+          data={configuratorData}
+          initialState={restoredState}
           intro={
             <div>
               {category && typeof category === 'object' ? (
@@ -240,7 +273,7 @@ export default async function ProductOrCategoryPage({ params }: { params: Promis
             Configurez votre produit ci-dessus, ou laissez-nous vos coordonnées : notre équipe vous contacte pour finaliser votre demande.
           </p>
           <div className="mt-8 flex justify-center">
-            <CTAGroup items={[{ label: 'Obtenir mon devis', href: `/demande-de-devis?produit=${product.slug}` }]} />
+            <CTAGroup items={[{ label: 'Obtenir mon devis', href: buildQuoteCheckoutHref(product.slug) }]} />
           </div>
         </Container>
       </section>

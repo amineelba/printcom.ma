@@ -40,11 +40,13 @@ test.describe('Product page configurator', () => {
     await expect(summary(page)).not.toContainText('landscape')
 
     await page.getByRole('link', { name: 'Obtenir mon devis' }).first().click()
-    await expect(page).toHaveURL(new RegExp(`/demande-de-devis\\?produit=${CONFIGURABLE_SLUG}$`))
+    await expect(page).toHaveURL(new RegExp(`/demande-de-devis\\?produit=${CONFIGURABLE_SLUG}&cfg=1\\.`))
     await expect(page.locator('h1')).toHaveText('Demande de devis')
-    // Sprint 1 checkout stays short: no configuration questions on the quote page.
+    // Sprint 1 checkout stays short: no configuration questions on the quote page —
+    // the choices only come back as a read-only "Votre demande" summary.
     await expect(page.getByRole('radio', { name: 'A5' })).toHaveCount(0)
     await expect(page.getByText('Votre configuration')).toHaveCount(0)
+    await expect(page.getByRole('region', { name: 'Votre demande' })).toContainText('E2E Vernis A, E2E Vernis B')
   })
 
   test('single-choice groups are keyboard-operable radios; finishes are checkboxes', async ({ page }) => {
@@ -155,7 +157,7 @@ test.describe('Visual options (thumbnails and preview images)', () => {
     await expect(page.getByRole('img', { name: 'Aperçu A4 e2e' })).toBeVisible()
 
     await page.getByRole('link', { name: 'Obtenir mon devis' }).first().click()
-    await expect(page).toHaveURL(new RegExp(`/demande-de-devis\\?produit=${VISUAL_SLUG}$`))
+    await expect(page).toHaveURL(new RegExp(`/demande-de-devis\\?produit=${VISUAL_SLUG}&cfg=1\\.`))
     await expect(page.locator('h1')).toHaveText('Demande de devis')
   })
 

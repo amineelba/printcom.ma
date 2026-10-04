@@ -40,8 +40,8 @@ ConfiguratorGroup → ConfiguratorOption   ProductPreview   ConfiguratorSummary
   state, selection, summary, quote link) so it is unit-testable without a
   DOM. The client keeps **one** typed `ProductConfigurationState` object
   (`single` selections by group key, `multiple.finish`, `customFormat`) —
-  option machine values, not labels — shaped so a later sprint can hand it
-  to the quote checkout without restructuring.
+  option machine values, not labels. Since Sprint 4 that same object is what
+  gets serialized into the quote hand-off (see "Quote hand-off" below).
 - `labels.ts` holds the French titles and the enum label maps; a unit test
   asserts they match the option labels declared in
   `src/collections/Products.ts`.
@@ -176,12 +176,73 @@ the design-system focus tokens. The summary is an `aria-live="polite"`
 region. Everything uses `pc-` semantic tokens; motion is limited to short
 colour transitions and respects `prefers-reduced-motion`.
 
+## Quote hand-off (Sprint 4)
+
+The configurator state is carried to the quote checkout, persisted on the
+lead, and can be restored for editing.
+
+**Transport** (`src/lib/configurator/transport.ts` — the only serializer and
+parser). `serializeConfiguration(state)` produces `1.<base64url(JSON)>`:
+a version prefix, then compact JSON of the *machine values* only
+(`f` format, `o` orientation, `p` page count, `s` print sides, `c` colour
+mode, `m` material slug, `g` grammage, `q` quantity, `n` finish slugs,
+`x` custom format `[width, height, unit]`). Properties: deterministic key
+order, URL-safe alphabet, empty selections omitted (no `cfg` parameter at
+all when nothing is selected), custom-format dimensions only while
+"Sur mesure" is chosen, no ids, no labels beyond inline-option values, no
+prices, no personal data, hard size ceilings (2000 chars / 200 per value /
+20 finishes). `parseConfigurationTransport` never throws and returns
+`empty`, `ok` or `invalid` (malformed, oversized, unknown version, unknown
+keys, wrong types) — callers treat `invalid` as "no configuration" (fail
+closed). URL helpers: `buildQuoteCheckoutHref(slug, transport?)`
+(`/demande-de-devis?produit=<slug>&cfg=<transport>`) and
+`buildProductConfigurationHref(slug, transport?)`
+(`/produits/<slug>?cfg=<transport>`), both via `URLSearchParams`.
+
+**Canonicalization** (`src/lib/configurator/resolveConfiguration.ts`).
+The transport is untrusted. `resolveProductConfiguration({product,
+transport, legacy})` validates it against the *current published product*
+(rebuilt with `buildProductConfiguratorData`): a value survives only if the
+product offers it right now. Dropped: another product's material/finish,
+unpublished materials/finishes, renamed or removed inline options, enum
+values the product doesn't list, groups the product doesn't have,
+custom-format dimensions when no custom format is offered or when not
+positive numbers. Nothing is invented — no auto-selected defaults, no filled
+gaps — and the result also exposes the labels/ids persistence needs
+(`selections`), the canonical re-serialized `transport`, and the display
+`rows` (built by the same `buildConfigurationSummary` the configurator
+uses, so the page, the checkout summary and the emails can never disagree).
+The server-side entry is `resolveQuoteContext` (it loads the published
+product at depth 2); the product page uses the pure function directly.
+
+**Edit round-trip.** `/produits/<slug>?cfg=…` is parsed on the server
+(`page.tsx`), canonicalized, and passed as `initialState` to
+`ProductConfigurator`, so the restored state drives the summary *and* the
+Sprint 3 `resolvePreviewMedia`. With no/invalid/entirely-rejected `cfg` the
+configurator starts as before (singleton groups auto-selected). The
+checkout's "Modifier" link points here with the canonical transport; the
+bottom-of-page CTA stays a plain product link. `?cfg=` URLs carry
+`alternates.canonical` → `/produits/<slug>`. The product route was
+already request-rendered (every public route builds as dynamic), so reading
+`searchParams` adds no rendering cost.
+
+**Analytics** (`src/lib/analytics/`). Provider-neutral and typed, no
+third-party dependency: `trackEvent(name, props)` fans out to providers
+registered with `registerAnalyticsProvider` and dispatches a
+`printcom:analytics` DOM `CustomEvent`. It is a no-op on the server, each
+provider call is try/caught, and props are sanitized to short primitives.
+No vendor is wired — choosing one (and its consent handling) is a separate
+decision. Events: `product_viewed` (once per product page view, never on
+category archives), `configurator_started` (first *human* choice per view —
+auto-selected or restored state doesn't count), `configurator_option_selected`
+(`selected`/`deselected`, group key, machine value — never typed
+dimensions), `configurator_completed` (CTA click), `quote_checkout_viewed`
+(once per checkout view), `quote_submitted` (only after the server confirmed
+the lead; no name/e-mail/phone/comment/reference). Once-per-view uses a ref
+(`useTrackOnce`), which survives React StrictMode's double effect.
+
 ## What it deliberately does not do (yet)
 
-- **No state hand-off.** "Obtenir mon devis" links to
-  `/demande-de-devis?produit=<slug>` only; selections are local React state
-  (no URL serialization, no storage). The quote page does not show or ask
-  for configuration. Full hand-off is Sprint 4.
 - **Imagery is authored, not seeded.** The fields exist (formats, page
   counts, grammages, quantities; materials/finishes thumbnails) but no
   option image or preview is invented or seeded — products stay text-only
@@ -205,6 +266,14 @@ colour transitions and respects `prefers-reduced-motion`.
 `configuratorPreview.spec.ts` (preview resolver),
 `configuratorState.spec.ts` (state/summary/link),
 `ProductConfigurator.spec.tsx` (rendered semantics and interaction),
+`configuratorTransport.spec.ts`, `configuratorResolve.spec.ts` (serializer/
+parser, tamper rejection, safe parsers), `configuratorHydration.spec.tsx`
+(restored state, preview, CTA round-trip, instrumentation, StrictMode),
+`analytics.spec.ts`, `quoteConfigurationMapping.spec.ts`,
+`QuoteRequestSummary.spec.tsx`,
+`tests/integration/quoteConfigurationPersistence.int.spec.ts` (what lands on
+the lead), `tests/e2e/quoteConfigurationFunnel.e2e.spec.ts` (full funnel,
+edit round-trip, tampering, analytics, mobile),
 `tests/integration/productOptionMedia.int.spec.ts` (legacy label-only rows,
 thumbnail/preview persistence, no pricing exposure),
 `tests/e2e/productConfigurator.e2e.spec.ts` (journey through to the quote

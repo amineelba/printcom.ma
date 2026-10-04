@@ -102,7 +102,13 @@ export async function submitQuoteRequest(input: QuoteCheckoutInput): Promise<Sub
   }
 
   const payload = await getPayload()
-  const context = await resolveQuoteContext(payload, data.context)
+  // Everything the browser sent about the product is re-resolved here against
+  // published documents: the transport is canonicalized, never trusted.
+  const context = await resolveQuoteContext(payload, {
+    ...data.context,
+    productSlug: data.productContext?.productSlug ?? data.context?.productSlug,
+    configurationTransport: data.productContext?.configurationTransport,
+  })
 
   let doc
   let attempts = 0

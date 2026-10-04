@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/forms/FormField'
 import { Select, TextInput } from '@/components/forms/inputs'
@@ -12,6 +12,7 @@ import {
   toggleMultipleOption,
   updateCustomFormat,
 } from '@/lib/configurator/state'
+import { trackEvent } from '@/lib/analytics/track'
 import { CUSTOM_FORMAT_HELPER } from '@/lib/configurator/labels'
 import { resolvePreviewMedia } from '@/lib/configurator/preview'
 import {
@@ -30,15 +31,29 @@ type SingleKey = keyof ProductConfigurationState['single']
 /**
  * Reusable product configurator. Receives the normalized, serializable
  * `ProductConfiguratorData` (built server-side) and owns only the
- * interactive state: one `ProductConfigurationState` object. Local state
- * only — nothing is persisted or sent anywhere until a later sprint hands
- * the state to the quote checkout; today the CTA carries just the product.
+ * interactive state: one `ProductConfigurationState` object. It starts from
+ * `initialState` when the page was opened with a configuration restored from
+ * the URL (the checkout's "Modifier" link), otherwise from the defaults. The
+ * CTA serializes that same state into the checkout link (see
+ * lib/configurator/transport) — nothing else is persisted client-side.
  *
  * `intro` is server-rendered content (category, H1, description) slotted
  * into the layout so the page's core copy stays in the server tree.
  */
-export function ProductConfigurator({ data, intro }: { data: ProductConfiguratorData; intro: ReactNode }) {
-  const [state, setState] = useState<ProductConfigurationState>(() => createInitialConfigurationState(data))
+export function ProductConfigurator({
+  data,
+  intro,
+  initialState,
+}: {
+  data: ProductConfiguratorData
+  intro: ReactNode
+  /** Canonical state restored server-side from the URL; defaults when absent. */
+  initialState?: ProductConfigurationState
+}) {
+  const [state, setState] = useState<ProductConfigurationState>(
+    () => initialState ?? createInitialConfigurationState(data),
+  )
+  const startedRef = useRef(false)
   const summaryRows = useMemo(() => buildConfigurationSummary(data, state), [data, state])
 
   // Main preview. Base = the gallery image the visitor last picked (primary
@@ -61,11 +76,27 @@ export function ProductConfigurator({ data, intro }: { data: ProductConfigurator
 
   const onToggle = (group: GroupData) => (value: string) => {
     setGalleryPinned(false)
-    setState((current) =>
+    const wasSelected = isSelected(group)(value)
+    const next =
       group.selectionMode === 'multiple'
-        ? toggleMultipleOption(current, group, value)
-        : selectSingleOption(current, group.key as SingleKey, value),
-    )
+        ? toggleMultipleOption(state, group, value)
+        : selectSingleOption(state, group.key as SingleKey, value)
+    setState(next)
+
+    // Instrumentation. Only real visitor choices land here — restored and
+    // auto-selected state never goes through onToggle.
+    const slug = data.product.slug
+    if (!startedRef.current) {
+      startedRef.current = true
+      trackEvent('configurator_started', { product_slug: slug, group_key: group.key })
+    }
+    trackEvent('configurator_option_selected', {
+      product_slug: slug,
+      group_key: group.key,
+      option_value: value,
+      action: wasSelected ? 'deselected' : 'selected',
+      selected_group_count: buildConfigurationSummary(data, next).length,
+    })
   }
 
   return (
@@ -100,7 +131,18 @@ export function ProductConfigurator({ data, intro }: { data: ProductConfigurator
         {data.groups.length ? <ConfiguratorSummary productTitle={data.product.title} rows={summaryRows} /> : null}
 
         <div>
-          <Button href={buildQuoteHref(data.product.slug)} size="large" className="w-full sm:w-auto">
+          <Button
+            href={buildQuoteHref(data.product.slug, state)}
+            size="large"
+            className="w-full sm:w-auto"
+            onClick={() =>
+              trackEvent('configurator_completed', {
+                product_slug: data.product.slug,
+                selected_group_count: summaryRows.length,
+                group_count: data.groups.length,
+              })
+            }
+          >
             Obtenir mon devis
           </Button>
         </div>

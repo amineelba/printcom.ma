@@ -366,8 +366,12 @@ export interface QuoteRequest {
     customFormatWidth?: number | null;
     customFormatHeight?: number | null;
     customFormatUnit?: ('mm' | 'cm') | null;
-    orientation?: ('portrait' | 'landscape') | null;
+    orientation?: ('portrait' | 'landscape' | 'square') | null;
     pageCount?: number | null;
+    /**
+     * Libellé choisi sur la fiche produit, conservé tel quel (le nombre ci-dessus n’est rempli que lorsqu’il est explicite).
+     */
+    pageCountLabel?: string | null;
     printSides?: ('single' | 'double') | null;
     color?: string | null;
     material?: (number | null) | Material;
@@ -375,6 +379,10 @@ export interface QuoteRequest {
     finish?: (number | Finish)[] | null;
     binding?: string | null;
     quantity?: number | null;
+    /**
+     * Libellé choisi sur la fiche produit, conservé tel quel (le nombre ci-dessus n’est rempli que lorsqu’il est explicite).
+     */
+    quantityLabel?: string | null;
     versionsCount?: number | null;
     variablePersonalization?: boolean | null;
   };
@@ -3029,6 +3037,7 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
         customFormatUnit?: T;
         orientation?: T;
         pageCount?: T;
+        pageCountLabel?: T;
         printSides?: T;
         color?: T;
         material?: T;
@@ -3036,6 +3045,7 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
         finish?: T;
         binding?: T;
         quantity?: T;
+        quantityLabel?: T;
         versionsCount?: T;
         variablePersonalization?: T;
       };

@@ -94,9 +94,15 @@ export const QuoteRequests: CollectionConfig = {
           options: [
             { label: 'Portrait', value: 'portrait' },
             { label: 'Paysage', value: 'landscape' },
+            { label: 'Carré', value: 'square' },
           ],
         },
         { name: 'pageCount', type: 'number' },
+        {
+          name: 'pageCountLabel',
+          type: 'text',
+          admin: { description: 'Libellé choisi sur la fiche produit, conservé tel quel (le nombre ci-dessus n’est rempli que lorsqu’il est explicite).' },
+        },
         {
           name: 'printSides',
           type: 'select',
@@ -111,6 +117,11 @@ export const QuoteRequests: CollectionConfig = {
         { name: 'finish', type: 'relationship', relationTo: 'finishes', hasMany: true },
         { name: 'binding', type: 'text' },
         { name: 'quantity', type: 'number' },
+        {
+          name: 'quantityLabel',
+          type: 'text',
+          admin: { description: 'Libellé choisi sur la fiche produit, conservé tel quel (le nombre ci-dessus n’est rempli que lorsqu’il est explicite).' },
+        },
         { name: 'versionsCount', type: 'number' },
         { name: 'variablePersonalization', type: 'checkbox', defaultValue: false },
       ],
