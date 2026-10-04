@@ -27,9 +27,9 @@ describe('buildProductConfiguratorData — groups', () => {
     expect(data.groups.map((g) => g.key)).toEqual([
       'format',
       'orientation',
-      'pageCount',
-      'printSides',
-      'colorMode',
+      'page-count',
+      'print-sides',
+      'color-mode',
       'material',
       'grammage',
       'finish',
@@ -83,11 +83,11 @@ describe('buildProductConfiguratorData — groups', () => {
       ['landscape', 'Paysage'],
       ['square', 'Carré'],
     ])
-    expect(pairs('printSides')).toEqual([
+    expect(pairs('print-sides')).toEqual([
       ['single', 'Recto'],
       ['double', 'Recto-verso'],
     ])
-    expect(pairs('colorMode')).toEqual([
+    expect(pairs('color-mode')).toEqual([
       ['cmyk', 'Quadrichromie (CMJN)'],
       ['bw', 'Noir et blanc'],
       ['pantone', 'Pantone'],
@@ -256,7 +256,7 @@ describe('buildProductConfiguratorData — visual option metadata (Sprint 3)', (
     expect([g?.image?.id, g?.previewImage?.id]).toEqual(['65', '66'])
     expect(groupOf(data, 'quantity')?.options[0].image?.id).toBe('67')
     expect(groupOf(data, 'quantity')?.options[1].image).toBeUndefined()
-    expect(groupOf(data, 'pageCount')?.options.every((o) => !o.image && !o.previewImage)).toBe(true)
+    expect(groupOf(data, 'page-count')?.options.every((o) => !o.image && !o.previewImage)).toBe(true)
   })
 
   it('omits unresolved or url-less media instead of breaking the option', () => {

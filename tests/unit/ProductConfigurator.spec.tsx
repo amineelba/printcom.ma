@@ -172,7 +172,9 @@ describe('ProductConfigurator — quote CTA', () => {
     const url = new URL(href, 'http://x')
     expect(url.pathname).toBe('/demande-de-devis')
     expect(url.searchParams.get('produit')).toBe('cartes-de-visite')
-    expect(cfgOf()).toEqual({ status: 'ok', configuration: { single: { pageCount: '4 pages' }, finishes: [] } })
+    const parsed = cfgOf()
+    expect(parsed.status === 'ok' && parsed.configuration.single).toEqual({ 'page-count': '4 pages' })
+    expect(parsed.status === 'ok' && parsed.configuration.multiple).toEqual({})
   })
 
   it('carries the live selection into the link', () => {
@@ -180,13 +182,9 @@ describe('ProductConfigurator — quote CTA', () => {
     fireEvent.click(within(group('Format')).getByRole('radio', { name: 'A5' }))
     fireEvent.click(within(group('Finition')).getByRole('checkbox', { name: 'Soft Touch' }))
     fireEvent.click(within(group('Finition')).getByRole('checkbox', { name: 'Vernis UV' }))
-    expect(cfgOf()).toEqual({
-      status: 'ok',
-      configuration: {
-        single: { format: 'A5', pageCount: '4 pages' },
-        finishes: ['soft-touch', 'vernis-uv'],
-      },
-    })
+    const parsed = cfgOf()
+    expect(parsed.status === 'ok' && parsed.configuration.single).toEqual({ format: 'A5', 'page-count': '4 pages' })
+    expect(parsed.status === 'ok' && parsed.configuration.multiple).toEqual({ finish: ['soft-touch', 'vernis-uv'] })
   })
 
   it('a product without configuration groups links to the plain product', () => {

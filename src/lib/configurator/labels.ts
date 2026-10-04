@@ -1,16 +1,16 @@
-import type { ConfiguratorGroupKey } from './types'
+import { CORE_DIMENSION_KEYS } from './types'
 
-/** Public French titles for each configurator group. */
-export const GROUP_LABELS: Record<ConfiguratorGroupKey, string> = {
-  format: 'Format',
-  orientation: 'Orientation',
-  pageCount: 'Nombre de pages',
-  printSides: 'Impression',
-  colorMode: 'Couleur',
-  material: 'Support',
-  grammage: 'Grammage',
-  finish: 'Finition',
-  quantity: 'Quantité',
+/** Public French titles of the core dimensions (other dimensions bring their own label). */
+export const GROUP_LABELS: Record<string, string> = {
+  [CORE_DIMENSION_KEYS.format]: 'Format',
+  [CORE_DIMENSION_KEYS.orientation]: 'Orientation',
+  [CORE_DIMENSION_KEYS.pageCount]: 'Nombre de pages',
+  [CORE_DIMENSION_KEYS.printSides]: 'Impression',
+  [CORE_DIMENSION_KEYS.colorMode]: 'Couleur',
+  [CORE_DIMENSION_KEYS.material]: 'Support',
+  [CORE_DIMENSION_KEYS.grammage]: 'Grammage',
+  [CORE_DIMENSION_KEYS.finish]: 'Finition',
+  [CORE_DIMENSION_KEYS.quantity]: 'Quantité',
 }
 
 /**
@@ -38,3 +38,17 @@ export const COLOR_MODE_LABELS: Record<string, string> = {
 export const CUSTOM_FORMAT_LABEL = 'Sur mesure'
 export const CUSTOM_FORMAT_HELPER = 'La faisabilité du format sera confirmée par notre équipe.'
 export const MULTIPLE_CHOICE_HINT = 'Plusieurs choix possibles'
+
+/**
+ * Label maps of the dimensions whose options are fixed enums, by dimension
+ * key. A product schema row of one of these dimensions lists enum *values*;
+ * the French label always comes from here.
+ */
+export const ENUM_LABELS_BY_DIMENSION: Record<string, Record<string, string>> = {
+  [CORE_DIMENSION_KEYS.orientation]: ORIENTATION_LABELS,
+  [CORE_DIMENSION_KEYS.printSides]: PRINT_SIDES_LABELS,
+  [CORE_DIMENSION_KEYS.colorMode]: COLOR_MODE_LABELS,
+}
+
+export const BOOLEAN_YES_LABEL = 'Oui'
+export const MEASURE_HELPER = 'Les dimensions exactes seront confirmées par notre équipe.'

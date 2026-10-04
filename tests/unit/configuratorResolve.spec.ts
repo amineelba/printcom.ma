@@ -2,18 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { resolveProductConfiguration } from '@/lib/configurator/resolveConfiguration'
 import { parseConfigurationTransport, serializeConfiguration } from '@/lib/configurator/transport'
 import { parseDimension, parseExplicitCount } from '@/lib/configurator/safeCount'
-import { CUSTOM_FORMAT_VALUE, type ProductConfigurationState } from '@/lib/configurator/types'
+import { CUSTOM_FORMAT_VALUE, emptyConfigurationState, type ProductConfigurationState } from '@/lib/configurator/types'
 import { makeFinish, makeFullProduct, makeMaterial, makeProduct } from './helpers/configuratorFixtures'
 
-function transportOf(partial: Partial<ProductConfigurationState> & { single?: ProductConfigurationState['single'] }) {
-  return parseConfigurationTransport(
-    serializeConfiguration({
-      single: {},
-      multiple: {},
-      customFormat: { width: '', height: '', unit: 'mm' },
-      ...partial,
-    }),
-  )
+function transportOf(partial: Partial<ProductConfigurationState>) {
+  return parseConfigurationTransport(serializeConfiguration({ ...emptyConfigurationState(), ...partial }))
 }
 
 const product = makeFullProduct()
@@ -42,7 +35,7 @@ describe('resolveProductConfiguration', () => {
     const resolved = resolveProductConfiguration({ product, transport: { status: 'empty' } })
     expect(resolved.rows).toEqual([])
     expect(resolved.transport).toBeUndefined()
-    expect(resolved.state.single.pageCount).toBeUndefined() // the lone "4 pages" option is not auto-picked here
+    expect(resolved.state.single['page-count']).toBeUndefined() // the lone "4 pages" option is not auto-picked here
   })
 
   it('ignores a malformed transport entirely and says why', () => {
@@ -72,10 +65,10 @@ describe('resolveProductConfiguration', () => {
     const resolved = resolveProductConfiguration({
       product,
       transport: transportOf({
-        single: { format: 'A3', orientation: 'square', printSides: 'double', grammage: '999 g' },
+        single: { format: 'A3', orientation: 'square', 'print-sides': 'double', grammage: '999 g' },
       }),
     })
-    expect(resolved.rows).toEqual([{ key: 'printSides', label: 'Impression', value: 'Recto-verso' }])
+    expect(resolved.rows).toEqual([{ key: 'print-sides', label: 'Impression', value: 'Recto-verso' }])
     expect(resolved.rejectedCount).toBe(3)
   })
 

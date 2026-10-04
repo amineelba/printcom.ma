@@ -43,7 +43,9 @@ src/
 │   ├── security/        honeypot, rate limiting, idempotency
 │   ├── seo/              JSON-LD builders
 │   ├── catalog/          buildProductWhere (filter query builder)
-│   ├── quote/            reference number generation
+│   ├── quote/            reference number generation, canonical configuration → quote mapping
+│   ├── configurator/     Product configurator model/state/transport/resolver (Sprint 2–5)
+│   ├── configurator-schema/  Product-specific schema tooling: dimension catalog, sources, backfill, audit, bulk review
 │   └── seed/             runSeed (idempotent, testable)
 ├── scripts/              CLI entrypoints: seed.ts, create-admin.ts, verify-content.ts, verify-design-tokens.ts
 ├── styles/tokens/         foundation.css → semantic.css → components.css → templates.css → index.css
@@ -80,11 +82,16 @@ pnpm seed                              # Idempotent — safe to re-run
 pnpm create-admin                      # Needs ADMIN_EMAIL/ADMIN_PASSWORD in env
 pnpm verify-content                    # CI gate: forbidden slugs, "[À confirmer]" leaks, missing consent flags
 pnpm verify-design-tokens              # CI gate: required pc- tokens present
+pnpm configurator:audit                # Product-specific configurator audit + review queue → data/configurator/
+pnpm configurator:backfill             # Dry-run by default; --write (local DB only) builds each product's configurationSchema
+pnpm configurator:export-review        # Bulk review sheet (CSV/JSON)
+pnpm configurator:import-review --file <path>   # Dry-run by default; --write applies additive changes (local DB only)
 ```
 
 ## Non-negotiable rules (see the original brief for full detail)
 
 - **No invented facts.** Founding year, employee count, certifications, machine capacities, client names, testimonials — none of these exist in the seed data because none were confirmed. Draft/`unverified` status hides them from the public frontend automatically (`publicReadPublished` access + `verificationStatus` filters). Never flip a document to `published`/`confirmed` without a real source.
+- **Technical configuration is product-specific.** Each product owns its `configurationSchema`; categories never assign dimensions or values, and no option value (format, grammage, adhesive, window…) is invented — unknown values go to the review queue (`pnpm configurator:audit`). See `docs/product-technical-schema.md`.
 - **No `[À confirmer]` on the frontend.** That marker is for the admin UI only — `pnpm verify-content` checks published docs for leaks.
 - **No cart/checkout/pricing.** `products.indicativePrice` is admin-only and disabled by default (`indicativePriceEnabled: false`).
 - **No "Réalisations"/portfolio collection**, route, nav entry, or seed data, ever.

@@ -1,6 +1,6 @@
 # Content model
 
-## Collections (28)
+## Collections (30)
 
 | Collection | Purpose | Public read? |
 |---|---|---|
@@ -14,6 +14,8 @@
 | `solutions` | Solutions "par besoin" (§14) | Published only |
 | `sectors` | Solutions "par secteur" (§15) | Published only |
 | `technologies` | Print technologies (§16) | Published **and** `verificationStatus: confirmed` |
+| `configurator-dimensions` | Technical Dimension Registry (Sprint 5): what a product can ask the customer (format, fenêtre, adhésif…) — never the values | Published only |
+| `configurator-options` | Reusable option catalog (Sprint 5): values identical wherever used; shown only when `published` **and** `confirmed`, and only on products that allow them | Published only |
 | `materials` | Supports/materials (§17), grouped | Published only |
 | `finishes` | Finishes (§18), grouped, structured relations | Published only |
 | `resources` | Editorial guides/articles | Published only |
@@ -213,6 +215,14 @@ any form — no collection, route, nav entry, seed data, or component:
 guard against the collection-slug half of this; there is no automated
 guard against someone manually adding a "Nos réalisations" page — code
 review is the guard there.
+
+## Product technical configuration (Sprint 5)
+
+`products.configurationSchema` holds each product's **own** dimensions and
+allowlists (registry + shared options + materials/finishes relationships).
+Categories never supply technical values. The legacy generic fields stay as
+a readable fallback. Full model, provenance, backfill and review workflow:
+`docs/product-technical-schema.md`.
 
 ## Product field groups (§19)
 

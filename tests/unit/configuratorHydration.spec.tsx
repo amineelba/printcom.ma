@@ -8,6 +8,7 @@ import { buildProductConfiguratorData } from '@/lib/configurator/buildProductCon
 import { resolveProductConfiguration } from '@/lib/configurator/resolveConfiguration'
 import { parseConfigurationTransport, serializeConfiguration } from '@/lib/configurator/transport'
 import { createInitialConfigurationState } from '@/lib/configurator/state'
+import { emptyConfigurationState, type ProductConfigurationState } from '@/lib/configurator/types'
 import { ANALYTICS_DOM_EVENT } from '@/lib/analytics/track'
 import { makeFullProduct, makeVisualProduct } from './helpers/configuratorFixtures'
 import type { Product } from '@/payload-types'
@@ -28,10 +29,10 @@ afterEach(() => {
 const group = (name: string) => screen.getByRole('group', { name })
 const names = () => events.map((event) => event.name)
 
-function restore(product: Product, wire: Parameters<typeof serializeConfiguration>[0]) {
+function restore(product: Product, wire: Partial<ProductConfigurationState>) {
   const resolved = resolveProductConfiguration({
     product,
-    transport: parseConfigurationTransport(serializeConfiguration(wire)),
+    transport: parseConfigurationTransport(serializeConfiguration({ ...emptyConfigurationState(), ...wire })),
   })
   return resolved.state
 }
@@ -52,7 +53,6 @@ describe('ProductConfigurator — restored state', () => {
   const state = restore(product, {
     single: { format: 'A5', orientation: 'landscape', material: 'offset', quantity: '500' },
     multiple: { finish: ['soft-touch', 'vernis-uv'] },
-    customFormat: { width: '', height: '', unit: 'mm' },
   })
 
   it('checks the restored options, including multiple finishes', () => {
@@ -95,7 +95,6 @@ describe('ProductConfigurator — restored state', () => {
     const visualState = restore(visual, {
       single: { format: 'A4' },
       multiple: {},
-      customFormat: { width: '', height: '', unit: 'mm' },
     })
     renderWith(visual, visualState)
     expect(screen.getAllByRole('img').some((img) => img.getAttribute('alt') === 'Aperçu A4')).toBe(true)
@@ -105,7 +104,7 @@ describe('ProductConfigurator — restored state', () => {
     renderWith(product)
     expect((within(group('Nombre de pages')).getByRole('radio') as HTMLInputElement).checked).toBe(true)
     expect((within(group('Format')).getByRole('radio', { name: 'A4' }) as HTMLInputElement).checked).toBe(false)
-    expect(createInitialConfigurationState(buildProductConfiguratorData(product)).single.pageCount).toBe('4 pages')
+    expect(createInitialConfigurationState(buildProductConfiguratorData(product)).single['page-count']).toBe('4 pages')
   })
 })
 
@@ -116,7 +115,6 @@ describe('ProductConfigurator — instrumentation', () => {
     const state = restore(product, {
       single: { format: 'A4' },
       multiple: {},
-      customFormat: { width: '', height: '', unit: 'mm' },
     })
     renderWith(product, state, true)
     expect(events).toEqual([])

@@ -1,0 +1,2513 @@
+# File de revue — configuration technique
+
+Liste de travail unique : chaque ligne est une information à confirmer. Rien ici n’a été deviné.
+
+Total : **459** point(s).
+
+| Statut | Points |
+|---|---:|
+| ambiguous-dimension | 58 |
+| missing-product-source | 15 |
+| missing-values | 386 |
+
+## Affichage et grand format
+
+### Affiches
+
+- **Durée** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Intérieur/extérieur** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Le terme regroupe plusieurs notions : à scinder ou confirmer.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+### Bâches
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Environnement** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Œillets** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Ourlets** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Tension** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Banderoles
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Distance de lecture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Vent** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Habillage de véhicules
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Modèle du véhicule** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Retrait** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Vinyle** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Habillage de vitrines
+
+- **Dépoli** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Mesures** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Dimensions » sans être garantie équivalente : à confirmer.
+- **Microperforé** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Transparent** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Visibilité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Habillage mural
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Durée** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **État du mur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Raccords** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Impression événementielle
+
+- **Délais** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Formats** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Supports** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Montage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Plan du site** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Réutilisation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Panneaux publicitaires
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Durée** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Exposition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+### Posters
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Encadrement** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Marge** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Rendu** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Vinyles adhésifs
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Durée** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Retrait** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Surface** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Dimensions » ou « Support » : à confirmer.
+## Édition et documents
+
+### Documents de formation
+
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Intercalaires** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Zones de notes** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Guides
+
+- **Chapitres** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Pictogrammes** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Poche éventuelle** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Journaux
+
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Périodicité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pliage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Livres
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Tirage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Livrets
+
+- **Agrafage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+### Magazines
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Périodicité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Manuels
+
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Index** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Onglets** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Résistance** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Rapports annuels
+
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Graphiques** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Version linguistique** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Rapports institutionnels
+
+- **Annexes** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Tableaux** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Volume** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Thèses et mémoires
+
+- **Couleur** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le mode colorimétrique ou les couleurs d’un produit : à confirmer.
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+## Étiquettes et stickers
+
+### Étiquettes alimentaires
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Conformité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Froid** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Humidité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Informations** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes cosmétiques
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Courbure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Résistance** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes de sécurité
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Destructibilité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Message** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Numérotation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Traçabilité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes en planche
+
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format de planche** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Forme** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Quantité par planche** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes en rouleau
+
+- **Espacement** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Forme** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Laize** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Mandrin** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Quantité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Sens d’enroulement** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes pharmaceutiques
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Codification** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Conformité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Sécurité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Variables** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes produits
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Forme** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Étiquettes transparentes
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Blanc de soutien éventuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Forme** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Transparence** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Stickers personnalisés
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Forme** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Stickers vitrine
+
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Durée** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pose intérieure/extérieure** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Le terme regroupe plusieurs notions : à scinder ou confirmer.
+- **Transparence** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+## Goodies & objets publicitaires
+
+### Accessoires technologiques
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Cadeaux d’affaires
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Carnets & notebooks
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Casquettes
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Clés USB
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Coffrets personnalisés
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Gourdes & bouteilles
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Mugs & tasses
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Parapluies
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Porte-clés
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Sacs personnalisés
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Stylos personnalisés
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Textile personnalisé
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Tote bags
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+### Tours de cou & badges
+
+- **Produit** — `missing-product-source`
+  - Source : aucune
+  - Valeurs existantes : aucune
+  - Action : Fournir la liste des dimensions techniques de ce produit.
+  - Note : Aucune source de dimensions pour ce produit.
+## Packaging
+
+### Boîtes alimentaires
+
+- **Barrière** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Conformité à confirmer** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le recto-verso, le mode d’impression ou la couleur : à confirmer.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Montage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Boîtes cosmétiques
+
+- **Calage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Carton** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou la structure d’un emballage : à confirmer.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fenêtre** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Mentions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Boîtes pharmaceutiques
+
+- **Braille éventuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Carton** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou la structure d’un emballage : à confirmer.
+- **Codification** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Conformité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Notice** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Boîtes pliantes
+
+- **Carton** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou la structure d’un emballage : à confirmer.
+- **Collage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le recto-verso, le mode d’impression ou la couleur : à confirmer.
+### Étuis produits
+
+- **Carton** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou la structure d’un emballage : à confirmer.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fenêtre** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fermeture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le recto-verso, le mode d’impression ou la couleur : à confirmer.
+### Fourreaux
+
+- **Carton** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou la structure d’un emballage : à confirmer.
+- **Collage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Recouvrement** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Packaging sur mesure
+
+- **Assemblage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Brief** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Prototype** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Papier d’emballage
+
+- **Couleur** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le mode colorimétrique ou les couleurs d’un produit : à confirmer.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Quantité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Répétition du motif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Pochettes
+
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fermeture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Soufflet** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Sacs en papier
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fond** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le recto-verso, le mode d’impression ou la couleur : à confirmer.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Poignées** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Renfort** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+## Papeterie d’entreprise
+
+### Agendas
+
+- **Accessoires** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Mise en page** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Blocs-notes
+
+- **Collage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dos** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Nombre de feuilles** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier intérieur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Calendriers
+
+- **Chevalet** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Période** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Personnalisation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Carnets personnalisés
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Élastique éventuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Intérieur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Cartes de visite
+
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Grammage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Orientation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Recto-verso** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Chemises à rabats
+
+- **Découpe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Encoche carte** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format fermé** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pelliculage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Rabats** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Enveloppes
+
+- **Fenêtre** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fermeture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le recto-verso, le mode d’impression ou la couleur : à confirmer.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Position des éléments** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Factures et bons
+
+- **Autocopiant** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Jeux** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Numérotation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Perforation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Formulaires autocopiants
+
+- **Couleurs de copies** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Nombre de feuillets** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Numérotation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Perforation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Papier à en-tête
+
+- **Compatibilité imprimante** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Grammage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le recto-verso, le mode d’impression ou la couleur : à confirmer.
+- **Marges** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+## PLV et supports de vente
+
+### Chevalets
+
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Inclinaison** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pli** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Usage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Displays
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Montage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Nombre de produits** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Transport** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Frontons
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Éclairage éventuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Visibilité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Habillage de linéaires
+
+- **Déclinaisons** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Supports** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Mesures** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Dimensions » sans être garantie équivalente : à confirmer.
+- **Plan de pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Kakémonos
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Système d’accroche** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Transport** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Présentoirs de comptoir
+
+- **Capacité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Carton ou rigide** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Le terme regroupe plusieurs notions : à scinder ou confirmer.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Montage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Visuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Présentoirs de sol
+
+- **Charge** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Étagères** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Montage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Transport** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Roll-ups
+
+- **Hauteur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Largeur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Remplacement du visuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Sac** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Structure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Stop-rayons
+
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Recto-verso** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Résistance** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Totems
+
+- **Base** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Démontage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Hauteur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Recto-verso** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+## Signalétique
+
+### Enseignes
+
+- **Autorisation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Éclairage éventuel** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+### Marquage au sol
+
+- **Adhésif** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Antidérapant** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Durée** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Résistance** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Retrait** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Surface** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Dimensions » ou « Support » : à confirmer.
+### Panneaux de chantier
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Exposition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Structure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Plaques professionnelles
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Extérieur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Gravure ou impression** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Le terme regroupe plusieurs notions : à scinder ou confirmer.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+### Signalétique de sécurité
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Norme fournie** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Photoluminescence** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Signalétique directionnelle
+
+- **Destinations** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Flèches** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Hiérarchie** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Implantation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Plan** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Signalétique extérieure
+
+- **Dimensions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer si le client peut saisir cette dimension pour ce produit (saisie libre autorisée).
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Exposition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matière** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Protection** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Signalétique intérieure
+
+- **Accessibilité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Fixation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Supports** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Nomenclature** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Parcours** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Signalétique sur mesure
+
+- **Audit du parcours** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Matériaux** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Recoupe « Support » sans être garantie équivalente : à confirmer.
+- **Nomenclature** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Plan de pose** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Prototype** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+## Supports marketing
+
+### Brochures
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Intérieur** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Nombre de pages** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Cartes promotionnelles
+
+- **Coins** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Personnalisation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Recto-verso** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Catalogues
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Index** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Structure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Coupons
+
+- **Code** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Conditions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Support** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Numérotation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Perforation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Dépliants
+
+- **Format fermé** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format ouvert** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Nombre de volets** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Type de pli** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Fiches produits
+
+- **Classement** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Perforation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Recto-verso** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Versions** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Flyers
+
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Grammage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Recto-verso** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Quantité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Mailings imprimés
+
+- **Adressage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Assemblage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Composition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Enveloppe** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Personnalisation** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Plaquettes commerciales
+
+- **Couverture** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Finition** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Reliure** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+### Prospectus
+
+- **Format** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Pagination** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Papier** — `ambiguous-dimension`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer la signification de cette dimension puis ses valeurs autorisées.
+  - Note : Peut désigner le support (dimension « Support ») ou un papier intérieur : à confirmer.
+- **Pliage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Quantité** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.
+- **Zonage** — `missing-values`
+  - Source : contenu maître (transcription seed)
+  - Valeurs existantes : aucune
+  - Action : Confirmer les valeurs autorisées pour ce produit.
+  - Note : Dimension issue de la source ; aucune valeur confirmée dans le CMS.

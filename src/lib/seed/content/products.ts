@@ -9,7 +9,7 @@ import { richText } from './richText'
  * (`<Nom> personnalisé | Printcom`) rather than per-product creative
  * copywriting, matching the source document exactly.
  */
-type ProductSource = {
+export type ProductSource = {
   category: string
   title: string
   tagline: string
@@ -18,7 +18,7 @@ type ProductSource = {
   configure: string[]
 }
 
-const PRODUCT_SOURCES: ProductSource[] = [
+export const PRODUCT_SOURCES: ProductSource[] = [
   // Papeterie d’entreprise
   {
     category: 'papeterie-entreprise',
@@ -678,7 +678,7 @@ const PRODUCT_SOURCES: ProductSource[] = [
   },
 ]
 
-function slugify(value: string): string {
+export function slugify(value: string): string {
   return value
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')

@@ -80,6 +80,8 @@ export interface Config {
     technologies: Technology;
     materials: Material;
     finishes: Finish;
+    'configurator-dimensions': ConfiguratorDimension;
+    'configurator-options': ConfiguratorOption;
     resources: Resource;
     faqs: Faq;
     testimonials: Testimonial;
@@ -116,6 +118,8 @@ export interface Config {
     technologies: TechnologiesSelect<false> | TechnologiesSelect<true>;
     materials: MaterialsSelect<false> | MaterialsSelect<true>;
     finishes: FinishesSelect<false> | FinishesSelect<true>;
+    'configurator-dimensions': ConfiguratorDimensionsSelect<false> | ConfiguratorDimensionsSelect<true>;
+    'configurator-options': ConfiguratorOptionsSelect<false> | ConfiguratorOptionsSelect<true>;
     resources: ResourcesSelect<false> | ResourcesSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
@@ -383,6 +387,20 @@ export interface QuoteRequest {
      * Libellé choisi sur la fiche produit, conservé tel quel (le nombre ci-dessus n’est rempli que lorsqu’il est explicite).
      */
     quantityLabel?: string | null;
+    /**
+     * Réponses du client aux dimensions propres au produit (hors champs historiques ci-dessus), résolues côté serveur au moment de la demande.
+     */
+    technicalSelections?:
+      | {
+          key: string;
+          label: string;
+          valueLabel: string;
+          valueLabels?: string[] | null;
+          numericValue?: number | null;
+          unit?: string | null;
+          id?: string | null;
+        }[]
+      | null;
     versionsCount?: number | null;
     variablePersonalization?: boolean | null;
   };
@@ -500,6 +518,78 @@ export interface Product {
   relatedProducts?: (number | Product)[] | null;
   relatedServices?: (number | Service)[] | null;
   relatedFAQs?: (number | Faq)[] | null;
+  /**
+   * L’ordre des lignes est l’ordre d’affichage dans le configurateur. Si ce tableau ne contient aucune ligne exploitable, le configurateur utilise les champs historiques ci-dessous.
+   */
+  configurationSchema?:
+    | {
+        /**
+         * Dimension technique concernée (registre).
+         */
+        dimension: number | ConfiguratorDimension;
+        /**
+         * Libellé propre à ce produit (facultatif).
+         */
+        labelOverride?: string | null;
+        /**
+         * Aide propre à ce produit (facultatif).
+         */
+        helpTextOverride?: string | null;
+        /**
+         * Seul « Confirmé » est visible sur le site.
+         */
+        dataStatus: 'confirmed' | 'needs-review' | 'unsupported';
+        /**
+         * Origine de la ligne (traçabilité).
+         */
+        source?:
+          | (
+              | 'existing-cms'
+              | 'existing-product-field'
+              | 'master-content'
+              | 'seed-source'
+              | 'shared-material'
+              | 'shared-finish'
+              | 'existing-enum'
+              | 'manual'
+              | 'import'
+            )
+          | null;
+        /**
+         * Format « Sur mesure », dimensions, nombre ou texte saisis par le client.
+         */
+        allowCustomValue?: boolean | null;
+        /**
+         * Information seulement : le client peut toujours demander un devis sans répondre.
+         */
+        requiredForConfiguration?: boolean | null;
+        /**
+         * Valeurs autorisées pour ce produit uniquement (dimensions de source « catalogue »).
+         */
+        options?:
+          | {
+              option: number | ConfiguratorOption;
+              descriptionOverride?: string | null;
+              imageOverride?: (number | null) | Media;
+              previewImage?: (number | null) | Media;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Supports autorisés (dimensions de source « materials »).
+         */
+        materialOptions?: (number | Material)[] | null;
+        /**
+         * Finitions autorisées (dimensions de source « finishes »).
+         */
+        finishOptions?: (number | Finish)[] | null;
+        /**
+         * Valeurs fixes autorisées (orientation, recto-verso, couleur).
+         */
+        enumOptions?: ('portrait' | 'landscape' | 'square' | 'single' | 'double' | 'cmyk' | 'bw' | 'pantone')[] | null;
+        id?: string | null;
+      }[]
+    | null;
   availableFormats?:
     | {
         label: string;
@@ -1157,6 +1247,73 @@ export interface Sector {
   reviewNotes?: string | null;
   publishedAt?: string | null;
   archivedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Registre des dimensions techniques (format, fenêtre, adhésif…). Une dimension décrit une question posée au client ; les valeurs autorisées sont définies produit par produit.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "configurator-dimensions".
+ */
+export interface ConfiguratorDimension {
+  id: number;
+  /**
+   * Identifiant stable (utilisé par l’import, les liens et les devis). Ne pas modifier après usage.
+   */
+  key: string;
+  label: string;
+  group: 'size' | 'print' | 'material' | 'construction' | 'finishing' | 'application' | 'quantity' | 'other';
+  /**
+   * single/multi-choice : liste de valeurs autorisées. dimensions / number / text : saisie du client, uniquement si le produit l’autorise. boolean : oui/non.
+   */
+  valueType: 'single-choice' | 'multi-choice' | 'dimensions' | 'number' | 'text' | 'boolean';
+  /**
+   * catalog : valeurs du catalogue d’options. materials / finishes : collections Supports / Finitions. enum : valeurs fixes (orientation, recto-verso, couleur). custom : saisie libre.
+   */
+  optionSource: 'catalog' | 'materials' | 'finishes' | 'enum' | 'custom';
+  /**
+   * Unité affichée pour une valeur numérique (ex. « mm »).
+   */
+  unit?: string | null;
+  publicHelpText?: string | null;
+  sortOrder?: number | null;
+  /**
+   * Une dimension en brouillon n’apparaît dans aucun configurateur.
+   */
+  status: 'draft' | 'published';
+  /**
+   * Notes internes (jamais publiques).
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Catalogue d’options réutilisables. Une option du catalogue n’est proposée que sur les produits qui l’autorisent dans leur propre configuration technique.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "configurator-options".
+ */
+export interface ConfiguratorOption {
+  id: number;
+  dimension: number | ConfiguratorDimension;
+  label: string;
+  /**
+   * Identifiant stable de la valeur au sein de la dimension (utilisé par l’import et les liens).
+   */
+  machineValue: string;
+  description?: string | null;
+  image?: (number | null) | Media;
+  /**
+   * Le frontend n'affiche jamais un contenu tant que ce champ n'est pas "Confirmé".
+   */
+  verificationStatus: 'unverified' | 'confirmed' | 'unavailable';
+  status: 'draft' | 'published';
+  /**
+   * Notes internes (jamais publiques).
+   */
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2287,6 +2444,14 @@ export interface PayloadLockedDocument {
         value: number | Finish;
       } | null)
     | ({
+        relationTo: 'configurator-dimensions';
+        value: number | ConfiguratorDimension;
+      } | null)
+    | ({
+        relationTo: 'configurator-options';
+        value: number | ConfiguratorOption;
+      } | null)
+    | ({
         relationTo: 'resources';
         value: number | Resource;
       } | null)
@@ -2572,6 +2737,30 @@ export interface ProductsSelect<T extends boolean = true> {
   relatedProducts?: T;
   relatedServices?: T;
   relatedFAQs?: T;
+  configurationSchema?:
+    | T
+    | {
+        dimension?: T;
+        labelOverride?: T;
+        helpTextOverride?: T;
+        dataStatus?: T;
+        source?: T;
+        allowCustomValue?: T;
+        requiredForConfiguration?: T;
+        options?:
+          | T
+          | {
+              option?: T;
+              descriptionOverride?: T;
+              imageOverride?: T;
+              previewImage?: T;
+              id?: T;
+            };
+        materialOptions?: T;
+        finishOptions?: T;
+        enumOptions?: T;
+        id?: T;
+      };
   availableFormats?:
     | T
     | {
@@ -2881,6 +3070,40 @@ export interface FinishesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "configurator-dimensions_select".
+ */
+export interface ConfiguratorDimensionsSelect<T extends boolean = true> {
+  key?: T;
+  label?: T;
+  group?: T;
+  valueType?: T;
+  optionSource?: T;
+  unit?: T;
+  publicHelpText?: T;
+  sortOrder?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "configurator-options_select".
+ */
+export interface ConfiguratorOptionsSelect<T extends boolean = true> {
+  dimension?: T;
+  label?: T;
+  machineValue?: T;
+  description?: T;
+  image?: T;
+  verificationStatus?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "resources_select".
  */
 export interface ResourcesSelect<T extends boolean = true> {
@@ -3046,6 +3269,17 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
         binding?: T;
         quantity?: T;
         quantityLabel?: T;
+        technicalSelections?:
+          | T
+          | {
+              key?: T;
+              label?: T;
+              valueLabel?: T;
+              valueLabels?: T;
+              numericValue?: T;
+              unit?: T;
+              id?: T;
+            };
         versionsCount?: T;
         variablePersonalization?: T;
       };
@@ -4285,6 +4519,8 @@ export interface TaskCreateCollectionExport {
       | 'technologies'
       | 'materials'
       | 'finishes'
+      | 'configurator-dimensions'
+      | 'configurator-options'
       | 'resources'
       | 'faqs'
       | 'testimonials'

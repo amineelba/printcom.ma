@@ -9,24 +9,29 @@ import {
   buildQuoteHref,
   createInitialConfigurationState,
   selectSingleOption,
+  setFlag,
+  setNumber,
+  setText,
   toggleMultipleOption,
   updateCustomFormat,
+  updateMeasure,
 } from '@/lib/configurator/state'
 import { trackEvent } from '@/lib/analytics/track'
 import { CUSTOM_FORMAT_HELPER } from '@/lib/configurator/labels'
 import { resolvePreviewMedia } from '@/lib/configurator/preview'
 import {
+  CORE_DIMENSION_KEYS,
   CUSTOM_FORMAT_VALUE,
+  groupValueType,
   type ConfiguratorGroup as GroupData,
   type CustomFormatUnit,
   type ProductConfigurationState,
   type ProductConfiguratorData,
 } from '@/lib/configurator/types'
 import { ConfiguratorGroup } from './ConfiguratorGroup'
+import { BooleanControl, MeasureControl, NumberControl, TextControl } from './ConfiguratorValueControls'
 import { ConfiguratorSummary } from './ConfiguratorSummary'
 import { ProductPreview } from './ProductPreview'
-
-type SingleKey = keyof ProductConfigurationState['single']
 
 /**
  * Reusable product configurator. Receives the normalized, serializable
@@ -67,24 +72,39 @@ export function ProductConfigurator({
   const preview = galleryPinned
     ? { media: baseMedia, source: 'base' as const }
     : resolvePreviewMedia({ baseMedia, groups: data.groups, selection: state })
-  const customSelected = state.single.format === CUSTOM_FORMAT_VALUE
+  const customSelected = state.single[CORE_DIMENSION_KEYS.format] === CUSTOM_FORMAT_VALUE
 
   const isSelected = (group: GroupData) => (value: string) =>
-    group.selectionMode === 'multiple'
-      ? (state.multiple.finish ?? []).includes(value)
-      : state.single[group.key as SingleKey] === value
+    groupValueType(group) === 'multi-choice'
+      ? (state.multiple[group.key] ?? []).includes(value)
+      : state.single[group.key] === value
 
   const onToggle = (group: GroupData) => (value: string) => {
     setGalleryPinned(false)
     const wasSelected = isSelected(group)(value)
-    const next =
-      group.selectionMode === 'multiple'
+    commit(
+      group,
+      groupValueType(group) === 'multi-choice'
         ? toggleMultipleOption(state, group, value)
-        : selectSingleOption(state, group.key as SingleKey, value)
-    setState(next)
+        : selectSingleOption(state, group.key, value),
+      value,
+      wasSelected ? 'deselected' : 'selected',
+    )
+  }
 
-    // Instrumentation. Only real visitor choices land here — restored and
-    // auto-selected state never goes through onToggle.
+  /**
+   * Applies a change and reports it. Only real visitor choices land here —
+   * restored and auto-selected state never goes through it. `optionValue`
+   * is a machine value for choices; free-form answers (numbers, texts,
+   * measures) are reported without their content.
+   */
+  const commit = (
+    group: GroupData,
+    next: ProductConfigurationState,
+    optionValue: string,
+    action: 'selected' | 'deselected',
+  ) => {
+    setState(next)
     const slug = data.product.slug
     if (!startedRef.current) {
       startedRef.current = true
@@ -93,10 +113,18 @@ export function ProductConfigurator({
     trackEvent('configurator_option_selected', {
       product_slug: slug,
       group_key: group.key,
-      option_value: value,
-      action: wasSelected ? 'deselected' : 'selected',
+      option_value: optionValue,
+      action,
       selected_group_count: buildConfigurationSummary(data, next).length,
     })
+  }
+
+  // Typed answers update state on every keystroke but are reported only when
+  // the dimension flips between answered and unanswered (no per-key events).
+  const onFreeForm = (group: GroupData, next: ProductConfigurationState, hasValue: boolean) => {
+    const hadValue = summaryRows.some((row) => row.key === group.key)
+    if (hadValue === hasValue) setState(next)
+    else commit(group, next, '__value__', hasValue ? 'selected' : 'deselected')
   }
 
   return (
@@ -117,16 +145,61 @@ export function ProductConfigurator({
       </div>
 
       <div className="flex min-w-0 flex-col gap-8 lg:col-start-2 lg:row-start-2">
-        {data.groups.map((group) => (
-          <ConfiguratorGroup key={group.key} group={group} isSelected={isSelected(group)} onToggle={onToggle(group)}>
-            {group.key === 'format' && customSelected ? (
-              <CustomFormatFields
-                value={state.customFormat}
-                onChange={(patch) => setState((current) => updateCustomFormat(current, patch))}
-              />
-            ) : null}
-          </ConfiguratorGroup>
-        ))}
+        {data.groups.map((group) => {
+          switch (groupValueType(group)) {
+            case 'dimensions':
+              return (
+                <MeasureControl
+                  key={group.key}
+                  group={group}
+                  value={state.measures[group.key]}
+                  onChange={(patch) => {
+                    const next = updateMeasure(state, group.key, patch)
+                    const measure = next.measures[group.key]
+                    onFreeForm(group, next, Boolean(measure.width || measure.height || measure.depth))
+                  }}
+                />
+              )
+            case 'number':
+              return (
+                <NumberControl
+                  key={group.key}
+                  group={group}
+                  value={state.numbers[group.key]}
+                  onChange={(value) => onFreeForm(group, setNumber(state, group.key, value), Boolean(value.trim()))}
+                />
+              )
+            case 'text':
+              return (
+                <TextControl
+                  key={group.key}
+                  group={group}
+                  value={state.texts[group.key]}
+                  onChange={(value) => onFreeForm(group, setText(state, group.key, value), Boolean(value.trim()))}
+                />
+              )
+            case 'boolean':
+              return (
+                <BooleanControl
+                  key={group.key}
+                  group={group}
+                  checked={Boolean(state.flags[group.key])}
+                  onChange={(checked) => onFreeForm(group, setFlag(state, group.key, checked), checked)}
+                />
+              )
+            default:
+              return (
+                <ConfiguratorGroup key={group.key} group={group} isSelected={isSelected(group)} onToggle={onToggle(group)}>
+                  {group.key === CORE_DIMENSION_KEYS.format && customSelected ? (
+                    <CustomFormatFields
+                      value={state.customFormat}
+                      onChange={(patch) => setState((current) => updateCustomFormat(current, patch))}
+                    />
+                  ) : null}
+                </ConfiguratorGroup>
+              )
+          }
+        })}
 
         {data.groups.length ? <ConfiguratorSummary productTitle={data.product.title} rows={summaryRows} /> : null}
 

@@ -1,49 +1,75 @@
 import { z } from 'zod'
-import { CUSTOM_FORMAT_VALUE, type CustomFormatUnit, type ProductConfigurationState } from './types'
+import {
+  CORE_DIMENSION_KEYS,
+  CUSTOM_FORMAT_VALUE,
+  type CustomFormatUnit,
+  type MeasureValue,
+  type ProductConfigurationState,
+} from './types'
 
 /**
- * URL-safe transport of a product configuration (Sprint 4).
+ * URL-safe transport of a product configuration.
  *
  * One serializer, one parser, used by the product page ("Obtenir mon devis",
  * "Modifier"), the checkout page and the submit action. The payload is the
  * *machine values* of the configurator state — never labels, never row ids,
  * never prices — wrapped in a version prefix so the format can evolve:
  *
- *   `1.<base64url(JSON)>`
+ *   `<version>.<base64url(JSON)>`
+ *
+ * - **v1** (Sprint 4): fixed keys for the nine core dimensions. Still
+ *   parsed, never emitted.
+ * - **v2** (Sprint 5): generic maps keyed by dimension key, so
+ *   product-specific dimensions travel too. Always emitted.
  *
  * It is untrusted input by construction: parsing only checks the *shape*
- * (types, lengths, known keys). Whether a value is actually offered by the
- * product is decided server-side by `resolveConfiguration`.
+ * (types, lengths, known keys). Whether a dimension/value is actually
+ * offered by the product is decided server-side by `resolveConfiguration`.
+ * v1 is parsed into the same generic structure — it is never reinterpreted.
  */
 
-export const CONFIGURATION_TRANSPORT_VERSION = 1
+export const CONFIGURATION_TRANSPORT_VERSION = 2
+export const SUPPORTED_TRANSPORT_VERSIONS = [1, 2] as const
 /** Query-string parameter that carries the transport. */
 export const CONFIGURATION_PARAM = 'cfg'
 
 /** Hard ceilings: a legitimate configuration is far below these. */
-const MAX_TRANSPORT_LENGTH = 2000
+const MAX_TRANSPORT_LENGTH = 4000
 const MAX_VALUE_LENGTH = 200
-const MAX_FINISHES = 20
+const MAX_TEXT_LENGTH = 80
+const MAX_CHOICES = 30
+const MAX_DIMENSIONS = 40
 
-type SingleKey = keyof ProductConfigurationState['single']
-
-/** Compact wire keys, in the fixed order used when serializing. */
-const SINGLE_WIRE_KEYS: Record<SingleKey, string> = {
-  format: 'f',
-  orientation: 'o',
-  pageCount: 'p',
-  printSides: 's',
-  colorMode: 'c',
-  material: 'm',
-  grammage: 'g',
-  quantity: 'q',
-}
-
-const SINGLE_KEYS = Object.keys(SINGLE_WIRE_KEYS) as SingleKey[]
-
+const DIMENSION_KEY = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const unit = z.enum(['mm', 'cm'])
+const dimensionKey = z.string().max(60).regex(DIMENSION_KEY)
 const wireString = z.string().min(1).max(MAX_VALUE_LENGTH)
 
-const wireSchema = z
+function keyedMap<T extends z.ZodTypeAny>(value: T) {
+  return z.record(dimensionKey, value).refine((record) => Object.keys(record).length <= MAX_DIMENSIONS)
+}
+
+const wireV2 = z
+  .object({
+    /** single-choice: key → value */
+    s: keyedMap(wireString).optional(),
+    /** multi-choice: key → values */
+    m: keyedMap(z.array(wireString).max(MAX_CHOICES)).optional(),
+    /** custom format: [width, height, unit] */
+    c: z.tuple([z.string().max(40), z.string().max(40), unit]).optional(),
+    /** measures: key → [width, height, depth, unit] */
+    d: keyedMap(z.tuple([z.string().max(40), z.string().max(40), z.string().max(40), unit])).optional(),
+    /** numbers: key → typed number */
+    n: keyedMap(z.string().min(1).max(40)).optional(),
+    /** short texts: key → text */
+    t: keyedMap(z.string().min(1).max(MAX_TEXT_LENGTH)).optional(),
+    /** booleans: key → 1 (only `true` is ever transported) */
+    b: keyedMap(z.literal(1)).optional(),
+  })
+  .strict()
+
+/** Sprint 4 payload: fixed keys. */
+const wireV1 = z
   .object({
     f: wireString.optional(),
     o: wireString.optional(),
@@ -53,24 +79,41 @@ const wireSchema = z
     m: wireString.optional(),
     g: wireString.optional(),
     q: wireString.optional(),
-    /** finishes (multi-select) */
-    n: z.array(wireString).max(MAX_FINISHES).optional(),
-    /** custom format: [width, height, unit] */
-    x: z.tuple([z.string().max(40), z.string().max(40), z.enum(['mm', 'cm'])]).optional(),
+    n: z.array(wireString).max(20).optional(),
+    x: z.tuple([z.string().max(40), z.string().max(40), unit]).optional(),
   })
   .strict()
 
+const V1_SINGLE_KEYS: Record<string, string> = {
+  f: CORE_DIMENSION_KEYS.format,
+  o: CORE_DIMENSION_KEYS.orientation,
+  p: CORE_DIMENSION_KEYS.pageCount,
+  s: CORE_DIMENSION_KEYS.printSides,
+  c: CORE_DIMENSION_KEYS.colorMode,
+  m: CORE_DIMENSION_KEYS.material,
+  g: CORE_DIMENSION_KEYS.grammage,
+  q: CORE_DIMENSION_KEYS.quantity,
+}
+
 /** What a transport decodes to. Raw, untrusted values — see `resolveConfiguration`. */
 export interface TransportedConfiguration {
-  single: Partial<Record<SingleKey, string>>
-  finishes: string[]
+  single: Record<string, string>
+  multiple: Record<string, string[]>
   customFormat?: { width: string; height: string; unit: CustomFormatUnit }
+  measures: Record<string, MeasureValue>
+  numbers: Record<string, string>
+  texts: Record<string, string>
+  flags: Record<string, boolean>
+}
+
+export function emptyTransportedConfiguration(): TransportedConfiguration {
+  return { single: {}, multiple: {}, measures: {}, numbers: {}, texts: {}, flags: {} }
 }
 
 export type ParsedConfigurationTransport =
   | { status: 'empty' }
   | { status: 'invalid'; reason: string }
-  | { status: 'ok'; configuration: TransportedConfiguration }
+  | { status: 'ok'; configuration: TransportedConfiguration; version: number }
 
 /* ---------- base64url helpers (UTF-8 safe, work in Node and the browser) ---------- */
 
@@ -89,36 +132,97 @@ function fromBase64Url(encoded: string): string {
   return new TextDecoder('utf-8', { fatal: true }).decode(bytes)
 }
 
+const sortedEntries = <T>(record: Record<string, T>): [string, T][] =>
+  Object.entries(record).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+
 /* ---------- serialize ---------- */
 
 /**
- * Serializes configurator state. Returns `undefined` when nothing is
- * selected (so callers add no parameter at all). Output is deterministic:
- * fixed key order, finishes in the order held by the state (CMS order),
- * custom-format dimensions only while "Sur mesure" is the chosen format.
+ * Serializes configurator state as transport v2. Returns `undefined` when
+ * nothing is selected (so callers add no parameter at all). Output is
+ * deterministic: dimension keys sorted, choices in the state's (schema)
+ * order, custom-format dimensions only while "Sur mesure" is the chosen
+ * format, blank values omitted.
  */
 export function serializeConfiguration(state: ProductConfigurationState): string | undefined {
   const wire: Record<string, unknown> = {}
 
-  for (const key of SINGLE_KEYS) {
-    const value = state.single[key]?.trim()
-    if (value) wire[SINGLE_WIRE_KEYS[key]] = value
+  const single: Record<string, string> = {}
+  for (const [key, value] of sortedEntries(state.single)) {
+    if (value?.trim()) single[key] = value
   }
+  if (Object.keys(single).length) wire.s = single
 
-  const finishes = (state.multiple.finish ?? []).filter(Boolean)
-  if (finishes.length) wire.n = finishes
+  const multiple: Record<string, string[]> = {}
+  for (const [key, values] of sortedEntries(state.multiple)) {
+    const kept = (values ?? []).filter(Boolean)
+    if (kept.length) multiple[key] = kept
+  }
+  if (Object.keys(multiple).length) wire.m = multiple
 
-  if (state.single.format === CUSTOM_FORMAT_VALUE) {
+  if (state.single[CORE_DIMENSION_KEYS.format] === CUSTOM_FORMAT_VALUE) {
     const width = state.customFormat.width.trim()
     const height = state.customFormat.height.trim()
-    if (width || height) wire.x = [width, height, state.customFormat.unit]
+    if (width || height) wire.c = [width, height, state.customFormat.unit]
   }
+
+  const measures: Record<string, [string, string, string, CustomFormatUnit]> = {}
+  for (const [key, measure] of sortedEntries(state.measures)) {
+    const width = measure.width.trim()
+    const height = measure.height.trim()
+    const depth = measure.depth.trim()
+    if (width || height || depth) measures[key] = [width, height, depth, measure.unit]
+  }
+  if (Object.keys(measures).length) wire.d = measures
+
+  const numbers: Record<string, string> = {}
+  for (const [key, value] of sortedEntries(state.numbers)) if (value.trim()) numbers[key] = value.trim()
+  if (Object.keys(numbers).length) wire.n = numbers
+
+  const texts: Record<string, string> = {}
+  for (const [key, value] of sortedEntries(state.texts)) if (value.trim()) texts[key] = value.trim().slice(0, MAX_TEXT_LENGTH)
+  if (Object.keys(texts).length) wire.t = texts
+
+  const flags: Record<string, 1> = {}
+  for (const [key, value] of sortedEntries(state.flags)) if (value) flags[key] = 1
+  if (Object.keys(flags).length) wire.b = flags
 
   if (!Object.keys(wire).length) return undefined
   return `${CONFIGURATION_TRANSPORT_VERSION}.${toBase64Url(JSON.stringify(wire))}`
 }
 
 /* ---------- parse ---------- */
+
+function parseV1(json: unknown): TransportedConfiguration | undefined {
+  const parsed = wireV1.safeParse(json)
+  if (!parsed.success) return undefined
+  const wire = parsed.data
+  const configuration = emptyTransportedConfiguration()
+  for (const [wireKey, dimension] of Object.entries(V1_SINGLE_KEYS)) {
+    const value = wire[wireKey as keyof typeof wire]
+    if (typeof value === 'string') configuration.single[dimension] = value
+  }
+  if (wire.n?.length) configuration.multiple[CORE_DIMENSION_KEYS.finish] = [...new Set(wire.n)]
+  if (wire.x) configuration.customFormat = { width: wire.x[0], height: wire.x[1], unit: wire.x[2] }
+  return configuration
+}
+
+function parseV2(json: unknown): TransportedConfiguration | undefined {
+  const parsed = wireV2.safeParse(json)
+  if (!parsed.success) return undefined
+  const wire = parsed.data
+  const configuration = emptyTransportedConfiguration()
+  configuration.single = { ...wire.s }
+  for (const [key, values] of Object.entries(wire.m ?? {})) configuration.multiple[key] = [...new Set(values)]
+  if (wire.c) configuration.customFormat = { width: wire.c[0], height: wire.c[1], unit: wire.c[2] }
+  for (const [key, [width, height, depth, measureUnit]] of Object.entries(wire.d ?? {})) {
+    configuration.measures[key] = { width, height, depth, unit: measureUnit }
+  }
+  configuration.numbers = { ...wire.n }
+  configuration.texts = { ...wire.t }
+  for (const key of Object.keys(wire.b ?? {})) configuration.flags[key] = true
+  return configuration
+}
 
 /**
  * Parses a transport string. Never throws: a missing value is `empty`;
@@ -133,7 +237,8 @@ export function parseConfigurationTransport(raw: string | null | undefined): Par
 
   const separator = raw.indexOf('.')
   if (separator < 1) return { status: 'invalid', reason: 'malformed' }
-  if (raw.slice(0, separator) !== String(CONFIGURATION_TRANSPORT_VERSION)) {
+  const version = Number(raw.slice(0, separator))
+  if (!(SUPPORTED_TRANSPORT_VERSIONS as readonly number[]).includes(version) || String(version) !== raw.slice(0, separator)) {
     return { status: 'invalid', reason: 'unknown-version' }
   }
 
@@ -144,23 +249,9 @@ export function parseConfigurationTransport(raw: string | null | undefined): Par
     return { status: 'invalid', reason: 'malformed' }
   }
 
-  const parsed = wireSchema.safeParse(json)
-  if (!parsed.success) return { status: 'invalid', reason: 'invalid-shape' }
-
-  const wire = parsed.data
-  const single: TransportedConfiguration['single'] = {}
-  for (const key of SINGLE_KEYS) {
-    const value = wire[SINGLE_WIRE_KEYS[key] as keyof typeof wire]
-    if (typeof value === 'string') single[key] = value
-  }
-
-  const configuration: TransportedConfiguration = {
-    single,
-    finishes: [...new Set(wire.n ?? [])],
-  }
-  if (wire.x) configuration.customFormat = { width: wire.x[0], height: wire.x[1], unit: wire.x[2] }
-
-  return { status: 'ok', configuration }
+  const configuration = version === 1 ? parseV1(json) : parseV2(json)
+  if (!configuration) return { status: 'invalid', reason: 'invalid-shape' }
+  return { status: 'ok', configuration, version }
 }
 
 /* ---------- URLs ---------- */
@@ -187,3 +278,4 @@ export function buildQuoteCheckoutHref(slug: string, transport?: string): string
   if (transport) query.set(CONFIGURATION_PARAM, transport)
   return `/demande-de-devis?${query.toString()}`
 }
+

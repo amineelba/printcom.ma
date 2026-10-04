@@ -17,11 +17,15 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed.ts",
     "create-admin": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/create-admin.ts",
+    "configurator:audit": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/configurator-audit.ts",
+    "configurator:backfill": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/configurator-backfill.ts",
+    "configurator:export-review": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/configurator-export-review.ts",
+    "configurator:import-review": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/configurator-import-review.ts",
     "verify-content": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/verify-content.ts",
     "verify-design-tokens": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/verify-design-tokens.ts",
     "test": "pnpm run test:unit && pnpm run test:integration",
     "test:unit": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts tests/unit",
-    "test:integration": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts tests/integration",
+    "test:integration": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts --no-file-parallelism tests/integration",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts"
   },
   "dependencies": {

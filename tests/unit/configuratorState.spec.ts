@@ -15,13 +15,13 @@ describe('initial configuration state', () => {
   it('selects a group that has exactly one option', () => {
     const data = buildProductConfiguratorData(makeFullProduct())
     const state = createInitialConfigurationState(data)
-    expect(state.single.pageCount).toBe('4 pages') // the fixture's only page-count option
+    expect(state.single['page-count']).toBe('4 pages') // the fixture's only page-count option
   })
 
   it('does not choose for the visitor when a group has several options', () => {
     const data = buildProductConfiguratorData(makeFullProduct())
     const state = createInitialConfigurationState(data)
-    for (const key of ['format', 'orientation', 'printSides', 'colorMode', 'material', 'grammage', 'quantity'] as const) {
+    for (const key of ['format', 'orientation', 'print-sides', 'color-mode', 'material', 'grammage', 'quantity'] as const) {
       expect(state.single[key]).toBeUndefined()
     }
     expect(state.multiple.finish).toBeUndefined()
@@ -76,14 +76,14 @@ describe('configuration summary', () => {
   const initial = createInitialConfigurationState(data)
 
   it('shows only the singleton default when nothing else is chosen', () => {
-    expect(buildConfigurationSummary(data, initial)).toEqual([{ key: 'pageCount', label: 'Nombre de pages', value: '4 pages' }])
+    expect(buildConfigurationSummary(data, initial)).toEqual([{ key: 'page-count', label: 'Nombre de pages', value: '4 pages' }])
   })
 
   it('shows selected labels (not machine values), in group order, hiding unselected rows', () => {
     let state = selectSingleOption(initial, 'quantity', '500')
     state = selectSingleOption(state, 'orientation', 'landscape')
-    state = selectSingleOption(state, 'printSides', 'double')
-    state = selectSingleOption(state, 'colorMode', 'cmyk')
+    state = selectSingleOption(state, 'print-sides', 'double')
+    state = selectSingleOption(state, 'color-mode', 'cmyk')
     state = selectSingleOption(state, 'material', 'couché-mat')
     state = toggleMultipleOption(state, data.groups.find((g) => g.key === 'finish')!, 'soft-touch')
     const rows = buildConfigurationSummary(data, state)

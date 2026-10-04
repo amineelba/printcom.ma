@@ -24,6 +24,8 @@ import { Sectors } from './collections/Sectors'
 import { Technologies } from './collections/Technologies'
 import { Materials } from './collections/Materials'
 import { Finishes } from './collections/Finishes'
+import { ConfiguratorDimensions } from './collections/ConfiguratorDimensions'
+import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
 
 import { Resources } from './collections/Resources'
 import { FAQs } from './collections/FAQs'
@@ -192,6 +194,8 @@ export default buildConfig({
     Technologies,
     Materials,
     Finishes,
+    ConfiguratorDimensions,
+    ConfiguratorOptions,
 
     Resources,
     FAQs,

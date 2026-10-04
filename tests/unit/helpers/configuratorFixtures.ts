@@ -1,4 +1,4 @@
-import type { Finish, Material, Media, Product, ProductCategory } from '@/payload-types'
+import type { ConfiguratorDimension, ConfiguratorOption, Finish, Material, Media, Product, ProductCategory } from '@/payload-types'
 
 const stamps = { updatedAt: '2026-01-01T00:00:00.000Z', createdAt: '2026-01-01T00:00:00.000Z' }
 
@@ -123,3 +123,80 @@ export function makeVisualProduct(overrides: Partial<Product> = {}): Product {
     ...overrides,
   })
 }
+
+
+/* ---------- Sprint 5: product-specific schema fixtures ---------- */
+
+export function makeDimension(
+  id: number,
+  key: string,
+  label: string,
+  overrides: Partial<ConfiguratorDimension> = {},
+): ConfiguratorDimension {
+  return {
+    id,
+    key,
+    label,
+    group: 'other',
+    valueType: 'single-choice',
+    optionSource: 'catalog',
+    status: 'published',
+    ...stamps,
+    ...overrides,
+  }
+}
+
+export function makeOption(
+  id: number,
+  dimension: ConfiguratorDimension | number,
+  label: string,
+  overrides: Partial<ConfiguratorOption> = {},
+): ConfiguratorOption {
+  return {
+    id,
+    dimension,
+    label,
+    machineValue: label,
+    verificationStatus: 'confirmed',
+    status: 'published',
+    ...stamps,
+    ...overrides,
+  }
+}
+
+type SchemaRow = NonNullable<Product['configurationSchema']>[number]
+
+/** One `configurationSchema` row; defaults to a confirmed row. */
+export function schemaRow(dimension: ConfiguratorDimension | number, overrides: Partial<SchemaRow> = {}): SchemaRow {
+  return { dimension, dataStatus: 'confirmed', ...overrides }
+}
+
+/** Binds catalog options to a row, in the given order. */
+export function catalogBindings(...options: (ConfiguratorOption | [ConfiguratorOption, Partial<NonNullable<SchemaRow['options']>[number]>])[]) {
+  return options.map((entry) => (Array.isArray(entry) ? { option: entry[0], ...entry[1] } : { option: entry }))
+}
+
+/** A product with no legacy fields and the given schema rows. */
+export function makeSchemaProduct(rows: SchemaRow[], overrides: Partial<Product> = {}): Product {
+  return makeProduct({ configurationSchema: rows, ...overrides })
+}
+
+/** Shared registry used by the structurally distinct fixtures below. */
+export const REGISTRY = {
+  format: makeDimension(101, 'format', 'Format', { group: 'size' }),
+  orientation: makeDimension(102, 'orientation', 'Orientation', { optionSource: 'enum', group: 'print' }),
+  pageCount: makeDimension(103, 'page-count', 'Nombre de pages', { group: 'construction' }),
+  printSides: makeDimension(104, 'print-sides', 'Impression', { optionSource: 'enum', group: 'print' }),
+  material: makeDimension(105, 'material', 'Support', { optionSource: 'materials', group: 'material' }),
+  grammage: makeDimension(106, 'grammage', 'Grammage', { group: 'material' }),
+  finish: makeDimension(107, 'finish', 'Finition', { optionSource: 'finishes', valueType: 'multi-choice', group: 'finishing' }),
+  quantity: makeDimension(108, 'quantity', 'Quantité', { group: 'quantity' }),
+  binding: makeDimension(109, 'reliure', 'Reliure', { group: 'construction' }),
+  cover: makeDimension(110, 'couverture', 'Couverture', { group: 'construction' }),
+  dimensions: makeDimension(111, 'dimensions', 'Dimensions', { valueType: 'dimensions', optionSource: 'custom', group: 'size' }),
+  adhesive: makeDimension(112, 'adhesif', 'Adhésif', { group: 'application' }),
+  window: makeDimension(113, 'fenetre', 'Fenêtre', { group: 'construction' }),
+  sheets: makeDimension(114, 'nombre-de-feuilles', 'Nombre de feuilles', { valueType: 'number', optionSource: 'custom', unit: 'feuilles' }),
+  elastic: makeDimension(115, 'elastique-eventuel', 'Élastique éventuel', { valueType: 'boolean', optionSource: 'custom' }),
+  note: makeDimension(116, 'precision', 'Précision', { valueType: 'text', optionSource: 'custom' }),
+} as const

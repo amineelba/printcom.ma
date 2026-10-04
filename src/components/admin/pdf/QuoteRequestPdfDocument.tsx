@@ -200,6 +200,9 @@ export function QuoteRequestPdfDocument({ quoteRequest }: { quoteRequest: QuoteR
           <Row label="Finitions" value={finishes} />
           <Row label="Reliure" value={configuration?.binding} />
           <Row label="Quantité" value={configuration?.quantityLabel || configuration?.quantity} />
+          {(configuration?.technicalSelections ?? []).map((selection) => (
+            <Row key={selection.id ?? selection.key} label={selection.label} value={selection.valueLabel} />
+          ))}
           <Row label="Nombre de versions" value={configuration?.versionsCount} />
           <Row label="Personnalisation variable" value={configuration?.variablePersonalization !== undefined ? yesNo(configuration.variablePersonalization) : undefined} />
         </Section>

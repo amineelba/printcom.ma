@@ -5,7 +5,9 @@
 Configuration happens on the product page (`docs/product-configurator.md`);
 its "Obtenir mon devis" button leads here with `?produit=<slug>&cfg=<transport>`
 (Sprint 4): the selected options travel as a versioned, URL-safe `cfg`
-payload that the server canonicalizes against the published product.
+payload that the server canonicalizes against the published product. Sprint 5
+emits transport **v2** (generic, product-specific dimensions); Sprint 4's v1
+URLs still resolve.
 
 `/demande-de-devis` (`src/app/(frontend)/demande-de-devis/page.tsx`)
 renders `QuoteCheckout`: **one single-scroll page, no stepper, no
@@ -101,6 +103,16 @@ normalizes a checkout into that shape:
   `pageCountLabel` / `quantityLabel`; it is additive, historical rows are
   untouched. The PDF export shows the labels (falling back to the numbers)
   and `Carré`.
+- **Specialized dimensions (Sprint 5).** Any dimension that is not one of the
+  nine core rows above (a window, a fold, an adhesive, typed box dimensions,
+  a number, a yes/no…) is snapshotted in `configuration.technicalSelections[]`
+  — `key`, French `label`, `valueLabel` (display text), `valueLabels` (for
+  multi-choice), `numericValue` + `unit` (numbers), `unit` (measures) — in the
+  product's own schema order. Values are resolved server-side from the
+  product's current allowlist (never the raw transport), are read-only in
+  the admin, appear in the admin PDF and the internal e-mail, and survive
+  later CMS label changes. Migration
+  `20261004_041851_product_technical_schema` (additive).
 - `need.requestType` (required by the collection) is `product-printing`
   when a product resolved, otherwise `other`; `need.description` is left
   empty — nothing is manufactured to satisfy a field.

@@ -39,6 +39,18 @@ function mapConfiguration(context: ResolvedQuoteContext): QuoteConfiguration {
     finish: selections.finishes.length ? selections.finishes.map((finish) => finish.id) : undefined,
     quantity: parseExplicitCount(selections.quantity),
     quantityLabel: selections.quantity,
+    // Product-specific dimensions (anything beyond the core fields above),
+    // snapshotted with their French labels in schema order.
+    technicalSelections: selections.technical.length
+      ? selections.technical.map((entry) => ({
+          key: entry.key,
+          label: entry.label,
+          valueLabel: entry.valueLabel,
+          valueLabels: entry.valueLabels,
+          numericValue: entry.numericValue,
+          unit: entry.unit,
+        }))
+      : undefined,
   }
 }
 

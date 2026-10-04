@@ -9,7 +9,7 @@ import {
   removeQuotesByReference,
 } from '../helpers/configuratorFixture'
 import { serializeConfiguration } from '../../src/lib/configurator/transport'
-import type { ProductConfigurationState } from '../../src/lib/configurator/types'
+import { emptyConfigurationState, type ProductConfigurationState } from '../../src/lib/configurator/types'
 
 test.describe.configure({ mode: 'serial' })
 
@@ -48,9 +48,7 @@ const readEvents = (page: Page) =>
   page.evaluate(() => JSON.parse(sessionStorage.getItem('pc-events') || '[]') as AnalyticsEvent[])
 
 const state = (partial: Partial<ProductConfigurationState>): ProductConfigurationState => ({
-  single: {},
-  multiple: {},
-  customFormat: { width: '', height: '', unit: 'mm' },
+  ...emptyConfigurationState(),
   ...partial,
 })
 const checkoutUrl = (slug: string, transport?: string, extra = '') =>
@@ -88,7 +86,7 @@ test.describe('Configurator → quote checkout funnel', () => {
     await page.getByRole('radio', { name: '500 ex.' }).check({ force: true })
 
     await page.getByRole('link', { name: 'Obtenir mon devis' }).first().click()
-    await expect(page).toHaveURL(/\/demande-de-devis\?produit=e2e-produit-configurable&cfg=1\./)
+    await expect(page).toHaveURL(/\/demande-de-devis\?produit=e2e-produit-configurable&cfg=2\./)
 
     // Server-rendered canonical summary: French labels, selected rows only, no machine values.
     const recap = summary(page)
@@ -104,7 +102,7 @@ test.describe('Configurator → quote checkout funnel', () => {
 
     // "Modifier" returns to the product with everything restored.
     await recap.getByRole('link', { name: 'Modifier ma configuration' }).click()
-    await expect(page).toHaveURL(new RegExp(`/produits/${CONFIGURABLE_SLUG}\\?cfg=1\\.`))
+    await expect(page).toHaveURL(new RegExp(`/produits/${CONFIGURABLE_SLUG}\\?cfg=2\\.`))
     await expect(page.getByRole('radio', { name: 'A5' })).toBeChecked()
     await expect(page.getByRole('radio', { name: 'Paysage' })).toBeChecked()
     await expect(page.getByRole('radio', { name: 'E2E Papier mat' })).toBeChecked()
@@ -180,7 +178,7 @@ test.describe('Configurator → quote checkout funnel', () => {
     await expect(summary(page)).toContainText('E2E Papier brillant')
     await expect(summary(page)).toContainText('E2E Vernis B')
     // "Modifier" now carries the normalized, canonical transport.
-    await expect(summary(page).getByRole('link', { name: 'Modifier ma configuration' })).toHaveAttribute('href', /\?cfg=1\./)
+    await expect(summary(page).getByRole('link', { name: 'Modifier ma configuration' })).toHaveAttribute('href', /\?cfg=2\./)
   })
 })
 
@@ -188,7 +186,7 @@ test.describe('Tampered or stale links fail closed', () => {
   test('checkout drops foreign, stale and unoffered values and keeps the valid ones', async ({ page }) => {
     const forged = serializeConfiguration(
       state({
-        single: { format: 'A3', material: 'e2e-papier-image', orientation: 'portrait', printSides: 'double' },
+        single: { format: 'A3', material: 'e2e-papier-image', orientation: 'portrait', 'print-sides': 'double' },
         multiple: { finish: ['finition-etrangere', 'e2e-vernis-b'] },
       }),
     )!

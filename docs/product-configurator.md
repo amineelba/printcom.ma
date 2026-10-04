@@ -17,7 +17,9 @@ nothing about the choices is priced or checked for feasibility.
 
 ```text
 Payload Product (depth 2)
-   ↓  src/lib/configurator/buildProductConfiguratorData.ts   (server, pure)
+   ↓  buildProductConfiguratorModel()   (server, pure)  — see docs/product-technical-schema.md
+        configurationSchema usable?  → normalizeProductConfigurationSchema()   (Sprint 5, canonical)
+        otherwise                    → legacyConfigurator.ts                   (Sprint 2–4 fallback)
 ProductConfiguratorData   (plain JSON: product identity, media, groups)
    ↓  props
 ProductConfigurator       (client; src/components/configurator/)
@@ -31,7 +33,16 @@ ConfiguratorGroup → ConfiguratorOption   ProductPreview   ConfiguratorSummary
   description) is server-rendered content slotted into the layout, so the
   page's core copy and metadata/JSON-LD stay in the server tree. Category
   archives (same route) never mount the configurator.
-- `buildProductConfiguratorData` is the only code that knows Payload field
+- **Sprint 5:** the groups come from the product's own
+  `configurationSchema` (product-specific dimensions + allowlists; see
+  `docs/product-technical-schema.md`) when it has a usable row, otherwise
+  from the legacy fields documented below. Group keys are registry dimension
+  keys (`format`, `page-count`, `print-sides`, `color-mode`, `fenetre`…);
+  groups may be single/multi-choice or typed (`dimensions`, `number`,
+  `text`, `boolean`) — the typed ones only when the product schema allows
+  them. State is generic (`single`, `multiple`, `customFormat`, `measures`,
+  `numbers`, `texts`, `flags`) and serializes into transport v2.
+- `buildProductConfiguratorData` (and the legacy adapter) are the only code that knows Payload field
   names. It trims media to `{id,url,alt,width,height,sizes}`, resolves
   relationships, drops unresolved/blank/duplicate entries and omits empty
   groups. React components only see `ProductConfiguratorData`
@@ -46,9 +57,10 @@ ConfiguratorGroup → ConfiguratorOption   ProductPreview   ConfiguratorSummary
   asserts they match the option labels declared in
   `src/collections/Products.ts`.
 
-## Supported CMS fields
+## Supported CMS fields (legacy model — fallback)
 
-Rendered, in this order, only when the product has values:
+Used for products whose `configurationSchema` has no usable row. Rendered,
+in this order, only when the product has values:
 
 | Group | Source (`products`) | Selection | Option value |
 |---|---|---|---|
@@ -182,7 +194,11 @@ The configurator state is carried to the quote checkout, persisted on the
 lead, and can be restored for editing.
 
 **Transport** (`src/lib/configurator/transport.ts` — the only serializer and
-parser). `serializeConfiguration(state)` produces `1.<base64url(JSON)>`:
+parser). Sprint 5 emits **v2** (`2.<base64url(JSON)>`, generic maps keyed by
+dimension key — see `docs/product-technical-schema.md`); v1 URLs from Sprint 4
+still parse into the same structure and are canonicalized the same way. The
+paragraph below describes the v1 wire format that Sprint 4 introduced.
+`serializeConfiguration(state)` used to produce `1.<base64url(JSON)>`:
 a version prefix, then compact JSON of the *machine values* only
 (`f` format, `o` orientation, `p` page count, `s` print sides, `c` colour
 mode, `m` material slug, `g` grammage, `q` quantity, `n` finish slugs,
@@ -249,13 +265,13 @@ the lead; no name/e-mail/phone/comment/reference). Once-per-view uses a ref
   until editors upload real media. Orientation, print sides and colour mode
   have no CMS imagery.
 - **No product-specific material/finish previews** (see above).
-- **Specialized product-family dimensions are not modelled** (packaging,
-  labels, roll-ups, signage…). The generic `Products` model only describes
-  the groups above; the engine renders what the CMS provides and degrades
-  to just the preview + CTA for products with none (which is every seeded
-  product today). Image enrichment applies to the existing generic groups
-  only; specialized product-family configuration remains a future
-  content-model task.
+- **Specialized dimensions exist, but values are not invented.** Since
+  Sprint 5 a product can define its own dimensions (window, closure, flaps,
+  adhesive, winding direction…) in `configurationSchema`
+  (`docs/product-technical-schema.md`). A dimension known from the master
+  content but without confirmed values renders **no control** and sits in
+  the review queue (`pnpm configurator:audit`). Which values Printcom really
+  offers is never guessed.
 - **No dependencies between options** (e.g. finish X only on material Y):
   the CMS does not encode them, so none are invented.
 - No pricing, cart, payment, availability or lead-time logic.
@@ -266,6 +282,12 @@ the lead; no name/e-mail/phone/comment/reference). Once-per-view uses a ref
 `configuratorPreview.spec.ts` (preview resolver),
 `configuratorState.spec.ts` (state/summary/link),
 `ProductConfigurator.spec.tsx` (rendered semantics and interaction),
+`configuratorSchema.spec.ts` (Sprint 5: product-specific schema normalizer,
+no-fake-controls rules, legacy fallback, generic resolver, v1/v2 transport),
+`tests/unit/configurator-schema/*` (sources, canonical mapping, backfill
+plan, audit, review workflow, CLI safety),
+`tests/integration/configuratorSchema.int.spec.ts`,
+`tests/e2e/productSpecificSchema.e2e.spec.ts`,
 `configuratorTransport.spec.ts`, `configuratorResolve.spec.ts` (serializer/
 parser, tamper rejection, safe parsers), `configuratorHydration.spec.tsx`
 (restored state, preview, CTA round-trip, instrumentation, StrictMode),

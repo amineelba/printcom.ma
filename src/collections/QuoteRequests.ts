@@ -122,6 +122,24 @@ export const QuoteRequests: CollectionConfig = {
           type: 'text',
           admin: { description: 'Libellé choisi sur la fiche produit, conservé tel quel (le nombre ci-dessus n’est rempli que lorsqu’il est explicite).' },
         },
+        {
+          name: 'technicalSelections',
+          type: 'array',
+          labels: { singular: 'Sélection technique', plural: 'Sélections techniques' },
+          admin: {
+            readOnly: true,
+            description:
+              'Réponses du client aux dimensions propres au produit (hors champs historiques ci-dessus), résolues côté serveur au moment de la demande.',
+          },
+          fields: [
+            { name: 'key', type: 'text', required: true },
+            { name: 'label', type: 'text', required: true },
+            { name: 'valueLabel', type: 'text', required: true },
+            { name: 'valueLabels', type: 'text', hasMany: true },
+            { name: 'numericValue', type: 'number' },
+            { name: 'unit', type: 'text' },
+          ],
+        },
         { name: 'versionsCount', type: 'number' },
         { name: 'variablePersonalization', type: 'checkbox', defaultValue: false },
       ],

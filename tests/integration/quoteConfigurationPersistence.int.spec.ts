@@ -4,7 +4,7 @@ import { runSeed } from '@/lib/seed/runSeed'
 import { describe, it, beforeAll, afterAll, expect, vi } from 'vitest'
 import { serializeConfiguration } from '@/lib/configurator/transport'
 import { resolveQuoteContext } from '@/lib/quote/resolveQuoteContext'
-import { CUSTOM_FORMAT_VALUE, type ProductConfigurationState } from '@/lib/configurator/types'
+import { CUSTOM_FORMAT_VALUE, emptyConfigurationState, type ProductConfigurationState } from '@/lib/configurator/types'
 
 let currentIp = '198.51.100.1'
 vi.mock('next/headers', () => ({
@@ -25,9 +25,7 @@ const nextIp = () => {
 const references: string[] = []
 
 const state = (partial: Partial<ProductConfigurationState>): ProductConfigurationState => ({
-  single: {},
-  multiple: {},
-  customFormat: { width: '', height: '', unit: 'mm' },
+  ...emptyConfigurationState(),
   ...partial,
 })
 
@@ -149,9 +147,9 @@ describe('quote checkout — configuration persistence', () => {
             single: {
               format: 'A5',
               orientation: 'square',
-              pageCount: '8 pages',
-              printSides: 'double',
-              colorMode: 'cmyk',
+              'page-count': '8 pages',
+              'print-sides': 'double',
+              'color-mode': 'cmyk',
               material: 'int-cfg-mat-a',
               grammage: '350 g',
               quantity: '500 ex.',
@@ -185,7 +183,7 @@ describe('quote checkout — configuration persistence', () => {
       productContext: {
         productSlug: SLUGS.product,
         configurationTransport: serializeConfiguration(
-          state({ single: { pageCount: 'Sur devis', quantity: 'Entre 500 et 1000' } }),
+          state({ single: { 'page-count': 'Sur devis', quantity: 'Entre 500 et 1000' } }),
         ),
       },
     })
@@ -228,7 +226,7 @@ describe('quote checkout — configuration persistence', () => {
             single: {
               format: 'A3', // not offered
               material: 'int-cfg-mat-autre', // belongs to another product
-              printSides: 'double', // valid, kept
+              'print-sides': 'double', // valid, kept
               orientation: 'landscape', // not offered by this product
             },
             multiple: { finish: ['int-cfg-fin-a', 'finition-inconnue'] },

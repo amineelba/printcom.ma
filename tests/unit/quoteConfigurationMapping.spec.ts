@@ -3,7 +3,7 @@ import { mapCheckoutToQuoteRequest } from '@/lib/quote/mapCheckoutToQuoteRequest
 import { buildQuoteConfirmationEmail, buildQuoteNotificationEmail } from '@/lib/quote/quoteEmails'
 import { resolveProductConfiguration } from '@/lib/configurator/resolveConfiguration'
 import { parseConfigurationTransport, serializeConfiguration } from '@/lib/configurator/transport'
-import { CUSTOM_FORMAT_VALUE, type ProductConfigurationState } from '@/lib/configurator/types'
+import { CUSTOM_FORMAT_VALUE, emptyConfigurationState, type ProductConfigurationState } from '@/lib/configurator/types'
 import type { QuoteCheckoutData } from '@/lib/validation/quote'
 import type { ResolvedQuoteContext } from '@/lib/quote/resolveQuoteContext'
 import { makeFullProduct } from './helpers/configuratorFixtures'
@@ -23,12 +23,7 @@ function contextFor(state: Partial<ProductConfigurationState>): ResolvedQuoteCon
   const configuration = resolveProductConfiguration({
     product,
     transport: parseConfigurationTransport(
-      serializeConfiguration({
-        single: {},
-        multiple: {},
-        customFormat: { width: '', height: '', unit: 'mm' },
-        ...state,
-      }),
+      serializeConfiguration({ ...emptyConfigurationState(), ...state }),
     ),
   })
   return {
@@ -48,9 +43,9 @@ describe('mapCheckoutToQuoteRequest — configuration', () => {
         single: {
           format: 'A5',
           orientation: 'landscape',
-          pageCount: '4 pages',
-          printSides: 'double',
-          colorMode: 'cmyk',
+          'page-count': '4 pages',
+          'print-sides': 'double',
+          'color-mode': 'cmyk',
           material: 'offset',
           grammage: '350 g',
           quantity: '500',
@@ -100,11 +95,7 @@ describe('mapCheckoutToQuoteRequest — configuration', () => {
       const configuration = resolveProductConfiguration({
         product: odd,
         transport: parseConfigurationTransport(
-          serializeConfiguration({
-            single: { pageCount, quantity },
-            multiple: {},
-            customFormat: { width: '', height: '', unit: 'mm' },
-          }),
+          serializeConfiguration({ ...emptyConfigurationState(), single: { 'page-count': pageCount, quantity } }),
         ),
       })
       return mapCheckoutToQuoteRequest('PC-1', data, { product: { id: 10, slug: 's', title: 't' }, configuration })
@@ -126,11 +117,7 @@ describe('mapCheckoutToQuoteRequest — configuration', () => {
     const configuration = resolveProductConfiguration({
       product: squareProduct,
       transport: parseConfigurationTransport(
-        serializeConfiguration({
-          single: { orientation: 'square' },
-          multiple: {},
-          customFormat: { width: '', height: '', unit: 'mm' },
-        }),
+        serializeConfiguration({ ...emptyConfigurationState(), single: { orientation: 'square' } }),
       ),
     })
     const request = mapCheckoutToQuoteRequest('PC-1', data, {

@@ -1,9 +1,11 @@
-import type {
-  ConfiguratorGroup,
-  ConfiguratorGroupKey,
-  ConfiguratorMedia,
-  ConfiguratorOption,
-  ProductConfigurationState,
+import {
+  CORE_DIMENSION_KEYS,
+  groupValueType,
+  type ConfiguratorGroup,
+  type ConfiguratorGroupKey,
+  type ConfiguratorMedia,
+  type ConfiguratorOption,
+  type ProductConfigurationState,
 } from './types'
 
 /**
@@ -16,15 +18,15 @@ import type {
  * quantity) can carry one.
  */
 export const PREVIEW_PRIORITY: readonly ConfiguratorGroupKey[] = [
-  'finish',
-  'material',
-  'format',
-  'orientation',
-  'pageCount',
-  'printSides',
-  'colorMode',
-  'grammage',
-  'quantity',
+  CORE_DIMENSION_KEYS.finish,
+  CORE_DIMENSION_KEYS.material,
+  CORE_DIMENSION_KEYS.format,
+  CORE_DIMENSION_KEYS.orientation,
+  CORE_DIMENSION_KEYS.pageCount,
+  CORE_DIMENSION_KEYS.printSides,
+  CORE_DIMENSION_KEYS.colorMode,
+  CORE_DIMENSION_KEYS.grammage,
+  CORE_DIMENSION_KEYS.quantity,
 ]
 
 export interface ResolvedPreview {
@@ -35,11 +37,13 @@ export interface ResolvedPreview {
 }
 
 function selectedOptions(group: ConfiguratorGroup, state: ProductConfigurationState): ConfiguratorOption[] {
-  if (group.selectionMode === 'multiple') {
-    const selected = new Set(state.multiple.finish ?? [])
+  const type = groupValueType(group)
+  if (type === 'multi-choice') {
+    const selected = new Set(state.multiple[group.key] ?? [])
     return group.options.filter((option) => selected.has(option.value))
   }
-  const value = state.single[group.key as keyof ProductConfigurationState['single']]
+  if (type !== 'single-choice') return []
+  const value = state.single[group.key]
   return group.options.filter((option) => option.value === value)
 }
 
@@ -63,7 +67,12 @@ export function resolvePreviewMedia({
   groups: ConfiguratorGroup[]
   selection: ProductConfigurationState
 }): ResolvedPreview {
-  for (const key of PREVIEW_PRIORITY) {
+  // Core dimensions first (fixed priority), then product-specific dimensions in schema order.
+  const orderedKeys = [
+    ...PREVIEW_PRIORITY,
+    ...groups.map((candidate) => candidate.key).filter((key) => !PREVIEW_PRIORITY.includes(key)),
+  ]
+  for (const key of orderedKeys) {
     const group = groups.find((candidate) => candidate.key === key)
     if (!group) continue
     const winner = selectedOptions(group, selection).find((option) => option.previewImage)

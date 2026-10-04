@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { buildProductConfiguratorData } from '@/lib/configurator/buildProductConfiguratorData'
 import { resolvePreviewMedia, PREVIEW_PRIORITY } from '@/lib/configurator/preview'
 import { createInitialConfigurationState, selectSingleOption, toggleMultipleOption } from '@/lib/configurator/state'
-import { CONFIGURATOR_GROUP_KEYS, CUSTOM_FORMAT_VALUE, type ConfiguratorGroup, type ConfiguratorMedia } from '@/lib/configurator/types'
+import { CORE_DIMENSION_KEYS, CUSTOM_FORMAT_VALUE, type ConfiguratorGroup, type ConfiguratorMedia } from '@/lib/configurator/types'
 import { makeVisualProduct } from './helpers/configuratorFixtures'
 
 const data = buildProductConfiguratorData(makeVisualProduct())
@@ -88,7 +88,7 @@ describe('resolvePreviewMedia', () => {
   })
 
   it('documents a fixed priority covering every group exactly once', () => {
-    expect([...PREVIEW_PRIORITY].sort()).toEqual([...CONFIGURATOR_GROUP_KEYS].sort())
+    expect([...PREVIEW_PRIORITY].sort()).toEqual(Object.values(CORE_DIMENSION_KEYS).sort())
     expect(PREVIEW_PRIORITY[0]).toBe('finish')
     expect(PREVIEW_PRIORITY.indexOf('format')).toBeLessThan(PREVIEW_PRIORITY.indexOf('grammage'))
   })

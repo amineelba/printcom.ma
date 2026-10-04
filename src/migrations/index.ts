@@ -7,6 +7,7 @@ import * as migration_20260904_032835_add_homepage_sections from './20260904_032
 import * as migration_20261004_021246_quote_checkout_design_source from './20261004_021246_quote_checkout_design_source';
 import * as migration_20261004_025908_add_visual_metadata_to_product_options from './20261004_025908_add_visual_metadata_to_product_options';
 import * as migration_20261004_031420_quote_configuration_snapshot from './20261004_031420_quote_configuration_snapshot';
+import * as migration_20261004_041851_product_technical_schema from './20261004_041851_product_technical_schema';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20261004_031420_quote_configuration_snapshot.up,
     down: migration_20261004_031420_quote_configuration_snapshot.down,
-    name: '20261004_031420_quote_configuration_snapshot'
+    name: '20261004_031420_quote_configuration_snapshot',
+  },
+  {
+    up: migration_20261004_041851_product_technical_schema.up,
+    down: migration_20261004_041851_product_technical_schema.down,
+    name: '20261004_041851_product_technical_schema'
   },
 ];

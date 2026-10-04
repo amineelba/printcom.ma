@@ -5,7 +5,12 @@ import config from '../../src/payload.config.js'
 export const CONFIGURABLE_SLUG = 'e2e-produit-configurable'
 export const BARE_SLUG = 'e2e-produit-sans-configuration'
 export const VISUAL_SLUG = 'e2e-produit-visuel'
-const FIXTURE_PRODUCT_SLUGS = [CONFIGURABLE_SLUG, BARE_SLUG, VISUAL_SLUG]
+/** Sprint 5: three structurally different products defined only by their own configurationSchema. */
+export const SCHEMA_CARD_SLUG = 'e2e-schema-carte'
+export const SCHEMA_DOC_SLUG = 'e2e-schema-document'
+export const SCHEMA_LABEL_SLUG = 'e2e-schema-etiquette'
+const FIXTURE_PRODUCT_SLUGS = [CONFIGURABLE_SLUG, BARE_SLUG, VISUAL_SLUG, SCHEMA_CARD_SLUG, SCHEMA_DOC_SLUG, SCHEMA_LABEL_SLUG]
+const FIXTURE_NOTE = 'e2e-fixture'
 const FIXTURE_MATERIAL_SLUGS = ['e2e-papier-mat', 'e2e-papier-brillant', 'e2e-papier-image']
 const FIXTURE_FINISH_SLUGS = ['e2e-vernis-a', 'e2e-vernis-b']
 
@@ -17,6 +22,8 @@ const FIXTURE_FINISH_SLUGS = ['e2e-vernis-a', 'e2e-vernis-b']
 export async function removeConfiguratorFixtures(): Promise<void> {
   const payload = await getPayload({ config })
   await payload.delete({ collection: 'products', where: { slug: { in: FIXTURE_PRODUCT_SLUGS } }, overrideAccess: true })
+  await payload.delete({ collection: 'configurator-options', where: { notes: { equals: FIXTURE_NOTE } }, overrideAccess: true })
+  await payload.delete({ collection: 'configurator-dimensions', where: { notes: { equals: FIXTURE_NOTE } }, overrideAccess: true })
   await payload.delete({ collection: 'materials', where: { slug: { in: FIXTURE_MATERIAL_SLUGS } }, overrideAccess: true })
   await payload.delete({ collection: 'finishes', where: { slug: { in: FIXTURE_FINISH_SLUGS } }, overrideAccess: true })
   await payload.delete({ collection: 'media', where: { filename: { like: 'e2e-visual-' } }, overrideAccess: true })
@@ -127,6 +134,152 @@ export async function createConfiguratorFixtures(): Promise<void> {
       ],
       materials: [imageMaterial.id],
       quantities: [{ label: '100' }, { label: '500' }],
+    },
+    overrideAccess: true,
+  })
+
+  await createSchemaFixtures(payload, category.id)
+}
+
+type DimensionSpec = {
+  key: string
+  label: string
+  valueType?: 'single-choice' | 'multi-choice' | 'dimensions' | 'number' | 'text' | 'boolean'
+  optionSource?: 'catalog' | 'materials' | 'finishes' | 'enum' | 'custom'
+  unit?: string
+}
+
+/**
+ * Sprint 5 fixtures: three products with *different* dimension sets, none of
+ * them using the legacy generic fields. Core dimensions are reused when the
+ * database already has them (and left alone afterwards); everything else is
+ * tagged and removed by removeConfiguratorFixtures.
+ */
+async function createSchemaFixtures(payload: Payload, categoryId: number) {
+  const dimension = async (spec: DimensionSpec) => {
+    const existing = await payload.find({ collection: 'configurator-dimensions', where: { key: { equals: spec.key } }, limit: 1, depth: 0, overrideAccess: true })
+    if (existing.docs[0]) return existing.docs[0]
+    return payload.create({
+      collection: 'configurator-dimensions',
+      data: {
+        key: spec.key,
+        label: spec.label,
+        group: 'other',
+        valueType: spec.valueType ?? 'single-choice',
+        optionSource: spec.optionSource ?? 'catalog',
+        unit: spec.unit,
+        status: 'published',
+        notes: FIXTURE_NOTE,
+      },
+      overrideAccess: true,
+    })
+  }
+  const option = async (dimensionId: number, label: string) => {
+    const existing = await payload.find({
+      collection: 'configurator-options',
+      where: { and: [{ dimension: { equals: dimensionId } }, { machineValue: { equals: label } }] },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
+    if (existing.docs[0]) return existing.docs[0]
+    return payload.create({
+      collection: 'configurator-options',
+      data: { dimension: dimensionId, label, machineValue: label, verificationStatus: 'confirmed', status: 'published', notes: FIXTURE_NOTE },
+      overrideAccess: true,
+    })
+  }
+  const material = async (slug: string) =>
+    (await payload.find({ collection: 'materials', where: { slug: { equals: slug } }, limit: 1, depth: 0, overrideAccess: true })).docs[0].id
+  const finish = async (slug: string) =>
+    (await payload.find({ collection: 'finishes', where: { slug: { equals: slug } }, limit: 1, depth: 0, overrideAccess: true })).docs[0].id
+
+  const d = {
+    format: await dimension({ key: 'format', label: 'Format' }),
+    orientation: await dimension({ key: 'orientation', label: 'Orientation', optionSource: 'enum' }),
+    material: await dimension({ key: 'material', label: 'Support', optionSource: 'materials' }),
+    grammage: await dimension({ key: 'grammage', label: 'Grammage' }),
+    finish: await dimension({ key: 'finish', label: 'Finition', optionSource: 'finishes', valueType: 'multi-choice' }),
+    pageCount: await dimension({ key: 'page-count', label: 'Nombre de pages' }),
+    cover: await dimension({ key: 'e2e-couverture', label: 'Couverture' }),
+    binding: await dimension({ key: 'e2e-reliure', label: 'Reliure' }),
+    dimensions: await dimension({ key: 'dimensions', label: 'Dimensions', valueType: 'dimensions', optionSource: 'custom' }),
+    adhesive: await dimension({ key: 'e2e-adhesif', label: 'Adhésif' }),
+    perSheet: await dimension({ key: 'e2e-par-planche', label: 'Quantité par planche', valueType: 'number', optionSource: 'custom', unit: 'étiquettes' }),
+    elastic: await dimension({ key: 'e2e-elastique', label: 'Élastique', valueType: 'boolean', optionSource: 'custom' }),
+    window: await dimension({ key: 'e2e-fenetre', label: 'Fenêtre' }),
+  }
+
+  const a4 = await option(d.format.id, 'A4')
+  const a5 = await option(d.format.id, 'A5')
+  const g350 = await option(d.grammage.id, '350 g')
+  const g400 = await option(d.grammage.id, '400 g')
+  const pages16 = await option(d.pageCount.id, '16 pages')
+  const pages32 = await option(d.pageCount.id, '32 pages')
+  const soft = await option(d.cover.id, 'Souple')
+  const rigid = await option(d.cover.id, 'Rigide')
+  const spiral = await option(d.binding.id, 'Spirale')
+  const staple = await option(d.binding.id, 'Agrafage')
+  const permanent = await option(d.adhesive.id, 'Permanent')
+  const removable = await option(d.adhesive.id, 'Amovible')
+
+  const [aThumb, aPreview] = await Promise.all([
+    fixtureMedia(payload, 'schema-thumb', 'Vignette schéma', [200, 90, 90]),
+    fixtureMedia(payload, 'schema-preview', 'Aperçu schéma A4', [90, 200, 90]),
+  ])
+  const baseMedia = await fixtureMedia(payload, 'schema-base', 'Produit schéma de base', [170, 170, 170])
+
+  const common = { shortDescription: 'Produit de test défini par sa propre configuration technique.', primaryCategory: categoryId, status: 'published' as const }
+  const row = (dimensionId: number, extra: Record<string, unknown> = {}) => ({ dimension: dimensionId, dataStatus: 'confirmed' as const, source: 'manual' as const, ...extra })
+
+  await payload.create({
+    collection: 'products',
+    data: {
+      ...common,
+      title: 'E2E Schéma carte',
+      slug: SCHEMA_CARD_SLUG,
+      primaryImage: baseMedia.id,
+      configurationSchema: [
+        row(d.format.id, { options: [{ option: a4.id, descriptionOverride: '210 × 297 mm', imageOverride: aThumb.id, previewImage: aPreview.id }, { option: a5.id }] }),
+        row(d.orientation.id, { enumOptions: ['portrait', 'landscape'] }),
+        row(d.material.id, { materialOptions: [await material('e2e-papier-mat'), await material('e2e-papier-brillant')] }),
+        row(d.grammage.id, { options: [{ option: g350.id }, { option: g400.id }] }),
+        row(d.finish.id, { finishOptions: [await finish('e2e-vernis-a'), await finish('e2e-vernis-b')] }),
+        row(d.window.id, { dataStatus: 'needs-review' }),
+      ],
+    },
+    overrideAccess: true,
+  })
+  await payload.create({
+    collection: 'products',
+    data: {
+      ...common,
+      title: 'E2E Schéma document',
+      slug: SCHEMA_DOC_SLUG,
+      configurationSchema: [
+        row(d.format.id, { options: [{ option: a4.id }] }),
+        row(d.pageCount.id, { options: [{ option: pages16.id }, { option: pages32.id }] }),
+        row(d.cover.id, { options: [{ option: soft.id }, { option: rigid.id }] }),
+        row(d.binding.id, { options: [{ option: spiral.id }, { option: staple.id }] }),
+      ],
+    },
+    overrideAccess: true,
+  })
+  await payload.create({
+    collection: 'products',
+    data: {
+      ...common,
+      title: 'E2E Schéma étiquette',
+      slug: SCHEMA_LABEL_SLUG,
+      configurationSchema: [
+        row(d.dimensions.id, { allowCustomValue: true }),
+        row(d.material.id, { materialOptions: [await material('e2e-papier-image')] }),
+        row(d.adhesive.id, { options: [{ option: permanent.id }, { option: removable.id }] }),
+        row(d.finish.id, { finishOptions: [await finish('e2e-vernis-a'), await finish('e2e-vernis-b')] }),
+        row(d.perSheet.id, { allowCustomValue: true }),
+        row(d.elastic.id),
+        row(d.window.id, { dataStatus: 'needs-review' }),
+      ],
     },
     overrideAccess: true,
   })
