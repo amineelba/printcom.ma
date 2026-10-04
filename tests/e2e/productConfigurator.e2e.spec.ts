@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test'
 import {
   BARE_SLUG,
   CONFIGURABLE_SLUG,
+  VISUAL_SLUG,
   createConfiguratorFixtures,
   removeConfiguratorFixtures,
 } from '../helpers/configuratorFixture'
@@ -106,5 +107,65 @@ test.describe('Product page configurator', () => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
     expect(overflow).toBeLessThanOrEqual(0)
     await expect(page.getByRole('link', { name: 'Obtenir mon devis' }).first()).toBeVisible()
+  })
+})
+
+test.describe('Visual options (thumbnails and preview images)', () => {
+  test('thumbnails render, the main preview follows preview images, and text options stay clean', async ({ page }) => {
+    await page.goto(`/produits/${VISUAL_SLUG}`)
+    const preview = page.getByRole('img', { name: 'Produit de base e2e' })
+    await expect(preview).toBeVisible()
+
+    const formats = page.getByRole('group', { name: 'Format' })
+    const a4 = formats.getByRole('radio', { name: 'A4' })
+    const a5 = formats.getByRole('radio', { name: 'A5' })
+    const a6 = formats.getByRole('radio', { name: 'A6' })
+
+    // Thumbnails: A4/A5 have one, text-only A6 has no image or empty frame.
+    const card = (radio: typeof a4) => radio.locator('xpath=ancestor::label')
+    await expect(card(a4).locator('img')).toBeVisible()
+    await expect(card(a5).locator('img')).toBeVisible()
+    await expect(card(a6).locator('img')).toHaveCount(0)
+    await expect(formats.getByText('210 × 297 mm')).toBeVisible()
+    await expect(card(page.getByRole('radio', { name: 'E2E Papier image' })).locator('img')).toBeVisible()
+
+    // Preview image on A4 → main preview changes; selected state is exposed.
+    await a4.check({ force: true })
+    await expect(a4).toBeChecked()
+    await expect(page.getByRole('img', { name: 'Aperçu A4 e2e' })).toBeVisible()
+    await expect(preview).toHaveCount(0)
+
+    // Thumbnail-only A5 does not replace the preview: base comes back.
+    await a5.check({ force: true })
+    await expect(page.getByRole('img', { name: 'Produit de base e2e' })).toBeVisible()
+    await expect(page.getByRole('img', { name: 'Aperçu A4 e2e' })).toHaveCount(0)
+
+    // Text-only option: no broken image anywhere, summary stays correct.
+    await a6.check({ force: true })
+    const broken = await page.evaluate(() =>
+      Array.from(document.images).filter((img) => img.complete && img.naturalWidth === 0).length,
+    )
+    expect(broken).toBe(0)
+    await page.getByRole('radio', { name: '500' }).check({ force: true })
+    await expect(page.getByRole('region', { name: 'Votre configuration' })).toContainText('A6')
+    await expect(page.getByRole('region', { name: 'Votre configuration' })).toContainText('500')
+
+    // Re-selecting the preview-backed option brings its preview back.
+    await a4.check({ force: true })
+    await expect(page.getByRole('img', { name: 'Aperçu A4 e2e' })).toBeVisible()
+
+    await page.getByRole('link', { name: 'Obtenir mon devis' }).first().click()
+    await expect(page).toHaveURL(new RegExp(`/demande-de-devis\\?produit=${VISUAL_SLUG}$`))
+    await expect(page.locator('h1')).toHaveText('Demande de devis')
+  })
+
+  test('mobile: image cards stay readable with no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 800 })
+    await page.goto(`/produits/${VISUAL_SLUG}`)
+    await page.getByRole('radio', { name: 'A4' }).check({ force: true })
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+    expect(overflow).toBeLessThanOrEqual(0)
+    await expect(page.getByRole('radio', { name: 'A4' })).toBeChecked()
+    await expect(page.getByText('210 × 297 mm')).toBeVisible()
   })
 })

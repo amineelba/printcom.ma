@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrContentManager, publicReadPublished } from '@/lib/payload/access'
-import { adminOnlyField, seoFields, slugField, workflowFields } from '@/lib/payload/fields'
+import { adminOnlyField, seoFields, slugField, visualOptionFields, workflowFields } from '@/lib/payload/fields'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -69,7 +69,7 @@ export const Products: CollectionConfig = {
           name: 'availableFormats',
           type: 'array',
           labels: { singular: 'Format', plural: 'Formats' },
-          fields: [{ name: 'label', type: 'text', required: true }],
+          fields: visualOptionFields,
         },
         { name: 'customFormatAvailable', type: 'checkbox', defaultValue: false },
         {
@@ -82,7 +82,12 @@ export const Products: CollectionConfig = {
             { label: 'Carré', value: 'square' },
           ],
         },
-        { name: 'pageCountOptions', type: 'array', fields: [{ name: 'label', type: 'text', required: true }] },
+        {
+          name: 'pageCountOptions',
+          type: 'array',
+          labels: { singular: 'Nombre de pages', plural: 'Nombres de pages' },
+          fields: visualOptionFields,
+        },
         {
           name: 'printSides',
           type: 'select',
@@ -103,9 +108,19 @@ export const Products: CollectionConfig = {
           ],
         },
         { name: 'materials', type: 'relationship', relationTo: 'materials', hasMany: true },
-        { name: 'grammages', type: 'array', fields: [{ name: 'label', type: 'text', required: true }] },
+        {
+          name: 'grammages',
+          type: 'array',
+          labels: { singular: 'Grammage', plural: 'Grammages' },
+          fields: visualOptionFields,
+        },
         { name: 'finishes', type: 'relationship', relationTo: 'finishes', hasMany: true },
-        { name: 'quantities', type: 'array', fields: [{ name: 'label', type: 'text', required: true }] },
+        {
+          name: 'quantities',
+          type: 'array',
+          labels: { singular: 'Quantité', plural: 'Quantités' },
+          fields: visualOptionFields,
+        },
       ],
     },
 

@@ -5,6 +5,7 @@ import * as migration_20260820_163249_add_mcp_plugin from './20260820_163249_add
 import * as migration_20260903_151417_catalog_architecture_migration from './20260903_151417_catalog_architecture_migration';
 import * as migration_20260904_032835_add_homepage_sections from './20260904_032835_add_homepage_sections';
 import * as migration_20261004_021246_quote_checkout_design_source from './20261004_021246_quote_checkout_design_source';
+import * as migration_20261004_025908_add_visual_metadata_to_product_options from './20261004_025908_add_visual_metadata_to_product_options';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261004_021246_quote_checkout_design_source.up,
     down: migration_20261004_021246_quote_checkout_design_source.down,
-    name: '20261004_021246_quote_checkout_design_source'
+    name: '20261004_021246_quote_checkout_design_source',
+  },
+  {
+    up: migration_20261004_025908_add_visual_metadata_to_product_options.up,
+    down: migration_20261004_025908_add_visual_metadata_to_product_options.down,
+    name: '20261004_025908_add_visual_metadata_to_product_options'
   },
 ];

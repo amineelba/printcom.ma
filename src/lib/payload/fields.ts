@@ -154,3 +154,56 @@ export const adminOnlyField = (field: Field): Field =>
       update: isAdminFieldLevel,
     },
   }) as Field
+
+/**
+ * Fields of one row of an image-capable option list on `products` (formats,
+ * page counts, grammages, quantities — see docs/product-configurator.md).
+ * `label` keeps the requiredness it always had; everything visual is
+ * optional, so a label-only row (every row created before the visual fields
+ * existed) stays valid and a text-only configurator remains a valid state.
+ *
+ * `image` and `previewImage` are different jobs: the first is the small
+ * thumbnail in the option's selector card, the second replaces the main
+ * product preview while the option is selected.
+ */
+export const visualOptionFields: Field[] = [
+  {
+    type: 'row',
+    fields: [
+      { name: 'label', type: 'text', required: true, label: 'Libellé', admin: { width: '50%' } },
+      {
+        name: 'description',
+        type: 'text',
+        label: 'Description courte',
+        maxLength: 120,
+        admin: {
+          width: '50%',
+          description: 'Texte d’aide affiché sous le nom de l’option (ex. « 210 × 297 mm »). Facultatif.',
+        },
+      },
+    ],
+  },
+  {
+    type: 'row',
+    fields: [
+      {
+        name: 'image',
+        type: 'upload',
+        relationTo: 'media',
+        label: 'Image de l’option',
+        admin: { width: '50%', description: 'Affichée dans la carte de sélection du configurateur. Facultatif.' },
+      },
+      {
+        name: 'previewImage',
+        type: 'upload',
+        relationTo: 'media',
+        label: 'Image d’aperçu produit',
+        admin: {
+          width: '50%',
+          description:
+            'Affichée dans l’aperçu principal lorsque cette option est sélectionnée. Facultatif — sans image, l’aperçu actuel est conservé.',
+        },
+      },
+    ],
+  },
+]

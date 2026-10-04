@@ -48,20 +48,36 @@ function uniqueByValue(options: ConfiguratorOption[]): ConfiguratorOption[] {
   })
 }
 
+/** One row of an image-capable option list (formats, page counts, grammages, quantities). */
+interface VisualOptionRow {
+  id?: string | null
+  label?: string | null
+  description?: string | null
+  image?: Media | number | null
+  previewImage?: Media | number | null
+}
+
 /**
- * Label-only array fields (formats, page counts, grammages, quantities).
- * The CMS label is the public value — it is never parsed, slugified into a
- * business identifier, or reinterpreted.
+ * Inline option arrays (formats, page counts, grammages, quantities). The
+ * CMS label is the public value and the row `id` is the DOM/React identity —
+ * neither is parsed or reinterpreted, and the images are metadata only (an
+ * image URL or media id is never an option's identity). `image` is the
+ * selector thumbnail; `previewImage` is the optional main-preview override.
+ * A legacy label-only row yields a plain text option.
  */
-function labelOptions(
-  key: ConfiguratorGroupKey,
-  items: { id?: string | null; label?: string | null }[] | null | undefined,
-): ConfiguratorOption[] {
+function labelOptions(key: ConfiguratorGroupKey, rows: VisualOptionRow[] | null | undefined): ConfiguratorOption[] {
   return uniqueByValue(
-    (items ?? []).flatMap((item, index) => {
-      const label = item?.label?.trim()
+    (rows ?? []).flatMap((row, index) => {
+      const label = row?.label?.trim()
       if (!label) return []
-      return [{ id: `${key}-${item.id ?? index}`, value: label, label }]
+      const option: ConfiguratorOption = { id: `${key}-${row.id ?? index}`, value: label, label }
+      const description = row.description?.trim()
+      if (description) option.description = description
+      const image = toConfiguratorMedia(row.image)
+      if (image) option.image = image
+      const previewImage = toConfiguratorMedia(row.previewImage)
+      if (previewImage) option.previewImage = previewImage
+      return [option]
     }),
   )
 }
@@ -119,8 +135,11 @@ function group(
  * a fixed order and are omitted when the CMS has no values for them; nothing
  * is invented, ranked or marked "recommended".
  *
- * Not modelled yet (see docs/product-configurator.md): dimensions specific to
- * a product family (packaging, labels, roll-ups…) and any dependency between
+ * Option thumbnails come from the row's `image` (inline arrays) or the shared
+ * material/finish `image`; `previewImage` exists only on inline rows — shared
+ * materials/finishes deliberately carry no preview image (see
+ * docs/product-configurator.md). Not modelled yet: dimensions specific to a
+ * product family (packaging, labels, roll-ups…) and any dependency between
  * options.
  */
 export function buildProductConfiguratorData(product: Product): ProductConfiguratorData {

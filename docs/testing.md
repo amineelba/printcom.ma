@@ -31,6 +31,7 @@ arg — none in application code).
 | `api.int.spec.ts` | Payload Local API boots correctly; config never registers a forbidden collection |
 | `accessControl.int.spec.ts` | Draft products invisible to anonymous reads; published products visible; `quote-requests`/`private-quote-files` reject anonymous reads outright (see `docs/access-control.md` for why this throws rather than returning empty) |
 | `quoteCheckout.int.spec.ts` | The real `submitQuoteRequest` server action (only `next/headers` mocked) against Postgres: both `designSource` answers persist with normalized values, company/comment optional, published-only product/support/finition context, honeypot writes nothing, same idempotency key → one lead, malformed input rejected server-side, per-IP rate limit, anonymous reads still refused. Cleans up the leads it creates |
+| `productOptionMedia.int.spec.ts` | Image-capable product option rows: legacy label-only rows stay valid, `image`/`previewImage` persist distinctly on formats/grammages, description length validation, materials/finishes stay shared (no `previewImage`), public read exposes no price |
 | `seedIdempotency.int.spec.ts` | `runSeed()` executed twice produces identical document counts (proves the upsert-by-slug logic is actually idempotent, not just "should be"); demo products seed as `draft`; sectors seed with the mandated neutral positioning note |
 
 9 tests, all passing. Run against a real local Postgres in this session
@@ -49,7 +50,7 @@ media query doesn't break rendering.
 
 `quoteCheckout.e2e.spec.ts` (4 tests): `/demande-de-devis` is a single-scroll form (no stepper/next-back/file upload/brief), required errors are tied to their fields and focus the first one, `designSource` is a mutually exclusive keyboard-operable radio group, and the short form submits through to `/demande-de-devis/merci?reference=PC-DEVIS-…`.
 
-`productConfigurator.e2e.spec.ts` (7 tests, creates its own published fixtures): configure → summary → quote link, keyboard radios/checkboxes, custom format, no price/cart UI, product without configuration, category archive unaffected, mobile no-overflow.
+`productConfigurator.e2e.spec.ts` (9 tests, creates its own published fixtures incl. generated flat-colour PNGs): configure → summary → quote link, keyboard radios/checkboxes, custom format, no price/cart UI, product without configuration, category archive unaffected, mobile no-overflow; plus a visual-options flow (thumbnails, main preview following `previewImage`, text-only options, mobile image cards).
 
 `admin.e2e.spec.ts` (3 tests): admin login → dashboard, collection list
 view, collection create view.

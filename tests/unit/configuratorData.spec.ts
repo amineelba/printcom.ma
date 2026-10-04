@@ -220,3 +220,81 @@ describe('buildProductConfiguratorData — identity', () => {
     expect(JSON.stringify(data)).not.toContain('"updatedAt"')
   })
 })
+
+import { makeVisualProduct } from './helpers/configuratorFixtures'
+
+describe('buildProductConfiguratorData — visual option metadata (Sprint 3)', () => {
+  const data = buildProductConfiguratorData(makeVisualProduct())
+  const format = (value: string) => groupOf(data, 'format')?.options.find((o) => o.value === value)
+
+  it('keeps a legacy label-only row as a plain text option', () => {
+    expect(format('A3')).toEqual({ id: 'format-a3', value: 'A3', label: 'A3' })
+    const legacy = buildProductConfiguratorData(makeProduct({ availableFormats: [{ id: 'x', label: 'A4', description: null, image: null, previewImage: null }] }))
+    expect(groupOf(legacy, 'format')?.options).toEqual([{ id: 'format-x', value: 'A4', label: 'A4' }])
+  })
+
+  it('normalizes the description only when populated', () => {
+    expect(format('A4')?.description).toBe('210 × 297 mm')
+    expect(format('A5')).not.toHaveProperty('description')
+    const blank = buildProductConfiguratorData(makeProduct({ availableFormats: [{ label: 'A4', description: '   ' }] }))
+    expect(groupOf(blank, 'format')?.options[0]).not.toHaveProperty('description')
+  })
+
+  it('exposes thumbnail and preview media separately', () => {
+    expect(format('A4')?.image?.id).toBe('61')
+    expect(format('A4')?.previewImage?.id).toBe('62')
+    expect(format('A4')?.previewImage?.alt).toBe('Aperçu A4')
+  })
+
+  it('supports thumbnail only, preview only, both and neither', () => {
+    const states = ['A4', 'A5', 'A6', 'A3'].map((v) => [Boolean(format(v)?.image), Boolean(format(v)?.previewImage)])
+    expect(states).toEqual([[true, true], [true, false], [false, true], [false, false]])
+  })
+
+  it('reads visual metadata on every inline group, not just formats', () => {
+    const g = groupOf(data, 'grammage')?.options[0]
+    expect([g?.image?.id, g?.previewImage?.id]).toEqual(['65', '66'])
+    expect(groupOf(data, 'quantity')?.options[0].image?.id).toBe('67')
+    expect(groupOf(data, 'quantity')?.options[1].image).toBeUndefined()
+    expect(groupOf(data, 'pageCount')?.options.every((o) => !o.image && !o.previewImage)).toBe(true)
+  })
+
+  it('omits unresolved or url-less media instead of breaking the option', () => {
+    const product = makeProduct({
+      availableFormats: [
+        { label: 'A4', image: 999, previewImage: makeMedia(70, { url: null }) },
+        { label: 'A5', image: makeMedia(71) },
+      ],
+    })
+    const options = groupOf(buildProductConfiguratorData(product), 'format')?.options
+    expect(options?.[0]).toEqual({ id: 'format-0', value: 'A4', label: 'A4' })
+    expect(options?.[1].image?.id).toBe('71')
+  })
+
+  it('maps shared material and finish thumbnails; they never carry a preview image', () => {
+    expect(groupOf(data, 'material')?.options[0].image?.id).toBe('31')
+    expect(groupOf(data, 'finish')?.options[0].image?.id).toBe('51')
+    const shared = [...(groupOf(data, 'material')?.options ?? []), ...(groupOf(data, 'finish')?.options ?? [])]
+    expect(shared.every((o) => o.previewImage === undefined)).toBe(true)
+  })
+
+  it('keeps option identity (id/value) unchanged by adding images', () => {
+    const plain = buildProductConfiguratorData(
+      makeVisualProduct({
+        availableFormats: [{ id: 'a4', label: 'A4' }, { id: 'a5', label: 'A5' }, { id: 'a6', label: 'A6' }, { id: 'a3', label: 'A3' }],
+      }),
+    )
+    const ids = (d: typeof data) => groupOf(d, 'format')?.options.filter((o) => !o.isCustom).map((o) => [o.id, o.value])
+    expect(ids(data)).toEqual(ids(plain))
+    for (const option of data.groups.flatMap((g) => g.options)) {
+      expect(option.value).not.toMatch(/\.(png|jpe?g|webp)|\/media\//)
+    }
+  })
+
+  it('exposes no raw CMS data in the public DTO (timestamps, filenames, relationships)', () => {
+    const json = JSON.stringify(data)
+    for (const leaked of ['updatedAt', 'createdAt', 'filename', 'mimeType', 'filesize', 'focalX']) {
+      expect(json).not.toContain(leaked)
+    }
+  })
+})

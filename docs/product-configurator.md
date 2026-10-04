@@ -85,18 +85,84 @@ order; nothing is ranked or marked "popular/recommended".
   `inputMode="decimal"`. No dimension limits are enforced and the helper
   says feasibility is confirmed by Printcom.
 
-## Images
+## Images: thumbnail vs preview
 
-- **Preview:** `primaryImage` first, then `gallery`, de-duplicated.
-  Thumbnails (buttons with `aria-pressed`, check badge on the active one)
-  appear only when there is more than one image and switch the large
-  preview. No image → neutral empty frame, never a broken image.
-- **Option cards:** materials and finishes show their existing `image`
-  when the CMS has one; otherwise a plain text card. Option images do **not**
-  change the main preview.
-- `ConfiguratorOption.previewImage` exists in the types as a seam for
-  option-specific previews; nothing populates or reads it yet.
-- Alt text comes from the media's `alt` only; nothing is invented.
+Two different jobs, two different fields (Sprint 3):
+
+| Field | Meaning | Where it shows |
+|---|---|---|
+| `image` — « Image de l’option » | selector **thumbnail** (paper close-up, format silhouette, finish texture…) | inside the option's card |
+| `previewImage` — « Image d’aperçu produit » | **main product preview override** while the option is selected | the large preview on the left |
+| `description` — « Description courte » (≤ 120 chars) | optional helper text (e.g. « 210 × 297 mm ») | under the option title |
+
+All four combinations work: thumbnail only, preview only, both, neither. A
+text-only configurator is still a valid, fully working state; nothing
+requires an image to publish. Descriptions render only when populated.
+
+### Which groups are image-capable
+
+- **Inline option lists on `products`** — `availableFormats`, `pageCountOptions`,
+  `grammages`, `quantities` — rows are now `{ label, description?, image?,
+  previewImage? }` (one shared field set, `visualOptionFields` in
+  `src/lib/payload/fields.ts`; migration
+  `…_add_visual_metadata_to_product_options`, additive nullable columns only —
+  existing rows are untouched and read back with the new fields `null`).
+  `label` keeps its requiredness; the row `id` stays the option identity and
+  the label stays the selection value (images are metadata, never identity —
+  no URL or media id is ever a value). No `value`/`recommended` field was
+  added: row ids already give stable identity and nothing in the product
+  needs editor-authored recommendations.
+- **Shared collections** — `materials` and `finishes` keep their existing
+  normalized records and their existing `image`, used as the selector
+  thumbnail. They deliberately have **no** `previewImage`: a shared
+  record's image cannot be correct for every product (« Soft Touch on a
+  business card » ≠ « Soft Touch on a brochure »), so material/finish
+  selection does not drive the main preview. Product-specific material/finish
+  previews would need a product-level override model and are a known
+  limitation, not implemented.
+- **Enum groups** (`orientations`, `printSides`, `colorModes`) keep their
+  enum storage and stay text options, except orientation which shows a tiny
+  generic sheet outline (CSS, semantic tokens — a UI cue, not product
+  photography). No CMS imagery for enums.
+
+### How options render (inferred from data, never an editor choice)
+
+| Option has | Group | Rendering |
+|---|---|---|
+| no image | any | compact text card (+ description if any) |
+| image | format, material, finish | large image card (grid) |
+| image | any other group (quantity, page count, grammage, …) | compact card with a small inline thumbnail — never a big card |
+
+Selected and focus states are identical for every variant (radio/checkbox
+indicator + border + background + weight). When the media's `alt` merely
+repeats the option label the thumbnail gets an empty `alt`; any
+additional `alt` text is kept. Thumbnails are server-normalized media
+(trimmed fields only), loaded lazily at the `thumbnail`/`card` sizes — only
+the main preview image is `priority`.
+
+### Main preview resolution
+
+`resolvePreviewMedia({ baseMedia, groups, selection })`
+(`src/lib/configurator/preview.ts`, pure and unit-tested):
+
+1. the first selected option that has a `previewImage`, scanning groups in
+   the fixed `PREVIEW_PRIORITY` order — **finish, material, format,
+   orientation, page count, print sides, colour mode, grammage, quantity**;
+   within the multi-select finish group the first *selected* option in CMS
+   order wins (click order never matters);
+2. otherwise `baseMedia` — the gallery image last chosen (the primary image
+   to start with).
+
+Because only inline lists carry `previewImage` today, the practical order
+is format → page count → grammage → quantity. A thumbnail-only option never
+overrides the preview; deselecting the winner falls through to the next
+candidate, then back to the base; "Sur mesure" has no preview so a custom
+format can never leave a stale standard-format image; an option with no
+preview image (or unresolved media) leaves the current preview in place.
+
+**Gallery interaction:** clicking a gallery thumbnail *pins* that image over
+any option override; the next option change re-evaluates the override. While
+an option's preview is showing, no gallery thumbnail is marked active.
 
 ## Layout and accessibility
 
@@ -116,23 +182,31 @@ colour transitions and respects `prefers-reduced-motion`.
   `/demande-de-devis?produit=<slug>` only; selections are local React state
   (no URL serialization, no storage). The quote page does not show or ask
   for configuration. Full hand-off is Sprint 4.
-- **Not every option type has imagery.** Only materials and finishes carry
-  an `image` in the CMS today; formats, orientations, grammages, quantities
-  etc. are text-only. Adding option imagery is Sprint 3 (schema work).
+- **Imagery is authored, not seeded.** The fields exist (formats, page
+  counts, grammages, quantities; materials/finishes thumbnails) but no
+  option image or preview is invented or seeded — products stay text-only
+  until editors upload real media. Orientation, print sides and colour mode
+  have no CMS imagery.
+- **No product-specific material/finish previews** (see above).
 - **Specialized product-family dimensions are not modelled** (packaging,
   labels, roll-ups, signage…). The generic `Products` model only describes
   the groups above; the engine renders what the CMS provides and degrades
   to just the preview + CTA for products with none (which is every seeded
-  product today).
+  product today). Image enrichment applies to the existing generic groups
+  only; specialized product-family configuration remains a future
+  content-model task.
 - **No dependencies between options** (e.g. finish X only on material Y):
   the CMS does not encode them, so none are invented.
 - No pricing, cart, payment, availability or lead-time logic.
 
 ## Tests
 
-`tests/unit/configuratorData.spec.ts` (normalizer),
+`tests/unit/configuratorData.spec.ts` (normalizer, incl. visual metadata),
+`configuratorPreview.spec.ts` (preview resolver),
 `configuratorState.spec.ts` (state/summary/link),
 `ProductConfigurator.spec.tsx` (rendered semantics and interaction),
+`tests/integration/productOptionMedia.int.spec.ts` (legacy label-only rows,
+thumbnail/preview persistence, no pricing exposure),
 `tests/e2e/productConfigurator.e2e.spec.ts` (journey through to the quote
 page, keyboard, custom format, no-config product, category archive, mobile
 overflow). The seed publishes no products and gives none any configuration,

@@ -1,29 +1,38 @@
-'use client'
-
-import { useState } from 'react'
 import { ResponsiveImage } from '@/components/ui/ResponsiveImage'
 import type { ConfiguratorMedia } from '@/lib/configurator/types'
 
 /**
  * Large product image plus, only when there is more than one image, a row
- * of keyboard-operable thumbnails. Driven purely by the product's own media
- * (primary image first, then gallery) — option thumbnails never replace it.
+ * of keyboard-operable thumbnails. Controlled by ProductConfigurator:
+ * `shownMedia` is whatever the preview resolver picked (a selected option's
+ * preview image, or the current gallery image), and `activeIndex` is the
+ * gallery thumbnail to mark as active — -1 while an option's preview image
+ * is overriding the gallery, so no thumbnail claims to be showing.
  */
-export function ProductPreview({ media, title }: { media: ConfiguratorMedia[]; title: string }) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const active = media[activeIndex] ?? media[0]
-
+export function ProductPreview({
+  media,
+  shownMedia,
+  activeIndex,
+  onSelect,
+  title,
+}: {
+  media: ConfiguratorMedia[]
+  shownMedia: ConfiguratorMedia | undefined
+  activeIndex: number
+  onSelect: (index: number) => void
+  title: string
+}) {
   return (
     <div className="flex flex-col gap-4">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-card-large bg-alternate">
-        {active ? (
+        {shownMedia ? (
           <ResponsiveImage
-            key={active.id}
-            media={active}
+            key={shownMedia.id}
+            media={shownMedia}
             payloadSize="listing"
             fill
             sizes="(min-width: 1069px) 50vw, 100vw"
-            priority={activeIndex === 0}
+            priority={shownMedia.id === media[0]?.id}
           />
         ) : null}
       </div>
@@ -36,7 +45,7 @@ export function ProductPreview({ media, title }: { media: ConfiguratorMedia[]; t
               <li key={item.id}>
                 <button
                   type="button"
-                  onClick={() => setActiveIndex(index)}
+                  onClick={() => onSelect(index)}
                   aria-pressed={isActive}
                   aria-label={item.alt || `${title} — image ${index + 1} sur ${media.length}`}
                   className={`relative block h-[var(--pc-touch-target-min)] w-16 overflow-hidden rounded-card-small border bg-alternate transition-opacity duration-[var(--pc-duration-fast)] motion-reduce:transition-none sm:h-14 sm:w-20 ${

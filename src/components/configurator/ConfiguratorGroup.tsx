@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import type { ConfiguratorGroup as GroupData } from '@/lib/configurator/types'
+import { optionPresentation } from '@/lib/configurator/presentation'
 import { ConfiguratorOption } from './ConfiguratorOption'
 
 /**
@@ -20,13 +21,13 @@ export function ConfiguratorGroup({
   /** Extra controls tied to the group (the custom-format inputs). */
   children?: ReactNode
 }) {
-  const hasImages = group.options.some((option) => option.image)
+  const hasImages = group.options.some((option) => optionPresentation(group.key, Boolean(option.image)) === 'media')
 
   return (
     <fieldset className="flex min-w-0 flex-col gap-3">
       <legend className="text-[1.0625rem] font-semibold text-primary">{group.label}</legend>
       {group.hint ? <p className="pc-text-footnote -mt-1 text-tertiary">{group.hint}</p> : null}
-      <div className={hasImages ? 'grid grid-cols-2 gap-3 sm:grid-cols-3' : 'flex flex-wrap gap-3'}>
+      <div className={hasImages ? 'grid grid-cols-2 items-start gap-3 sm:grid-cols-3' : 'flex flex-wrap gap-3'}>
         {group.options.map((option) => (
           <div key={option.id} className={hasImages ? undefined : 'min-w-[8rem] flex-1 sm:flex-none'}>
             <ConfiguratorOption

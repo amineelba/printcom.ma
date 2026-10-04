@@ -495,6 +495,18 @@ export interface Product {
   availableFormats?:
     | {
         label: string;
+        /**
+         * Texte d’aide affiché sous le nom de l’option (ex. « 210 × 297 mm »). Facultatif.
+         */
+        description?: string | null;
+        /**
+         * Affichée dans la carte de sélection du configurateur. Facultatif.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Affichée dans l’aperçu principal lorsque cette option est sélectionnée. Facultatif — sans image, l’aperçu actuel est conservé.
+         */
+        previewImage?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -503,6 +515,18 @@ export interface Product {
   pageCountOptions?:
     | {
         label: string;
+        /**
+         * Texte d’aide affiché sous le nom de l’option (ex. « 210 × 297 mm »). Facultatif.
+         */
+        description?: string | null;
+        /**
+         * Affichée dans la carte de sélection du configurateur. Facultatif.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Affichée dans l’aperçu principal lorsque cette option est sélectionnée. Facultatif — sans image, l’aperçu actuel est conservé.
+         */
+        previewImage?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -512,6 +536,18 @@ export interface Product {
   grammages?:
     | {
         label: string;
+        /**
+         * Texte d’aide affiché sous le nom de l’option (ex. « 210 × 297 mm »). Facultatif.
+         */
+        description?: string | null;
+        /**
+         * Affichée dans la carte de sélection du configurateur. Facultatif.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Affichée dans l’aperçu principal lorsque cette option est sélectionnée. Facultatif — sans image, l’aperçu actuel est conservé.
+         */
+        previewImage?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -519,6 +555,18 @@ export interface Product {
   quantities?:
     | {
         label: string;
+        /**
+         * Texte d’aide affiché sous le nom de l’option (ex. « 210 × 297 mm »). Facultatif.
+         */
+        description?: string | null;
+        /**
+         * Affichée dans la carte de sélection du configurateur. Facultatif.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Affichée dans l’aperçu principal lorsque cette option est sélectionnée. Facultatif — sans image, l’aperçu actuel est conservé.
+         */
+        previewImage?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -2520,6 +2568,9 @@ export interface ProductsSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        description?: T;
+        image?: T;
+        previewImage?: T;
         id?: T;
       };
   customFormatAvailable?: T;
@@ -2528,6 +2579,9 @@ export interface ProductsSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        description?: T;
+        image?: T;
+        previewImage?: T;
         id?: T;
       };
   printSides?: T;
@@ -2537,6 +2591,9 @@ export interface ProductsSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        description?: T;
+        image?: T;
+        previewImage?: T;
         id?: T;
       };
   finishes?: T;
@@ -2544,6 +2601,9 @@ export interface ProductsSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        description?: T;
+        image?: T;
+        previewImage?: T;
         id?: T;
       };
   recommendedTechnologies?: T;
