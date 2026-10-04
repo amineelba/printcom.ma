@@ -4,6 +4,7 @@ import * as migration_20260820_021258 from './20260820_021258';
 import * as migration_20260820_163249_add_mcp_plugin from './20260820_163249_add_mcp_plugin';
 import * as migration_20260903_151417_catalog_architecture_migration from './20260903_151417_catalog_architecture_migration';
 import * as migration_20260904_032835_add_homepage_sections from './20260904_032835_add_homepage_sections';
+import * as migration_20261004_021246_quote_checkout_design_source from './20261004_021246_quote_checkout_design_source';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20260904_032835_add_homepage_sections.up,
     down: migration_20260904_032835_add_homepage_sections.down,
-    name: '20260904_032835_add_homepage_sections'
+    name: '20260904_032835_add_homepage_sections',
+  },
+  {
+    up: migration_20261004_021246_quote_checkout_design_source.up,
+    down: migration_20261004_021246_quote_checkout_design_source.down,
+    name: '20261004_021246_quote_checkout_design_source'
   },
 ];

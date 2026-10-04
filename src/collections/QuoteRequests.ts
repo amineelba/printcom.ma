@@ -147,9 +147,25 @@ export const QuoteRequests: CollectionConfig = {
       name: 'files',
       label: 'Étape 4 — Fichiers',
       fields: [
+        {
+          // Public checkout (Sprint 1) answer to "Qui fournit le design ?".
+          // No default: records created before this field existed stay empty
+          // rather than being assigned an answer the customer never gave.
+          name: 'designSource',
+          type: 'select',
+          options: [
+            { label: 'Le client fournit son design', value: 'client' },
+            { label: 'Printcom réalise le design', value: 'printcom' },
+          ],
+        },
         { name: 'filesReady', type: 'checkbox', defaultValue: false },
         { name: 'needsFileCheck', type: 'checkbox', defaultValue: false },
-        { name: 'needsGraphicDesign', type: 'checkbox', defaultValue: false },
+        {
+          name: 'needsGraphicDesign',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: { description: 'Maintenu en cohérence avec « designSource » pour les nouvelles demandes.' },
+        },
         { name: 'uploadedFiles', type: 'relationship', relationTo: 'private-quote-files', hasMany: true },
         { name: 'externalLink', type: 'text' },
         { name: 'comments', type: 'textarea' },
@@ -162,7 +178,7 @@ export const QuoteRequests: CollectionConfig = {
       name: 'contact',
       label: 'Étape 5 — Contact',
       fields: [
-        { name: 'company', type: 'text', required: true },
+        { name: 'company', type: 'text' },
         { name: 'fullName', type: 'text', required: true },
         { name: 'jobTitle', type: 'text' },
         { name: 'email', type: 'email', required: true },

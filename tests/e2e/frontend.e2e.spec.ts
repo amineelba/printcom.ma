@@ -56,13 +56,6 @@ test.describe('Frontend — golden paths', () => {
     await expect(page.getByText('Veuillez corriger les champs suivants')).toBeVisible()
   })
 
-  test('quote wizard advances through steps and blocks on missing description', async ({ page }) => {
-    await page.goto('/demande-de-devis')
-    await expect(page.locator('h1')).toContainText('Demande de devis')
-    await page.getByRole('button', { name: 'Continuer' }).click()
-    await expect(page.locator('#description-error')).toBeVisible()
-  })
-
   test('unknown route renders the 404 page', async ({ page }) => {
     const response = await page.goto('/cette-page-nexiste-pas')
     expect(response?.status()).toBe(404)

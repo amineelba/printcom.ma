@@ -100,8 +100,8 @@ itself has full read power via the Local API.
   Payload. Acceptable at Printcom's traffic profile — revisit with a
   narrower `revalidate` on specific low-churn pages if it ever isn't.
 - Client Components are used only where interaction requires them:
-  navigation disclosure, search overlay, filter bar, the quote wizard,
-  file upload, accordions. Everything else is a Server Component.
+  navigation disclosure, search overlay, filter bar, the quote checkout
+  form, accordions. Everything else is a Server Component.
 - `src/proxy.ts` (Next 16 renamed "middleware" to "proxy"; it always runs
   on the Node.js runtime, which the Postgres adapter needs) resolves
   `redirects` collection entries before any route renders.

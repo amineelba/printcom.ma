@@ -2,7 +2,10 @@
 
 import { headers } from 'next/headers'
 import { getPayload } from '@/lib/payload/client'
-import { quoteRequestSchema, type QuoteRequestInput } from '@/lib/validation/quote'
+import { quoteCheckoutSchema, type QuoteCheckoutInput } from '@/lib/validation/quote'
+import { resolveQuoteContext } from '@/lib/quote/resolveQuoteContext'
+import { mapCheckoutToQuoteRequest } from '@/lib/quote/mapCheckoutToQuoteRequest'
+import { buildQuoteConfirmationEmail, buildQuoteNotificationEmail } from '@/lib/quote/quoteEmails'
 import { generateReference } from '@/lib/quote/generateReference'
 import { isRateLimited } from '@/lib/security/rateLimit'
 import { getIdempotentResult, storeIdempotentResult } from '@/lib/security/idempotency'
@@ -20,9 +23,8 @@ export interface UploadFileResult {
 
 /**
  * Uploads one client-selected file into the private-quote-files collection.
- * Called eagerly as each file is added in step 4, ahead of final submit, so
- * the wizard can show per-file success/failure without blocking the rest
- * of the form.
+ * Not exposed by the public quote checkout (Sprint 1 no longer collects
+ * artwork) — kept as backend infrastructure for a later file-exchange flow.
  */
 export async function uploadQuoteFile(formData: FormData): Promise<UploadFileResult> {
   const file = formData.get('file')
@@ -68,22 +70,27 @@ export interface SubmitQuoteResult {
   message?: string
 }
 
-export async function submitQuoteRequest(input: QuoteRequestInput): Promise<SubmitQuoteResult> {
-  if (input.honeypot && input.honeypot.trim().length > 0) {
+/**
+ * Submission boundary for the public quote checkout. Everything the browser
+ * sends is re-validated here — client-side validation is a convenience only.
+ */
+export async function submitQuoteRequest(input: QuoteCheckoutInput): Promise<SubmitQuoteResult> {
+  if (typeof input?.honeypot === 'string' && input.honeypot.trim().length > 0) {
     // Pretend success to bots without writing anything.
     return { status: 'success', reference: 'PC-DEVIS-0000-000000' }
   }
 
-  const parsed = quoteRequestSchema.safeParse(input)
+  const parsed = quoteCheckoutSchema.safeParse(input)
   if (!parsed.success) {
     const errors: Record<string, string> = {}
     for (const issue of parsed.error.issues) {
-      errors[issue.path.join('.')] = issue.message
+      errors[issue.path.join('.') || 'form'] = issue.message
     }
     return { status: 'error', errors }
   }
+  const data = parsed.data
 
-  const existing = getIdempotentResult(parsed.data.idempotencyKey)
+  const existing = getIdempotentResult(data.idempotencyKey)
   if (existing) {
     return { status: 'success', reference: existing }
   }
@@ -95,7 +102,7 @@ export async function submitQuoteRequest(input: QuoteRequestInput): Promise<Subm
   }
 
   const payload = await getPayload()
-  const { need, configuration, productionAndDelivery, files, contact } = parsed.data
+  const context = await resolveQuoteContext(payload, data.context)
 
   let doc
   let attempts = 0
@@ -107,69 +114,7 @@ export async function submitQuoteRequest(input: QuoteRequestInput): Promise<Subm
     try {
       doc = await payload.create({
         collection: 'quote-requests',
-        data: {
-          reference,
-          need: {
-            requestType: need.requestType,
-            desiredProduct: need.desiredProduct ? Number(need.desiredProduct) : undefined,
-            category: need.category ? Number(need.category) : undefined,
-            description: need.description,
-            usage: need.usage,
-            sector: need.sector ? Number(need.sector) : undefined,
-          },
-          configuration: {
-            format: configuration.format,
-            customFormatWidth: configuration.customFormatWidth,
-            customFormatHeight: configuration.customFormatHeight,
-            customFormatUnit: configuration.customFormatUnit,
-            orientation: configuration.orientation,
-            pageCount: configuration.pageCount,
-            printSides: configuration.printSides,
-            color: configuration.color,
-            material: configuration.material ? Number(configuration.material) : undefined,
-            grammage: configuration.grammage,
-            finish: configuration.finish?.map(Number),
-            binding: configuration.binding,
-            quantity: configuration.quantity,
-            versionsCount: configuration.versionsCount,
-            variablePersonalization: configuration.variablePersonalization,
-          },
-          productionAndDelivery: {
-            desiredDate: productionAndDelivery.desiredDate,
-            urgencyLevel: productionAndDelivery.urgencyLevel,
-            city: productionAndDelivery.city,
-            addressOrZone: productionAndDelivery.addressOrZone,
-            multiSiteDelivery: productionAndDelivery.multiSiteDelivery,
-            destinationsCount: productionAndDelivery.destinationsCount,
-            installationRequired: productionAndDelivery.installationRequired,
-            logisticsComments: productionAndDelivery.logisticsComments,
-          },
-          files: {
-            filesReady: files.filesReady,
-            needsFileCheck: files.needsFileCheck,
-            needsGraphicDesign: files.needsGraphicDesign,
-            uploadedFiles: files.uploadedFileIds,
-            externalLink: files.externalLink,
-            comments: files.comments,
-          },
-          contact: {
-            company: contact.company,
-            fullName: contact.fullName,
-            jobTitle: contact.jobTitle,
-            email: contact.email,
-            phone: contact.phone,
-            city: contact.city,
-            preferredContactMethod: contact.preferredContactMethod,
-            comments: contact.comments,
-            consentConfirmed: true,
-            consentTimestamp: new Date().toISOString(),
-          },
-          workflow: {
-            status: 'new',
-            priority: 'normal',
-            source: 'website-quote-form',
-          },
-        },
+        data: mapCheckoutToQuoteRequest(reference, data, context),
         overrideAccess: true,
       })
       break
@@ -181,49 +126,31 @@ export async function submitQuoteRequest(input: QuoteRequestInput): Promise<Subm
     }
   }
 
-  storeIdempotentResult(parsed.data.idempotencyKey, doc.reference)
+  storeIdempotentResult(data.idempotencyKey, doc.reference)
 
-  // Link uploaded files back to this quote request for admin traceability.
-  if (files.uploadedFileIds?.length) {
-    await Promise.all(
-      files.uploadedFileIds.map((fileId) =>
-        payload
-          .update({
-            collection: 'private-quote-files',
-            id: fileId,
-            data: { quoteRequest: doc.id },
-            overrideAccess: true,
-          })
-          .catch(() => undefined),
-      ),
-    )
-  }
+  // The lead is already saved: a mail failure must not turn a successful
+  // submission into an error the customer would retry.
+  try {
+    const quoteSettings = await payload.findGlobal({ slug: 'quote-settings', depth: 0 })
+    const recipients = (quoteSettings.notificationRecipients || process.env.PRINTCOM_QUOTE_RECIPIENTS || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
 
-  const quoteSettings = await payload.findGlobal({ slug: 'quote-settings', depth: 0 })
-  const recipients = (quoteSettings.notificationRecipients || process.env.PRINTCOM_QUOTE_RECIPIENTS || '')
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
+    if (recipients.length) {
+      const notification = buildQuoteNotificationEmail(doc.reference, data, context)
+      await sendEmail({ to: recipients, subject: notification.subject, html: notification.html })
+    }
 
-  if (recipients.length) {
+    const confirmation = buildQuoteConfirmationEmail(doc.reference, data)
     await sendEmail({
-      to: recipients,
-      subject: `Nouvelle demande de devis ${doc.reference} — ${contact.company}`,
-      html: `<p><strong>${doc.reference}</strong></p>
-             <p>${contact.fullName} — ${contact.company}</p>
-             <p>${contact.email} — ${contact.phone}</p>
-             <p>${need.description}</p>`,
+      to: data.email,
+      subject: quoteSettings.confirmationSubject || 'Votre demande de devis Printcom a bien été reçue',
+      html: confirmation.html,
     })
+  } catch (error) {
+    console.error(`[quote] ${doc.reference} saved but email delivery failed`, error)
   }
-
-  await sendEmail({
-    to: contact.email,
-    subject: quoteSettings.confirmationSubject || 'Votre demande de devis Printcom a bien été reçue',
-    html: `<p>Bonjour ${contact.fullName},</p>
-           <p>Votre demande de devis a bien été enregistrée sous la référence <strong>${doc.reference}</strong>.</p>
-           <p>Notre équipe l’étudie et revient vers vous dans les meilleurs délais.</p>
-           <p>L’équipe Printcom</p>`,
-  })
 
   return { status: 'success', reference: doc.reference }
 }

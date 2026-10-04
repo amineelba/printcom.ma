@@ -1,88 +1,72 @@
 import { z } from 'zod'
 
-export const quoteNeedSchema = z.object({
-  requestType: z.enum([
-    'product-printing',
-    'advisory',
-    'custom-packaging',
-    'large-format',
-    'multi-site-campaign',
-    'other',
-  ]),
-  desiredProduct: z.string().optional(),
-  category: z.string().optional(),
-  description: z.string().trim().min(1, 'Décrivez brièvement votre besoin.'),
-  usage: z.string().optional(),
-  sector: z.string().optional(),
-})
+export const DESIGN_SOURCES = ['client', 'printcom'] as const
+export type DesignSource = (typeof DESIGN_SOURCES)[number]
 
-export const quoteConfigurationSchema = z.object({
-  format: z.string().optional(),
-  customFormatWidth: z.union([z.number(), z.nan()]).optional(),
-  customFormatHeight: z.union([z.number(), z.nan()]).optional(),
-  customFormatUnit: z.enum(['mm', 'cm']).optional(),
-  orientation: z.enum(['portrait', 'landscape']).optional(),
-  pageCount: z.union([z.number(), z.nan()]).optional(),
-  printSides: z.enum(['single', 'double']).optional(),
-  color: z.string().optional(),
-  material: z.string().optional(),
-  grammage: z.string().optional(),
-  finish: z.array(z.string()).optional(),
-  binding: z.string().optional(),
-  quantity: z.union([z.number(), z.nan()]).optional(),
-  versionsCount: z.union([z.number(), z.nan()]).optional(),
-  variablePersonalization: z.boolean().optional(),
-})
-
-export const quoteProductionAndDeliverySchema = z.object({
-  desiredDate: z.string().optional(),
-  urgencyLevel: z.enum(['standard', 'urgent']).default('standard'),
-  city: z.string().optional(),
-  addressOrZone: z.string().optional(),
-  multiSiteDelivery: z.boolean().optional(),
-  destinationsCount: z.union([z.number(), z.nan()]).optional(),
-  installationRequired: z.boolean().optional(),
-  logisticsComments: z.string().optional(),
-})
-
-export const quoteFilesSchema = z.object({
-  filesReady: z.boolean().optional(),
-  needsFileCheck: z.boolean().optional(),
-  needsGraphicDesign: z.boolean().optional(),
-  uploadedFileIds: z.array(z.number()).optional(),
-  externalLink: z.string().optional(),
-  comments: z.string().optional(),
-})
-
-export const quoteContactSchema = z.object({
-  company: z.string().trim().min(1, 'Indiquez le nom de votre entreprise.'),
-  fullName: z.string().trim().min(2, 'Indiquez votre nom complet.'),
-  jobTitle: z.string().optional(),
-  email: z.string().trim().email('Adresse e-mail invalide.'),
-  phone: z.string().trim().min(6, 'Indiquez un numéro de téléphone valide.'),
-  city: z.string().optional(),
-  preferredContactMethod: z.enum(['email', 'phone']).optional(),
-  comments: z.string().optional(),
-  consentConfirmed: z.literal(true, { message: 'Le consentement est requis pour traiter votre demande.' }),
-})
-
-export const quoteRequestSchema = z.object({
-  need: quoteNeedSchema,
-  configuration: quoteConfigurationSchema,
-  productionAndDelivery: quoteProductionAndDeliverySchema,
-  files: quoteFilesSchema,
-  contact: quoteContactSchema,
-  honeypot: z.string().optional(),
-  idempotencyKey: z.string().min(1),
-})
-
-export type QuoteRequestInput = z.infer<typeof quoteRequestSchema>
-
-export const REQUEST_TYPE_LABELS: Record<QuoteRequestInput['need']['requestType'], string> = {
-  'product-printing': "Impression d'un produit",
-  advisory: 'Conseil et accompagnement',
-  'custom-packaging': 'Packaging sur mesure',
-  'large-format': 'Grand format ou signalétique',
-  'multi-site-campaign': 'Campagne multi-sites',
-  other: 'Autre demande',
+/** Readable French labels, shared by the form, emails and admin-facing output. */
+export const DESIGN_SOURCE_LABELS: Record<DesignSource, string> = {
+  client: 'Le client fournit son design',
+  printcom: 'Printcom réalise le design',
 }
+
+/** Empty/whitespace-only optional text is treated as "not provided". */
+const optionalText = (max: number) =>
+  z
+    .string()
+    .trim()
+    .max(max, 'Texte trop long.')
+    .optional()
+    .transform((value) => (value ? value : undefined))
+
+/**
+ * Optional page context carried over from the product page via query params
+ * (`?produit=`, `?support=`, `?finition=`). Slugs only — the server action
+ * re-resolves them against published catalogue documents, so nothing here is
+ * trusted as an ID or a label.
+ */
+export const quoteCheckoutContextSchema = z.object({
+  productSlug: z.string().trim().max(200).optional(),
+  materialSlug: z.string().trim().max(200).optional(),
+  finishSlug: z.string().trim().max(200).optional(),
+})
+
+/**
+ * What the public `/demande-de-devis` checkout actually collects (Sprint 1).
+ * Deliberately NOT the persisted quote-request shape — see
+ * `mapCheckoutToQuoteRequest` for how this is normalized into the Payload
+ * collection's legacy structured groups.
+ */
+export const quoteCheckoutSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, 'Indiquez votre nom complet.')
+    .max(200, 'Nom trop long.'),
+  company: optionalText(200),
+  phone: z
+    .string()
+    .trim()
+    .min(6, 'Indiquez un numéro de téléphone valide.')
+    .max(40, 'Numéro de téléphone trop long.'),
+  email: z.string().trim().max(254, 'Adresse e-mail trop longue.').email('Adresse e-mail invalide.'),
+  designSource: z.enum(DESIGN_SOURCES, {
+    errorMap: () => ({ message: 'Indiquez qui fournit le design.' }),
+  }),
+  comments: optionalText(2000),
+  consentConfirmed: z.literal(true, {
+    errorMap: () => ({ message: 'Le consentement est requis pour traiter votre demande.' }),
+  }),
+  context: quoteCheckoutContextSchema.optional(),
+  honeypot: z.string().optional(),
+  idempotencyKey: z.string().min(1).max(100),
+})
+
+/** Parsed (server-validated) checkout data. */
+export type QuoteCheckoutData = z.output<typeof quoteCheckoutSchema>
+
+/**
+ * Raw checkout input as sent by the client: `consentConfirmed` / `designSource`
+ * are loosened because the form starts with nothing chosen and
+ * `quoteCheckoutSchema` is what enforces them.
+ */
+export type QuoteCheckoutInput = z.input<typeof quoteCheckoutSchema>

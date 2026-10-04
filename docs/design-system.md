@@ -114,9 +114,10 @@ CategoryCard, ServiceCard, SolutionCard, SectorCard, TechnologyCard,
 MaterialCard, FinishCard, ResourceCard, ProductGrid), `rails/`
 (HorizontalRail — native scroll-snap, keyboard-operable prev/next, no
 autoplay/infinite loop per the brief), `filters/` (FilterBar, Pagination
-— both URL-driven), `forms/` (the full quote wizard stack —
-QuoteWizard/QuoteStepper/QuoteSummary/FileUpload/ContactForm/FormField/
-ConsentField/FormErrorSummary/inputs), `content/` (RichTextRenderer,
+— both URL-driven), `forms/` (the single-page quote checkout —
+QuoteCheckout/DesignSourceSelector/QuoteRequestSummary — plus
+ContactForm/FormField/ConsentField/FormErrorSummary/inputs, and
+FileUpload, currently unused by the public pages), `content/` (RichTextRenderer,
 ProcessSteps, FAQAccordion, SpecificationList, QuoteCTA, ContactCTA),
 `feedback/` (EmptyState, LoadingState, ErrorState), `seo/`
 (StructuredData).

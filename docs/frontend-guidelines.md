@@ -78,7 +78,7 @@ const result = await payload.find({
   alone — `submitQuoteRequest`/`submitContactForm` both re-validate),
   and a real `<ConsentField>` wired to actual component state (not
   defaulted to `true` — this was a real bug caught and fixed during
-  development of the quote wizard, see git history).
+  development of the original quote form, see git history).
 - Use `FormField` + `TextInput`/`TextArea`/`Select` from
   `src/components/forms/inputs.tsx` for every field — they carry the
   shared focus/error/disabled styling and `aria-invalid` wiring.

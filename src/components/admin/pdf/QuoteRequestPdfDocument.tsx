@@ -214,6 +214,10 @@ export function QuoteRequestPdfDocument({ quoteRequest }: { quoteRequest: QuoteR
         </Section>
 
         <Section title="Fichiers">
+          <Row
+            label="Design fourni par"
+            value={files?.designSource === 'client' ? 'Le client' : files?.designSource === 'printcom' ? 'Printcom' : undefined}
+          />
           <Row label="Fichiers prêts" value={files?.filesReady !== undefined ? yesNo(files.filesReady) : undefined} />
           <Row label="Contrôle de fichier demandé" value={files?.needsFileCheck !== undefined ? yesNo(files.needsFileCheck) : undefined} />
           <Row label="Création graphique demandée" value={files?.needsGraphicDesign !== undefined ? yesNo(files.needsGraphicDesign) : undefined} />

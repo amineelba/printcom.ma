@@ -15,7 +15,8 @@ arg — none in application code).
 | File | Covers |
 |---|---|
 | `buildProductWhere.spec.ts` | The `/produits` filter-query builder — cumulative AND filters, empty-param handling |
-| `quoteValidation.spec.ts` | `quoteNeedSchema`, `quoteContactSchema`, `quoteRequestSchema` — rejection of invalid request types, invalid emails, `consentConfirmed: false`, missing idempotency key |
+| `quoteValidation.spec.ts` | `quoteCheckoutSchema` — required name/phone/email/`designSource`/consent, exact `designSource` enum, optional company/comment (normalized), comment length cap, honeypot passthrough, missing idempotency key |
+| `quoteEmails.spec.ts` | Notification/confirmation email rendering (no `undefined`, company only when present, HTML escaping, no promises) and `mapCheckoutToQuoteRequest` normalization |
 | `generateReference.spec.ts` | `formatReference`'s zero-padding and non-truncation of large sequences |
 | `normalize.spec.ts` | Accent-stripping/lowercasing for search |
 | `noForbiddenTaxonomy.spec.ts` | Asserts `Products`/`ProductCategories`/`Solutions`/`Sectors`/`Services` never define a forbidden slug (réalisations/projects/portfolio/etc.), and `Products` has no cart-shaped fields |
@@ -28,6 +29,7 @@ arg — none in application code).
 |---|---|
 | `api.int.spec.ts` | Payload Local API boots correctly; config never registers a forbidden collection |
 | `accessControl.int.spec.ts` | Draft products invisible to anonymous reads; published products visible; `quote-requests`/`private-quote-files` reject anonymous reads outright (see `docs/access-control.md` for why this throws rather than returning empty) |
+| `quoteCheckout.int.spec.ts` | The real `submitQuoteRequest` server action (only `next/headers` mocked) against Postgres: both `designSource` answers persist with normalized values, company/comment optional, published-only product/support/finition context, honeypot writes nothing, same idempotency key → one lead, malformed input rejected server-side, per-IP rate limit, anonymous reads still refused. Cleans up the leads it creates |
 | `seedIdempotency.int.spec.ts` | `runSeed()` executed twice produces identical document counts (proves the upsert-by-slug logic is actually idempotent, not just "should be"); demo products seed as `draft`; sectors seed with the mandated neutral positioning note |
 
 9 tests, all passing. Run against a real local Postgres in this session
@@ -39,11 +41,12 @@ before these run.
 `frontend.e2e.spec.ts` (11 tests): homepage hero content, skip-link
 focus order, desktop nav → `/produits`, category filter updates the URL,
 mobile menu opens/traps focus/closes on Escape, search overlay →
-`/recherche?q=...`, contact form validation summary on empty submit,
-quote wizard blocks advancing past step 1 without a description, unknown
+`/recherche?q=...`, contact form validation summary on empty submit, unknown
 routes return an actual 404 status with the styled not-found page,
 `/parc-machines` 404s (no confirmed machine seeded), reduced-motion
 media query doesn't break rendering.
+
+`quoteCheckout.e2e.spec.ts` (4 tests): `/demande-de-devis` is a single-scroll form (no stepper/next-back/file upload/brief), required errors are tied to their fields and focus the first one, `designSource` is a mutually exclusive keyboard-operable radio group, and the short form submits through to `/demande-de-devis/merci?reference=PC-DEVIS-…`.
 
 `admin.e2e.spec.ts` (3 tests): admin login → dashboard, collection list
 view, collection create view.

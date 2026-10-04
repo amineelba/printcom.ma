@@ -389,15 +389,19 @@ export interface QuoteRequest {
     logisticsComments?: string | null;
   };
   files?: {
+    designSource?: ('client' | 'printcom') | null;
     filesReady?: boolean | null;
     needsFileCheck?: boolean | null;
+    /**
+     * Maintenu en cohérence avec « designSource » pour les nouvelles demandes.
+     */
     needsGraphicDesign?: boolean | null;
     uploadedFiles?: (number | PrivateQuoteFile)[] | null;
     externalLink?: string | null;
     comments?: string | null;
   };
   contact: {
-    company: string;
+    company?: string | null;
     fullName: string;
     jobTitle?: string | null;
     email: string;
@@ -2990,6 +2994,7 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
   files?:
     | T
     | {
+        designSource?: T;
         filesReady?: T;
         needsFileCheck?: T;
         needsGraphicDesign?: T;

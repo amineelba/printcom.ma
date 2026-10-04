@@ -51,13 +51,13 @@ is designed to make that a drop-in swap.
 `src/lib/security/idempotency.ts` — same in-memory caveat as rate
 limiting, 10-minute TTL. Protects `submitQuoteRequest` against duplicate
 lead creation from a double-click or a retried network request (the
-client generates one UUID per wizard mount and resends it on every
+client generates one UUID per checkout mount and resends it on every
 submit attempt).
 
 ## Anti-spam
 
 Honeypot field (`src/lib/security/honeypot.ts`) on both the contact form
-and the quote wizard: a hidden `website` input that's invisible to
+and the quote checkout: a hidden `website` input that's invisible to
 sighted users and screen readers (`aria-hidden`, `sr-only`, `tabIndex={-1}`)
 but present in the DOM for bots that blind-fill every field. A filled
 honeypot short-circuits to a fake success response — the bot gets no
@@ -105,4 +105,4 @@ going live — see `docs/environment-variables.md`.
   hydration + the one inline style usage.
 - **CAPTCHA/challenge on forms** — honeypot + rate limiting only; if spam
   becomes a real problem in production, adding a CAPTCHA (e.g. Turnstile)
-  to `ContactForm`/`QuoteWizard`'s final step is a contained addition.
+  to `ContactForm`/`QuoteCheckout`'s submit button is a contained addition.

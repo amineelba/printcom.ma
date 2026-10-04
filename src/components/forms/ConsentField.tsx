@@ -10,6 +10,7 @@ export function ConsentField({
   onChange?: (checked: boolean) => void
 }) {
   const isControlled = onChange !== undefined
+  const errorId = error ? `${name}-error` : undefined
 
   return (
     <div className="flex flex-col gap-2">
@@ -18,7 +19,9 @@ export function ConsentField({
           type="checkbox"
           name={name}
           required
+          id={name}
           aria-invalid={Boolean(error) || undefined}
+          aria-describedby={errorId}
           {...(isControlled ? { checked: checked ?? false, onChange: (e) => onChange(e.target.checked) } : {})}
           className="mt-1 h-5 w-5 shrink-0 rounded-[var(--pc-radius-xs)] border border-border-default"
         />
@@ -31,7 +34,7 @@ export function ConsentField({
         </span>
       </label>
       {error ? (
-        <p role="alert" className="pc-text-footnote text-error">
+        <p id={errorId} role="alert" className="pc-text-footnote text-error">
           {error}
         </p>
       ) : null}
